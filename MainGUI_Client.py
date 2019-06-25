@@ -16,8 +16,6 @@ from tools import exception_class
 import configparser
 from tracker import ClientGUI_support
 
-
-
 Config = configparser.ConfigParser()
 
 #Global vars

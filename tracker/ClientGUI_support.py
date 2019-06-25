@@ -249,10 +249,6 @@ class ThreadingProcess(object):
         self.arg1 = arg1
         self.arg2 = arg2
 
-        #thread = threading.Thread(target=self.run(), args=args)
-        #thread.daemon = True                            # Daemonize thread
-        #thread.start()                                  # Start the execution
-
 
     def runTrack(self, process):
         try:
