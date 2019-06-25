@@ -16,14 +16,6 @@ from tools import exception_class
 import configparser
 from tracker import ClientGUI_support
 
-#import sys
-#import time
-#import multiprocessing
-#import os
-#import cv2
-#import numpy as np
-#from tracker.fish_tank import Tank
-#from tools import fishlog
 
 
 Config = configparser.ConfigParser()
