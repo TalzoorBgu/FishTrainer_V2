@@ -132,3 +132,6 @@ dmypy.json
 *.iml
 out
 gen
+.DS_Store
+data/.DS_Store
+data/log/

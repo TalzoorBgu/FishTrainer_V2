@@ -1,5 +1,0 @@
-Packs to install:
-
-opencv-contrib-python
-matplotlib
-pyserial
