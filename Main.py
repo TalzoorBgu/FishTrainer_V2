@@ -42,7 +42,7 @@ class ConfigSectionMap:
 
     def get(self, section):
         dict1 = {}
-
+        print (Config.items())
         if Config.has_section(section):
             options = Config.options(section)
             for option in options:
