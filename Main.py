@@ -581,7 +581,7 @@ class Fish_traning_GUI___Client:
 
         self.txtStatRunArgs = Text(self.frmStat)
         self.txtStatRunArgs.place(relx=0.19, rely=0.9, relheight=0.09
-                                  , relwidth=0.44)
+                                  , relwidth=0.54)
         self.txtStatRunArgs.configure(background="white")
         self.txtStatRunArgs.configure(font=font9)
         self.txtStatRunArgs.configure(foreground="black")
