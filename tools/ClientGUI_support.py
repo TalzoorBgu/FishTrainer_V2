@@ -13,7 +13,7 @@ try:
     import scene_planner
 except ImportError:
     from . import scene_planner
-from controller import Controller
+from .controller import Controller
 import track_fish
 # from tracker.old_tcp_client import FishClient
 from time import sleep
