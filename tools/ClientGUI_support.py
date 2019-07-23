@@ -9,12 +9,12 @@
 import sys
 import subprocess
 import threading
-from tools import scene_planner
-from tools.controller import Controller
-from tools import track_fish
+import scene_planner
+from controller import Controller
+import track_fish
 # from tracker.old_tcp_client import FishClient
 from time import sleep
-from tools.track_feeder import tracker_Feeder
+from track_feeder import tracker_Feeder
 
 stop_traning = False
 feed_object = tracker_Feeder()
