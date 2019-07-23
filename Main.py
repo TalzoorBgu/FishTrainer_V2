@@ -50,24 +50,20 @@ class ConfigSectionMap:
         with open(config_file) as f:
             Config.read_file(f)
 
-        for each_section in Config.sections():
-            for (each_key, each_val) in Config.items(each_section):
-                print(each_key)
-                print(each_val)
-        if Config.has_section(section):
-            options = Config.options(section)
-            for option in options:
-                try:
-                    dict1[option] = Config.get(section, option)
-                    if dict1[option] == -1:
-                        DebugPrint("skip: %s" % option)
-                except:
-                    print("exception on %s!" % option)
-                    dict1[option] = None
-        else:   # there is no such option
-            # print("Config file error!")
-            self.exception.error("Config file error! ({})".format(section))
-            dict1 = {}
+            if Config.has_section(section):
+                options = Config.options(section)
+                for option in options:
+                    try:
+                        dict1[option] = Config.get(section, option)
+                        if dict1[option] == -1:
+                            DebugPrint("skip: %s" % option)
+                    except:
+                        print("exception on %s!" % option)
+                        dict1[option] = None
+            else:   # there is no such option
+                # print("Config file error!")
+                self.exception.error("Config file error! ({})".format(section))
+                dict1 = {}
         return dict1
 
 
