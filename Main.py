@@ -43,8 +43,8 @@ class ConfigSectionMap:
     def get(self, section):
         dict1 = {}
 
-        cwd = os.getcwd()  # working dir
-        config_file = '{}\GUI_config.txt'.format(cwd)
+        script_dir = os.path.dirname(os.path.realpath(__file__))  # script dir
+        config_file = '{}\GUI_config.txt'.format(script_dir)
         print(config_file)
         # Config.read(config_file)
         with open(config_file) as f:
