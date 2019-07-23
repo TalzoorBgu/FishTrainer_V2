@@ -1,6 +1,6 @@
 # main
 from __future__ import print_function
-import serial
+from . import serial
 import time
 import curses
 import _thread as thread
