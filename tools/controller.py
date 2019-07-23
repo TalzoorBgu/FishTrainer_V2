@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
-from tools import track_fish
+import track_fish
 # from tracker.old_tcp_client import FishClient
-from tools.fish_tank import Tank
-from tools import fishlog
-from tools.time_counter import TimeCounter
+from .fish_tank import Tank
+import fishlog
+from .time_counter import TimeCounter
 import argparse
 import os
 import time
-from tools import plotter
+import plotter
 from time import sleep
 
 
