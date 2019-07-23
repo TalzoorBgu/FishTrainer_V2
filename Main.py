@@ -12,35 +12,49 @@ except ImportError:
     import tkinter.ttk as ttk
     py3 = 1
 
-from tools import exception_class
+try:
+    from tools import exception_class
+except ImportError:
+    from .tools import exception_class
+
 import configparser
 from tools import ClientGUI_support
+from datetime import datetime
+
 
 Config = configparser.ConfigParser()
 
 #Global vars
 exit_var = False
 
+
 def print_path():
     pass
 
-def ConfigSectionMap(section):
-    dict1 = {}
-    if Config.has_section(section):
-        options = Config.options(section)
-        for option in options:
-            try:
-                dict1[option] = Config.get(section, option)
-                if dict1[option] == -1:
-                    DebugPrint("skip: %s" % option)
-            except:
-                print("exception on %s!" % option)
-                dict1[option] = None
-    else:   # there is no such option
-        print("Config file error!")
-        dict1 = 0
-        pass
-    return dict1
+
+class ConfigSectionMap:
+    def __init__(self, _exception=None):
+        self.exception = _exception
+
+    def get(self, section):
+        dict1 = {}
+
+        if Config.has_section(section):
+            options = Config.options(section)
+            for option in options:
+                try:
+                    dict1[option] = Config.get(section, option)
+                    if dict1[option] == -1:
+                        DebugPrint("skip: %s" % option)
+                except:
+                    print("exception on %s!" % option)
+                    dict1[option] = None
+        else:   # there is no such option
+            # print("Config file error!")
+            self.exception.error("Config file error! ({})".format(section))
+            dict1 = {}
+        return dict1
+
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
@@ -50,7 +64,7 @@ def vp_start_gui():
     Fish_traning_GUI = Fish_traning_GUI___Client(root)
     Excp = exception_class.RaiseException(Fish_traning_GUI)
 
-    if ClientGUI_support.feed_object.Arduino.connection=='NO':
+    if ClientGUI_support.feed_object.Arduino.connection == 'NO':
         Excp.error("No Arduino conn. check serial port (USB)")
 
     ClientGUI_support.init(root, Fish_traning_GUI)
@@ -74,7 +88,8 @@ def destroy_Fish_traning_GUI___Client():
 
 
 class Fish_traning_GUI___Client:
-    def __init__(self, top = None):
+    def __init__(self, top = None, excp = None):
+
         self.stop_traning = False
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -871,27 +886,54 @@ class Fish_traning_GUI___Client:
         self.menubar = Menu(top, font="TkMenuFont", bg=_bgcolor, fg=_fgcolor)
         top.configure(menu=self.menubar)
 
+        self.Exception = exception_class.RaiseException(self)
+
+        self.vars_init()
         self.fillValue()
+        self.print_and_update_main_log("{} ---Started---".format(self.time_stamp()))
+
+
+    def vars_init(self):
+        self.LogFolderName = ""
+        self.Stat_days = ""
+        self.Stat_arg = ""
+        self.ServerIP = ""
+        self.Args = ""
 
     def fillValue(self):
+        ConfigVals = ConfigSectionMap(self.Exception)
         self.chb_Var = ClientGUI_support.chb_Var
         Config.read('GUI_config.txt')
 
-        self.LogFolderName = ConfigSectionMap("Fish Statistics")['log folder']
-        self.Stat_days = ConfigSectionMap("Fish Statistics")['days back']
-        self.Stat_arg = ConfigSectionMap("Fish Statistics")['arg']
+        fish_statistics_dict = ConfigVals.get("Fish Statistics")
+        communication_dist = ConfigVals.get("Communication")
+        fish_dict = ConfigVals.get("Fish")
+
+        if fish_statistics_dict=={}:
+            pass
+        else:
+            self.LogFolderName = fish_statistics_dict['log folder']
+            self.Stat_days = fish_statistics_dict['days back']
+            self.Stat_arg = fish_statistics_dict['arg']
         #self.Red_Feeder = ConfigSectionMap("Motor")['redFeeder']
 
-        ServerIP = ConfigSectionMap("Communication")['server ip']
-        Arg1 = ConfigSectionMap("Fish")['argument1']
-        Arg2 = ConfigSectionMap("Fish")['argument2']
-        Args = '{} {}'.format(Arg1, Arg2)
+        if communication_dist == {}:
+            pass
+        else:
+            self.ServerIP = communication_dist['server ip']
 
-        #print Args
+        if fish_dict == {}:
+            pass
+        else:
+            Arg1 = fish_dict['argument1']
+            Arg2 = fish_dict['argument2']
+            self.Args = '{} {}'.format(Arg1, Arg2)
+
+        #print self.Args
 
         self.txtLogFolder.insert('0.0', self.LogFolderName)
-        self.txtServerIP.insert('0', ServerIP)
-        self.txtArgs.insert('0.0', Args)
+        self.txtServerIP.insert('0', self.ServerIP)
+        self.txtArgs.insert('0.0', self.Args)
         self.txtStatDaysBack.insert('0.0', self.Stat_days)
         self.txtStatArgs.insert('0.0', self.Stat_arg)
         temp_run_arg = "{} {} {} {}".format('fish_stat.py', self.LogFolderName, self.Stat_days, self.Stat_arg)
@@ -913,7 +955,6 @@ class Fish_traning_GUI___Client:
         self.txtMainLog.insert(END, str_temp)
         self.txtMainLog.see(END)
 
-
     def update_time(self, time_str):
         _str_time_array = str(time_str).split(':')
         _str_time_array = list(map(int, _str_time_array))
@@ -931,6 +972,9 @@ class Fish_traning_GUI___Client:
 
         def __call__(self):
             print("RUN Command")
+
+    def time_stamp(self):
+        return datetime.today().strftime('%Y-%m-%d %H:%M.%S --> ')
 
 
 def make_two_digit_num(int_to_check):

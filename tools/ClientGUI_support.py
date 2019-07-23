@@ -223,7 +223,7 @@ def onStatRun():
                                  Fish_traningGUI.txtStatArgs.get('0.0', END)).run()
     Fish_traningGUI.txtStatLog.insert(END, _StatInfo)
     Fish_traningGUI.txtStatLog.see(END)
-    # print "HERE:{}".format(StatInfo)
+    print ("HERE:{}".format(_StatInfo))
 
 def init(top, gui, *args, **kwargs):
     global Fish_traningGUI, top_level, root

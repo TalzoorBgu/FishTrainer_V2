@@ -69,8 +69,9 @@ def get_information(directory, days_back, int_relevant_input):
     p_b_div=files_count/toolbar_width
     #print(p_b_div)
     if p_b_div == 0: p_b_div=1
-    toolbar_width =files_count/p_b_div
+    toolbar_width =int(files_count/p_b_div)
     # setup toolbar
+    print("toolbar_width:{}".format(toolbar_width))
     sys.stdout.write("\t[%s]" % (" " * toolbar_width))
     str_to_add="       (" + str(files_count) + " files)"
     sys.stdout.write(str_to_add)
@@ -373,8 +374,8 @@ def banner(text, ch='=', length=78):
         return text
     else:
         remain = length - (len(text) + 2)
-        prefix_len = remain / 2
-        suffix_len = remain - prefix_len
+        prefix_len = int(remain / 2)
+        suffix_len = int(remain - prefix_len)
         if len(ch) == 1:
             prefix = ch * prefix_len
             suffix = ch * suffix_len
