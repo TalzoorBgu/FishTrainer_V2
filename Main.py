@@ -42,10 +42,18 @@ class ConfigSectionMap:
 
     def get(self, section):
         dict1 = {}
+
+        cwd = os.getcwd()  # working dir
+        config_file = '{}\GUI_config.txt'.format(cwd)
+        print(config_file)
+        # Config.read(config_file)
+        with open(config_file) as f:
+            Config.read_file(f)
+
         for each_section in Config.sections():
             for (each_key, each_val) in Config.items(each_section):
-                print (each_key)
-                print (each_val)
+                print(each_key)
+                print(each_val)
         if Config.has_section(section):
             options = Config.options(section)
             for option in options:
@@ -910,10 +918,6 @@ class Fish_traning_GUI___Client:
     def fillValue(self):
         ConfigVals = ConfigSectionMap(self.Exception)
         self.chb_Var = ClientGUI_support.chb_Var
-        cwd = os.getcwd()   # working dir
-        config_file = '{}\GUI_config.txt'.format(cwd)
-        print (config_file)
-        Config.read(config_file)
 
         fish_statistics_dict = ConfigVals.get("Fish Statistics")
         communication_dist = ConfigVals.get("Communication")
