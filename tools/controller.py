@@ -3,7 +3,7 @@
 import .track_fish
 # from tracker.old_tcp_client import FishClient
 from .fish_tank import Tank
-import fishlog
+import .fishlog
 from .time_counter import TimeCounter
 import argparse
 import os
