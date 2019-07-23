@@ -24,7 +24,7 @@ except ImportError:
 
 import configparser
 from datetime import datetime
-
+import os
 
 Config = configparser.ConfigParser()
 
@@ -907,7 +907,10 @@ class Fish_traning_GUI___Client:
     def fillValue(self):
         ConfigVals = ConfigSectionMap(self.Exception)
         self.chb_Var = ClientGUI_support.chb_Var
-        Config.read('GUI_config.txt')
+        cwd = os.getcwd()
+
+        print(cwd)
+        Config.read('{}\GUI_config.txt'.format(''))
 
         fish_statistics_dict = ConfigVals.get("Fish Statistics")
         communication_dist = ConfigVals.get("Communication")
