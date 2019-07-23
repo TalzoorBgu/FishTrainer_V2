@@ -908,7 +908,7 @@ class Fish_traning_GUI___Client:
         ConfigVals = ConfigSectionMap(self.Exception)
         self.chb_Var = ClientGUI_support.chb_Var
         cwd = os.getcwd()   # working dir
-        Config.read('{}\tools\GUI_config.txt'.format(cwd))
+        Config.read('{}\GUI_config.txt'.format(cwd))
 
         fish_statistics_dict = ConfigVals.get("Fish Statistics")
         communication_dist = ConfigVals.get("Communication")
