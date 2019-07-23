@@ -12,7 +12,7 @@ import threading
 try:
     import scene_planner
 except ImportError:
-    from .tools import scene_planner
+    from . import scene_planner
 from controller import Controller
 import track_fish
 # from tracker.old_tcp_client import FishClient
