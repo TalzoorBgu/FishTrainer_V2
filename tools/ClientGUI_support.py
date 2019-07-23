@@ -14,10 +14,10 @@ try:
 except ImportError:
     from . import scene_planner
 from .controller import Controller
-import track_fish
+from . import track_fish
 # from tracker.old_tcp_client import FishClient
 from time import sleep
-from track_feeder import tracker_Feeder
+from .track_feeder import tracker_Feeder
 
 stop_traning = False
 feed_object = tracker_Feeder()
