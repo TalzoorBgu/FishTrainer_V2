@@ -9,7 +9,10 @@
 import sys
 import subprocess
 import threading
-import scene_planner
+try:
+    import scene_planner
+except ImportError:
+    from .tools import scene_planner
 from controller import Controller
 import track_fish
 # from tracker.old_tcp_client import FishClient
