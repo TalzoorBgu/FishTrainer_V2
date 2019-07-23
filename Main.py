@@ -17,8 +17,12 @@ try:
 except ImportError:
     from .tools import exception_class
 
+try:
+    from tools import ClientGUI_support
+except ImportError:
+    from .tools import ClientGUI_support
+
 import configparser
-from tools import ClientGUI_support
 from datetime import datetime
 
 
