@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import track_fish
+import .track_fish
 # from tracker.old_tcp_client import FishClient
 from .fish_tank import Tank
 import fishlog
