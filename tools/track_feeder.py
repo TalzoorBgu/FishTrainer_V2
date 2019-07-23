@@ -1,7 +1,7 @@
 from __future__ import print_function
 import time ## Import 'time' library. Allows us to use 'sleep'
 import sys
-import .arduino as arduino_class
+from . import arduino as arduino_class
 
 time_to_sleep=0
 #pin_enbl = 36
