@@ -959,7 +959,7 @@ class Fish_traning_GUI___Client:
             print("type:{}".format(type(set_stepper_pins)))
 
 
-            if set_stepper_pins is 'True':
+            if set_stepper_pins == 'True':
                 print("ClientGUI_support.feed_object.Arduino:{}".format(ClientGUI_support.feed_object.Arduino))
                 if ClientGUI_support.feed_object.Arduino is 'OK':
                     print("Sending motor pins")
