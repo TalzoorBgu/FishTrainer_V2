@@ -347,8 +347,9 @@ class Arduino_Functions:
     def recive_data(self):
         str_in = ""
         while self.serial_con.serial.inWaiting():
-            str_in = self.serial_con.serial.readline().decode()
-            print("arduino_in: {}".format(str_in), end='')
+            str_in = str_in + self.serial_con.serial.readline().decode()
+
+        print("arduino_in: {}".format(str_in), end='')
         return str_in
 
     def __exit__(self, exc_type, exc_val, exc_tb):
