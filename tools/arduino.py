@@ -153,9 +153,9 @@ class Arduino_Functions:
         print("serial_ports_list:{}".format(serial_ports_list))
         try:
             for port in serial_ports_list:
-                str_res = port.find("usbmodem")
-                if (str_res is not -1):
-                    self.serial_con = MySerial(port, 9600)
+                # str_res = port.find("usbmodem")
+                # if (str_res is not -1):
+                self.serial_con = MySerial(port, 9600)
             self.connection = 'OK'
         #     dump first lines
             time.sleep(3000/1000)     # ms
