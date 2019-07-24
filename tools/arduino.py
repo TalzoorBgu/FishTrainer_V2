@@ -176,7 +176,7 @@ class Arduino_Functions:
 
     def send_command(self, _command):
         self.serial_con.write(_command)
-        sleep(1/1000)   #ms
+        sleep(5/1000)   #ms
         self.recive_data()
 
     def check_arduino_connection(self):
@@ -356,7 +356,8 @@ class Arduino_Functions:
         while self.serial_con.serial.inWaiting():
             str_in = str_in + self.serial_con.serial.readline().decode()
 
-        print("arduino_in: {}".format(str_in), end='')
+        if not str_in == "":
+            print("arduino_in: {}".format(str_in), end='')
         return str_in
 
     def __exit__(self, exc_type, exc_val, exc_tb):
