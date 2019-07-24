@@ -1,6 +1,6 @@
 #include <SoftwareSerial.h>
-#include <src/AccelStepper/AccelStepper.h>
-#include <src/MemoryFree/MemoryFree.h>
+#include "src/AccelStepper/AccelStepper.h"
+#include "src/MemoryFree/MemoryFree.h"
 
 #define STR_SIZE      40
 #define NUM_OF_PROGS  1
