@@ -159,11 +159,9 @@ class Arduino_Functions:
                 self.serial_con = MySerial(port, 9600)
                 #     dump first lines
                 time.sleep(3000/1000)     # ms
-                while self.serial_con.serial.inWaiting():
-                    str_in = self.serial_con.serial.readline().decode()
-                    print("arduino_in: {}".format(str_in), end='')
-                    if str_in.find("Connected to PC") is not -1:
-                        self.connection = 'OK'
+                str_in = self.recive_data()
+                if str_in.find("Connected to PC") is not -1:
+                    self.connection = 'OK'
                 if self.connection is 'OK':
                     break
                 time.sleep(5 / 1000)    # ms
@@ -344,6 +342,13 @@ class Arduino_Functions:
             res = 'Program runing on motor {}'.format(_motor)
 
         return res
+
+    def recive_data(self):
+        str_in = ""
+        while self.serial_con.serial.inWaiting():
+            str_in = self.serial_con.serial.readline().decode()
+            print("arduino_in: {}".format(str_in), end='')
+        return str_in
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.serial_con.close()
