@@ -1,4 +1,4 @@
-#include <EEPROMex.h>
+#include ""src/EEPROMEx/EEPROMex.h"
 
 const int maxAllowedWrites = 80;
 const int memBase          = 350;
