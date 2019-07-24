@@ -27,7 +27,7 @@ class tracker_Feeder:
 
     def check_arduino_conn(self):
         self.ardu_conn = self.Arduino.check_arduino_connection()
-        print('ardu_conn:{}'.format(self.ardu_conn))
+        # print('ardu_conn:{}'.format(self.ardu_conn))
         return self.ardu_conn
 
     def new_feeder_run(self, _feeder, _side):

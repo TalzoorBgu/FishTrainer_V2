@@ -20,3 +20,7 @@ argument2 = --n=
 
 [Others]
 Route: 66
+
+
+[Arduino]
+send stepper pins = True

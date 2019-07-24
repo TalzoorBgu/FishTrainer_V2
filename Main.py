@@ -926,6 +926,7 @@ class Fish_traning_GUI___Client:
         fish_statistics_dict = ConfigVals.get("Fish Statistics")
         communication_dist = ConfigVals.get("Communication")
         fish_dict = ConfigVals.get("Fish")
+        arduino_dict = ConfigVals.get("Arduino")
 
         if fish_statistics_dict=={}:
             pass
@@ -946,6 +947,15 @@ class Fish_traning_GUI___Client:
             Arg1 = fish_dict['argument1']
             Arg2 = fish_dict['argument2']
             self.Args = '{} {}'.format(Arg1, Arg2)
+
+        if arduino_dict == {}:
+            pass
+        else:
+            set_stepper_pins = arduino_dict['send stepper pins']
+            if set_stepper_pins == 'True':
+                if ClientGUI_support.feed_object.Arduino is not 'NO':
+                    ClientGUI_support.feed_object.Arduino.send_command.init_seq_motor_1(6, 7, 8)
+                    ClientGUI_support.feed_object.Arduino.send_command.init_seq_motor_2(10, 11, 12)
 
         #print self.Args
 

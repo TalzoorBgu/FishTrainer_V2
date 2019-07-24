@@ -161,6 +161,8 @@ class Arduino_Functions:
             time.sleep(3000/1000)     # ms
             while self.serial_con.serial.inWaiting():
                 str_in = self.serial_con.serial.readline().decode()
+                if str_in.find("Connected to PC"):
+                    print("THIS IS ARDUINO")
                 print("arduino_in: {}".format(str_in), end='')
                 time.sleep(5 / 1000)    # ms
         except:
