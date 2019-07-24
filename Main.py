@@ -962,6 +962,7 @@ class Fish_traning_GUI___Client:
 
                     arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_1(6, 7, 8))
                     arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_2(10, 11, 12))
+                    arduino_obj.send_command(arduino_obj.command_str.define_default_vel_acc(10, 20, 10))
 
         #print self.Args
 
