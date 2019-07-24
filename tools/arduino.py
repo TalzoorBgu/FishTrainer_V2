@@ -148,7 +148,7 @@ class MySerial:
 
 class Arduino_Functions:
     def __init__(self):
-        self.send_command = SendCommand(FULL_CYCLE)
+        self.command_str = SendCommand(FULL_CYCLE)
         serial_ports_list = serial_ports()
         print("serial_ports_list:{}".format(serial_ports_list))
         try:
@@ -160,7 +160,7 @@ class Arduino_Functions:
                 #     dump first lines
                 time.sleep(3000/1000)     # ms
                 str_in = self.recive_data()
-                print("str_in:@@{}@@".format(str_in))
+                # print("str_in:@@{}@@".format(str_in))
                 if str_in.find("Connected to PC") is not -1:
                     self.connection = 'OK'
                 if self.connection is 'OK':
@@ -274,17 +274,17 @@ class Arduino_Functions:
             _str_to_send = ''
 
             if step[0] == 'move':
-                _str_to_send = self.send_command.move(step[1], step[2])
+                _str_to_send = self.command_str.move(step[1], step[2])
             if step[0] == 'moveto':
-                _str_to_send = self.send_command.moveto(step[1])
+                _str_to_send = self.command_str.moveto(step[1])
             if step[0] == 'delay':
-                _str_to_send = self.send_command.delay(step[1])
+                _str_to_send = self.command_str.delay(step[1])
             if step[0] == 'def_v_a':
-                _str_to_send = self.send_command.define_vel_acc(step[1], step[2], step[3])
+                _str_to_send = self.command_str.define_vel_acc(step[1], step[2], step[3])
             if step[0] == 'prog_start':
-                _str_to_send = self.send_command.program_start(step[1])
+                _str_to_send = self.command_str.program_start(step[1])
             if step[0] == 'prog_end':
-                _str_to_send = self.send_command.program_end(step[1])
+                _str_to_send = self.command_str.program_end(step[1])
 
             self.serial_con.write(_str_to_send)
 
@@ -298,14 +298,16 @@ class Arduino_Functions:
 
         #ser.write(res)
 
+
+
     def disable_pins(self, _int_on):
         # ser = MySerial("/dev/ttyS0", 9600)
         # command = SendCommand(FULL_CYCLE)
 
         if _int_on == 1:
-            _str_to_send = self.send_command.disable_pins(0)
+            _str_to_send = self.command_str.disable_pins(0)
         else:
-            _str_to_send = self.send_command.en_pins(0)
+            _str_to_send = self.command_str.en_pins(0)
 
         self.serial_con.write(_str_to_send)
 
@@ -319,7 +321,7 @@ class Arduino_Functions:
 
         res = ''
 
-        _str_to_send = self.send_command.select_motor(_motor)
+        _str_to_send = self.command_str.select_motor(_motor)
         self.serial_con.write(_str_to_send)
 
         result = ''
@@ -332,7 +334,7 @@ class Arduino_Functions:
             result = self.serial_con.read()
         print(result)
 
-        _str_to_send = self.send_command.run_prog(_prog)
+        _str_to_send = self.command_str.run_prog(_prog)
         self.serial_con.write(_str_to_send)
 
         result = ''
@@ -477,7 +479,7 @@ if __name__ == '__main__':
         if not ardu.connection == 'OK':
             raise EnvironmentError('No Arduino answer. Check Serial conn.')
         # ---- uncomment if need to send arduino Servo PINs
-        _str_to_send = ardu.send_command.init_seq_motor_1(6, 7, 8)  # (step, dir, en)
+        _str_to_send = ardu.command_str.init_seq_motor_1(6, 7, 8)  # (step, dir, en)
         ardu.serial_con.write(_str_to_send)
         time.sleep(500 / 1000)  # ms
         while ardu.serial_con.serial.inWaiting():
@@ -486,7 +488,7 @@ if __name__ == '__main__':
             time.sleep(5 / 1000)  # ms _
 
         time.sleep(3000 / 1000)  # ms
-        _str_to_send = ardu.send_command.init_seq_motor_2(10, 11, 12)   # (step, dir, en)
+        _str_to_send = ardu.command_str.init_seq_motor_2(10, 11, 12)   # (step, dir, en)
         ardu.serial_con.write(_str_to_send)
         time.sleep(100 / 1000)  # ms
         while ardu.serial_con.serial.inWaiting():
