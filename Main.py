@@ -955,7 +955,8 @@ class Fish_traning_GUI___Client:
         else:
             set_stepper_pins = arduino_dict['send stepper pins']
             if set_stepper_pins == 'True':
-                if ClientGUI_support.feed_object.Arduino is not 'NO':
+                if ClientGUI_support.feed_object.Arduino is 'OK':
+                    print("Sending motor pins")
                     ClientGUI_support.feed_object.Arduino.send_command.init_seq_motor_1(6, 7, 8)
                     ClientGUI_support.feed_object.Arduino.send_command.init_seq_motor_2(10, 11, 12)
 
