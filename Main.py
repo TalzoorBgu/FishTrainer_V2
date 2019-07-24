@@ -26,6 +26,9 @@ import configparser
 from datetime import datetime
 import os
 
+from pathlib import Path
+
+
 Config = configparser.ConfigParser()
 
 #Global vars
@@ -44,26 +47,31 @@ class ConfigSectionMap:
         dict1 = {}
 
         script_dir = os.path.dirname(os.path.realpath(__file__))  # script dir
-        config_file = '{}\GUI_config.txt'.format(script_dir)
-        print(config_file)
-        # Config.read(config_file)
-        with open(config_file) as f:
-            Config.read_file(f)
+        file_name = 'GUI_config.txt'
 
-            if Config.has_section(section):
-                options = Config.options(section)
-                for option in options:
-                    try:
-                        dict1[option] = Config.get(section, option)
-                        if dict1[option] == -1:
-                            DebugPrint("skip: %s" % option)
-                    except:
-                        print("exception on %s!" % option)
-                        dict1[option] = None
-            else:   # there is no such option
-                # print("Config file error!")
-                self.exception.error("Config file error! ({})".format(section))
-                dict1 = {}
+        data_folder = Path(script_dir)
+        file_to_open = data_folder / file_name
+
+        try:
+            with open(file_to_open) as f:
+                Config.read_file(f)
+
+                if Config.has_section(section):
+                    options = Config.options(section)
+                    for option in options:
+                        try:
+                            dict1[option] = Config.get(section, option)
+                            if dict1[option] == -1:
+                                DebugPrint("skip: %s" % option)
+                        except:
+                            print("exception on %s!" % option)
+                            dict1[option] = None
+                else:   # there is no such option
+                    # print("Config file error!")
+                    self.exception.error("Config file error! ({})".format(section))
+                    dict1 = {}
+        except FileNotFoundError:
+            self.exception.error("Config file error! (FileNotFoundError), ({})".format(section))
         return dict1
 
 
