@@ -176,7 +176,7 @@ class Arduino_Functions:
 
     def send_command(self, _command):
         self.serial_con.write(_command)
-        sleep(5/1000)   #ms
+        sleep(50/1000)   #ms
         self.recive_data()
 
     def check_arduino_connection(self):
