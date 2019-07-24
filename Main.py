@@ -956,6 +956,8 @@ class Fish_traning_GUI___Client:
             set_stepper_pins = arduino_dict['send stepper pins']
             print("arduino_dict:{}".format(arduino_dict))
             print("set_stepper_pins:{}".format(set_stepper_pins))
+            print("type:{}".format(type(set_stepper_pins)))
+
 
             if set_stepper_pins is ('True' or True):
                 if ClientGUI_support.feed_object.Arduino is 'OK':
