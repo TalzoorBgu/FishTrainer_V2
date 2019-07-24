@@ -152,18 +152,21 @@ class Arduino_Functions:
         serial_ports_list = serial_ports()
         print("serial_ports_list:{}".format(serial_ports_list))
         try:
+            self.connection = 'NO'
             for port in serial_ports_list:
                 # str_res = port.find("usbmodem")
                 # if (str_res is not -1):
                 self.serial_con = MySerial(port, 9600)
-            self.connection = 'OK'
-        #     dump first lines
-            time.sleep(3000/1000)     # ms
-            while self.serial_con.serial.inWaiting():
-                str_in = self.serial_con.serial.readline().decode()
-                if str_in.find("Connected to PC") is not -1:
-                    print("THIS IS ARDUINO")
-                print("arduino_in: {}".format(str_in), end='')
+                #     dump first lines
+                time.sleep(3000/1000)     # ms
+                while self.serial_con.serial.inWaiting():
+                    str_in = self.serial_con.serial.readline().decode()
+                    print("arduino_in: {}".format(str_in), end='')
+                    if str_in.find("Connected to PC") is not -1:
+                        self.connection = 'OK'
+                        print("THIS IS ARDUINO")
+                if self.connection is 'OK':
+                    break
                 time.sleep(5 / 1000)    # ms
         except:
             self.connection = 'NO'
