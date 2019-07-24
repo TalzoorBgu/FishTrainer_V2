@@ -160,7 +160,7 @@ class Arduino_Functions:
                 #     dump first lines
                 time.sleep(3000/1000)     # ms
                 str_in = self.recive_data()
-                print("str_in:{}".format(str_in))
+                print("str_in:@@{}@@".format(str_in))
                 if str_in.find("Connected to PC") is not -1:
                     self.connection = 'OK'
                 if self.connection is 'OK':
