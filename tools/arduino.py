@@ -164,8 +164,6 @@ class Arduino_Functions:
                     print("arduino_in: {}".format(str_in), end='')
                     if str_in.find("Connected to PC") is not -1:
                         self.connection = 'OK'
-                        print("THIS IS ARDUINO")
-                        print("port: {}".format(self.serial_con.serial.port))
                 if self.connection is 'OK':
                     break
                 time.sleep(5 / 1000)    # ms

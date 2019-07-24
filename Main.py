@@ -82,9 +82,11 @@ def vp_start_gui():
     ClientGUI_support.set_Tk_var()
     Fish_traning_GUI = Fish_traning_GUI___Client(root)
     Excp = exception_class.RaiseException(Fish_traning_GUI)
-
-    if ClientGUI_support.feed_object.Arduino.connection == 'NO':
+    Arduino_obj = ClientGUI_support.feed_object.Arduino
+    if Arduino_obj.connection == 'NO':
         Excp.error("No Arduino conn. check serial port (USB)")
+    else:
+        Excp.info("Arduino connection OK, port:{}".format(Arduino_obj.serial_con.serial.port))
 
     ClientGUI_support.init(root, Fish_traning_GUI)
     root.mainloop()
