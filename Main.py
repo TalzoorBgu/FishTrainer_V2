@@ -953,8 +953,10 @@ class Fish_traning_GUI___Client:
         if arduino_dict == {}:
             pass
         else:
-            print("arduino_dict:{}".format(arduino_dict))
             set_stepper_pins = arduino_dict['send stepper pins']
+            print("arduino_dict:{}".format(arduino_dict))
+            print("set_stepper_pins:{}".format(set_stepper_pins))
+
             if set_stepper_pins == 'True':
                 if ClientGUI_support.feed_object.Arduino is 'OK':
                     print("Sending motor pins")
