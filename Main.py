@@ -958,8 +958,10 @@ class Fish_traning_GUI___Client:
                 ardu_conn = ClientGUI_support.feed_object.Arduino.connection
                 if ardu_conn == 'OK':
                     print("Sending motor pins")
-                    ClientGUI_support.feed_object.Arduino.send_command.init_seq_motor_1(6, 7, 8)
-                    ClientGUI_support.feed_object.Arduino.send_command.init_seq_motor_2(10, 11, 12)
+                    arduino_obj = ClientGUI_support.feed_object.Arduino
+
+                    arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_1(6, 7, 8))
+                    arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_2(10, 11, 12))
 
         #print self.Args
 

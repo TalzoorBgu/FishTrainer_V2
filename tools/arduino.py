@@ -174,6 +174,11 @@ class Arduino_Functions:
     def __enter__(self):
         return self
 
+    def send_command(self, _command):
+        self.serial_con.write(_command)
+        sleep(1/1000)   #ms
+        self.recive_data()
+
     def check_arduino_connection(self):
         # ser = MySerial("/dev/ttyS0", 9600)
         _bool_flag = False
