@@ -10,7 +10,7 @@ import os
 import time
 from . import plotter
 from time import sleep
-
+import Main
 
 
 FEED_EVERY = 3          # feed every 3 sec
@@ -43,12 +43,17 @@ class Controller:
         #   full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '/')
         #   full_root_script_path = full_script_path[:full_script_path.find('tracker')]
         #   log_folder = '{}data/log/'.format(full_root_script_path)
-        full_script_path = os.path.dirname(os.path.realpath(__file__))
-        trainerNEW_end_place = full_script_path.find(r"fish-trainerNEW") + len("fish-trainerNEW/")
-        full_root_script_path = full_script_path[:trainerNEW_end_place]
-        log_folder = os.path.join(full_root_script_path, r"data\log")
-        print("full_script_path:{}\nfull_root_script_path:{}\nlog_folder:{}".
-              format(full_script_path, full_root_script_path, log_folder))
+
+        # full_script_path = os.path.dirname(os.path.realpath(__file__))
+        # trainerNEW_end_place = full_script_path.find(r"fish-trainerNEW") + len("fish-trainerNEW/")
+        # full_root_script_path = full_script_path[:trainerNEW_end_place]
+        # log_folder = os.path.join(full_root_script_path, r"data\log")
+        # print("full_script_path:{}\nfull_root_script_path:{}\nlog_folder:{}".
+        #       format(full_script_path, full_root_script_path, log_folder))
+
+        print("Main.__file__:{}".format(Main.__file__))
+        path = os.path.dirname(a_module.__file__)
+        print("path:{}".format(path))
 
         #print_and_update_main_log('log:{}'.format(log_folder))
         self.logger = []
