@@ -102,7 +102,7 @@ def SP_Main(_camera=0):
         print ('No Image')
 
     # draw current configuration
-    draw_current(image)
+    draw_current(image, _camera)
 
     # image = cv2.imread(args["image"])
     clone = image.copy()
