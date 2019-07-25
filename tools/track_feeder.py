@@ -52,7 +52,7 @@ class tracker_Feeder:
             _motor = 2
 
         if self.ardu_conn == True:
-            res = self.Arduino.
+            res = self.Arduino.motor_move(_step_no, _motor)
         else:
             pass
         return res
