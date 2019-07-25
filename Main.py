@@ -921,6 +921,16 @@ class Fish_traning_GUI___Client:
         self.ServerIP = ""
         self.Args = ""
 
+    def str_pins_split(self, _str):
+        p1_place = int(_str.find("("))
+        p2_place = int(_str.find(")"))
+        new_str = _str[p1_place+1:p2_place]
+        new_str = new_str.split(",")
+        results = list(map(int, new_str))
+
+        return results
+
+
     def fillValue(self):
         ConfigVals = ConfigSectionMap(self.Exception)
         self.chb_Var = ClientGUI_support.chb_Var
@@ -929,6 +939,10 @@ class Fish_traning_GUI___Client:
         communication_dist = ConfigVals.get("Communication")
         fish_dict = ConfigVals.get("Fish")
         arduino_dict = ConfigVals.get("Arduino")
+        motor_dict = ConfigVals.get("Motor")
+        pins_2a = motor_dict['pins2a']; pins_2b = motor_dict['pins2b'];
+        pin_step_2a_list = self.str_pins_split(pins_2a)
+        pin_step_2b_list = self.str_pins_split(pins_2b)
 
         if fish_statistics_dict=={}:
             pass
@@ -958,8 +972,11 @@ class Fish_traning_GUI___Client:
                 ardu_conn = ClientGUI_support.feed_object.Arduino.connection
                 if ardu_conn == 'OK':
                     arduino_obj = ClientGUI_support.feed_object.Arduino
-                    arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_1(6, 7, 8))
-                    arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_2(10, 11, 12))
+                    p2a_st = pin_step_2a_list[0]; p2a_dir = pin_step_2a_list[1]; p2a_en = pin_step_2a_list[2];
+                    p2b_st = pin_step_2b_list[0]; p2b_dir = pin_step_2b_list[1]; p2b_en = pin_step_2b_list[2];
+
+                    arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_1(p2a_st, p2a_dir, p2a_en))
+                    arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_2(p2b_st, p2b_dir, p2b_en))
                     arduino_obj.send_command(arduino_obj.command_str.define_default_vel_acc(10, 20, 10))
 
         #print self.Args

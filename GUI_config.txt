@@ -12,6 +12,8 @@ server ip = 132.73.194.80
 stepNum = 320
 redFeeder = 1
 
+Pins2A = (5, 6, 7)      # step, dir, en
+Pins2B = (10, 11, 12)
 
 [Fish]
 argument1 = --file=tank_config.txt
@@ -24,3 +26,4 @@ Route: 66
 
 [Arduino]
 send stepper pins = False
+
