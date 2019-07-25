@@ -25,5 +25,5 @@ Route: 66
 
 
 [Arduino]
-send stepper pins = False
+send stepper pins = True
 
