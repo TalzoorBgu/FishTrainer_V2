@@ -364,6 +364,7 @@ class Arduino_Functions:
             str_in = str_in + self.serial_con.serial.readline().decode()
             print("str_in:{}".format(str_in))
             sys.stdout.flush()
+            sleep(10/1000)
 
         if not str_in == "":
             print("arduino_in: {}".format(str_in), end='')
