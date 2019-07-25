@@ -340,7 +340,8 @@ class Arduino_Functions:
         print(result)
 
         _str_to_send = self.command_str.run_prog(_prog)
-        self.serial_con.write(_str_to_send)
+        self.send_command(_str_to_send)
+        # self.serial_con.write(_str_to_send)
 
         result = ''
         while result == '':  # wait for respond before sending next command
