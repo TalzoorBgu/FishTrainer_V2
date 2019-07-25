@@ -36,5 +36,5 @@ void MotorPins(unsigned int motor, unsigned int _stp_pin, unsigned int _dir_pin,
 
 void SelectMotor(unsigned int motor){
   stepper.updatePins(stp_Pin[motor], dir_Pin[motor]);
-  Serial.print(F("\tMotor selected. "));   
+  Serial.println(F("\tMotor selected. "));
 }
