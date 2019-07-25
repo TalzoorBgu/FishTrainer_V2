@@ -23,7 +23,7 @@ FEED_EVERY = 3          # feed every 3 sec
 
 
 class Controller:
-    def __init__(self, feed, GUI_obj=None, _log_name=['test'], _camera=0):
+    def __init__(self, feed, _exception_class, _GUI_obj=None, _log_name=['test'], _camera=0):
         global total_feed
         global time_counter
         total_feed = 0
@@ -32,10 +32,12 @@ class Controller:
         self.feed = feed
 
         self.time_count = TimeCounter()
-        self.GUI_obj = GUI_obj
-        self.chb_Var = GUI_obj.chb_Var
+        self.GUI_obj = _GUI_obj
+        self.chb_Var = _GUI_obj.chb_Var
         print("chb_Var_cont:{}".format(self.chb_Var.get()))
         self.time_last_feed = int(round(time.time()))
+
+        self.Exception_log = _exception_class
 
         width = track_fish.init_tracking(int(_camera))
 
@@ -65,7 +67,7 @@ class Controller:
         #print ('Tank(1, 1):' + str(Tank(1, 1)))
         for size in width:
             self.tank.append(Tank(id, size))
-            self.logger.append(fishlog.FishLog(self.GUI_obj, self.log_folder(), "{}.({})".format(_log_name[id], str(id))))
+            self.logger.append(fishlog.FishLog(self.GUI_obj, self.log_folder(), "{}.({})".format(_log_name[id], str(id)), self.Exception_log))
             id = id + 1
 
 

@@ -88,7 +88,7 @@ def vp_start_gui():
     else:
         Excp.info("Arduino connection OK, port:{}".format(Arduino_obj.serial_con.serial.port))
 
-    ClientGUI_support.init(root, Fish_traning_GUI)
+    ClientGUI_support.init(root, Fish_traning_GUI, Excp)
     root.mainloop()
 
 Fish_traningGUI = None

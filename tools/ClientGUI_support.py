@@ -172,7 +172,7 @@ def onRunTraining():
 
     camera = CamVar1.get()
 
-    controller = Controller(feed_object, Fish_traningGUI, log_name, camera)
+    controller = Controller(feed_object, exception_class, Fish_traningGUI, log_name, camera)
     _tmp1 = type(controller)
     print("type:{}".format(_tmp1))
     training_type = "edge" if TraningVar.get() is 'E' else "center"
@@ -237,11 +237,12 @@ def onStatRun():
     Fish_traningGUI.txtStatLog.see(END)
     print ("HERE:{}".format(_StatInfo))
 
-def init(top, gui, *args, **kwargs):
-    global Fish_traningGUI, top_level, root
+def init(top, gui, _exception_class,  *args, **kwargs):
+    global Fish_traningGUI, top_level, root, exception_class
     Fish_traningGUI = gui
     top_level = top
     root = top
+    exception_class = _exception_class
     root.protocol("WM_DELETE_WINDOW", onStopTraining)
     root.bind("<Destroy>", onStopTraining)
 
