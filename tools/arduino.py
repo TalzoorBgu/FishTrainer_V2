@@ -177,7 +177,9 @@ class Arduino_Functions:
     def send_command(self, _command):
         self.serial_con.write(_command)
         sleep(40/1000)   #ms
-        self.recive_data()
+        res = self.recive_data()
+
+        return res
 
     def check_arduino_connection(self):
         # ser = MySerial("/dev/ttyS0", 9600)
@@ -340,12 +342,12 @@ class Arduino_Functions:
         print(result)
 
         _str_to_send = self.command_str.run_prog(_prog)
-        self.send_command(_str_to_send)
+        result = self.send_command(_str_to_send)
         # self.serial_con.write(_str_to_send)
 
-        result = ''
-        while result == '':  # wait for respond before sending next command
-            result = self.serial_con.read()
+        # result = ''
+        # while result == '':  # wait for respond before sending next command
+        #     result = self.serial_con.read()
         if "run_prog" in result:
             print('run_prog --> OK'.format(_motor))
             res = 'Program runing on motor {}'.format(_motor)
