@@ -102,7 +102,7 @@ class MySerial:
             if not cmd == '':
                 print('(Comp_OUT):#{}#'.format(cmd))
                 self.serial.write(cmd.encode())
-                sleep(20.0/1000.0)      # 10mS
+                sleep(20.0/1000.0)      # 20mS
         except KeyboardInterrupt:
             raise KeyboardInterrupt
         except:
@@ -175,7 +175,8 @@ class Arduino_Functions:
         return self
 
     def send_command(self, _command):
-        self.serial_con.write(_command)
+        res = self.serial_con.write(_command)
+        print("res:{}".format(res))
         sleep(40/1000)   #ms
         res = self.recive_data()
 
