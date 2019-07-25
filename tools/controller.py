@@ -23,7 +23,7 @@ FEED_EVERY = 3          # feed every 3 sec
 
 
 class Controller:
-    def __init__(self, feed, cb_obj=None, log_name=['test'], _camera=0):
+    def __init__(self, feed, cb_obj=None, _log_name=['test'], _camera=0):
         global total_feed
         global time_counter
         total_feed = 0
@@ -51,9 +51,10 @@ class Controller:
         # print("full_script_path:{}\nfull_root_script_path:{}\nlog_folder:{}".
         #       format(full_script_path, full_root_script_path, log_folder))
 
-        print("Main.__file__:{}".format(Main.__file__))
-        path = os.path.dirname(Main.__file__)
-        print("path:{}".format(path))
+
+        file_name = self.log_file_name(_log_name)
+        print("file_name:{}".format(file_name))
+
 
         #print_and_update_main_log('log:{}'.format(log_folder))
         self.logger = []
@@ -64,13 +65,24 @@ class Controller:
         #print ('Tank(1, 1):' + str(Tank(1, 1)))
         for size in width:
             self.tank.append(Tank(id, size))
-            self.logger.append(fishlog.FishLog(log_folder, "{}.({})".format(log_name[id], str(id))))
+            self.logger.append(fishlog.FishLog(self.log_folder(), "{}.({})".format(_log_name[id], str(id))))
             id = id + 1
 
 
     def __del__(self):  #Destroy
         print ('Controller closed')
 
+    def log_folder(self):
+        path = os.path.dirname(Main.__file__)
+        full_path = "{}\\data\\log".format(path)
+
+        return full_path
+
+    def log_file_name(self, _file_name):
+        full_path = self.log_folder()
+        file_name = "{}\\{}".format(full_path, _file_name)
+
+        return  file_name
 
     def time(self):
         time_str = self.time_count.get_time_diff()
