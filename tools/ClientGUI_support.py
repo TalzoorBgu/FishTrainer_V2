@@ -95,11 +95,12 @@ def on1L():
         Fish_traningGUI.print_and_update_main_log("Test motor - 1L")
 
         steps_no = Fish_traningGUI.txtStepNum.get()
+        motor = 1
         if steps_no == '':
-            program = 0;  motor = 1
+            program = 0
             feed_object.new_feeder_run(program, motor)
         else:
-            print("steps_no:{}".format(steps_no))
+            feed_object.move_steps(steps_no, motor)
 
         # fish_client = FishClient(Fish_traningGUI)
         #print('chb_Var:{}'.format(chb_Var.get()))
