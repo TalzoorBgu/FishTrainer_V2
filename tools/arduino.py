@@ -176,9 +176,10 @@ class Arduino_Functions:
 
     def send_command(self, _command):
         res = self.serial_con.write(_command)
-        print("res:{}".format(res))
+        print("res1:{}".format(res))
         sleep(40/1000)   #ms
         res = self.recive_data()
+        print("res2:{}".format(res))
 
         return res
 
@@ -355,6 +356,7 @@ class Arduino_Functions:
 
     def recive_data(self):
         str_in = ""
+        print("here")
         while self.serial_con.serial.inWaiting():
             str_in = str_in + self.serial_con.serial.readline().decode()
             print("str_in:{}".format(str_in))
