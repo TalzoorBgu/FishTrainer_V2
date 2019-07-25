@@ -358,15 +358,10 @@ class Arduino_Functions:
         str_in = ""
 
         ser_inwait = self.serial_con.serial.inWaiting()
-        print("ser_inwait:{}".format(ser_inwait))
-        sleep(1)
         while self.serial_con.serial.inWaiting():
             # str_in = str_in + self.serial_con.serial.readline().decode()
             str_in = str_in + self.serial_con.serial.read().decode()
-
-            print("str_in:{}".format(str_in), flush=True)
-            sys.stdout.flush()
-            sleep(10/1000)
+            sleep(1/1000) # 1ms
 
         if not str_in == "":
             print("arduino_in: {}".format(str_in), end='')
