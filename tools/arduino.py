@@ -308,19 +308,20 @@ class Arduino_Functions:
 
 
     def disable_pins(self, _int_on):
-        # ser = MySerial("/dev/ttyS0", 9600)
-        # command = SendCommand(FULL_CYCLE)
 
         if _int_on == 1:
             _str_to_send = self.command_str.disable_pins(0)
         else:
             _str_to_send = self.command_str.en_pins(0)
 
-        self.serial_con.write(_str_to_send)
+        res = self.send_command(_str_to_send)
+        # self.serial_con.write(_str_to_send)
+        #
+        # result = ''
+        # while result == '':  # wait for respond before sending next command
+        #     result = self.serial_con.read()
 
-        result = ''
-        while result == '':  # wait for respond before sending next command
-            result = self.serial_con.read()
+        return res
 
     def motor_move(self, _step_no, _motor):
         _str_to_send = self.command_str.select_motor(_motor)

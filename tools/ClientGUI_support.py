@@ -214,14 +214,15 @@ def onSetZero():
     btn_txt = Fish_traningGUI.btnSetZero['text']
     if btn_txt == "Set ZERO pos.":
         Fish_traningGUI.btnSetZero.configure(text='END')
-        _str_to_send = 'SetZeroStart'
+        feed_object.Arduino.disable_pins(True)
     else:
         Fish_traningGUI.btnSetZero.configure(text='Set ZERO pos.')
-        _str_to_send = 'SetZeroEND'
+        feed_object.Arduino.disable_pins(False)
 
-    fish_client = FishClient()
-    fish_client.send(_str_to_send, 0)
-    fish_client.kill()
+    #
+    # fish_client = FishClient()
+    # fish_client.send(_str_to_send, 0)
+    # fish_client.kill()
 
 def onStatRun():
     global Fish_traningGUI
