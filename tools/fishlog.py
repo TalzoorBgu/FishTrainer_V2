@@ -1,8 +1,11 @@
 #!/usr/bin/python
 import datetime
-from time import gmtime, strftime
+# from time import gmtime, strftime
 import os
+from datetime import datetime
 
+def time_stamp():
+    return datetime.today().strftime('%Y-%m-%d %H%M%S')
 
 class FishLog:
     def __init__(self, log_folder, fish_name):
@@ -14,10 +17,10 @@ class FishLog:
         print ('start logging data')
         # Open a file
 
-        self.filename='{}\{}{}{}'.format(log_folder, strftime("%Y-%m-%d %H%M%S", gmtime()), '_'+fish_name, ".txt") # time+name
+        self.filename='{}\{}{}{}'.format(log_folder, time_stamp(), '_'+fish_name, ".txt") # time+name
         print ('log file:{}'.format(self.filename))
 
-        self.fo = open(self.filename, 'w')
+        self.fo = open(self.filename, 'w+')
         
     def add_tracked_point(self,x,y):
         self.fo.write(str(self.line_number)+' ') #
