@@ -21,11 +21,12 @@ refPt = []
 fish = []
 cropping = False
 
+full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '\\')
+file_path='{}tank_config_cam_{}.txt'.format(full_script_path, camera)
+
 
 def draw_current(_img):
     try:
-        full_root_script_path = os.getcwd()
-        file_path = '{}\\tracker\\tank_config_cam_{}.txt'.format(full_root_script_path, camera)
 
         fish_draw = []
         with open(file_path) as f:
@@ -137,17 +138,6 @@ def SP_Main(_camera=0):
     # from the image and display it
 
     if len(refPt) == 2:
-        full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '\\')
-        #full_root_script_path = full_script_path[:12+full_script_path.find('fish-trainer')]
-
-        # full_root_script_path = os.getcwd()
-        file_path='{}tank_config_cam_{}.txt'.format(full_script_path, camera)
-
-
-        print("script: __file__ is {}".format(repr(__file__)))
-        # print("script: cwd is {}".format(repr(os.getcwd())))
-
-        print("full_script_path:{}".format(full_script_path))
         print("file_path:{}".format(file_path))
 
         thefile = open(file_path, 'w+')
