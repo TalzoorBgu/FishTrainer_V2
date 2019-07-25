@@ -45,12 +45,14 @@ def draw_current(_img, _camera):
         print ('file dosent exsit - cannot draw')
 
 
-def click_and_crop(event, x, y, flags, param):
-    global image, fish ,refPt, camera
+def click_and_crop(event, x, y, flags, param, _camera):
+    global image, fish ,refPt
 
     # grab references to the global variables
     global refPt, cropping
 
+
+    print("_camera:{}".format(_camera))
     # if the left mouse button was clicked, record the starting
     # (x, y) coordinates and indicate that cropping is being
     # performed
@@ -69,7 +71,7 @@ def click_and_crop(event, x, y, flags, param):
         ordered=[(min(refPt[0][0],refPt[1][0]),min(refPt[0][1],refPt[1][1]))]
         ordered.append((max(refPt[0][0],refPt[1][0]),max(refPt[0][1],refPt[1][1])))
 
-        fish.append({'camera:': camera, 'upper': ordered[0][1], 'lower': ordered[1][1], 'left': ordered[0][0], 'right': ordered[1][0]})
+        fish.append({'camera:': _camera, 'upper': ordered[0][1], 'lower': ordered[1][1], 'left': ordered[0][0], 'right': ordered[1][0]})
 
         # draw a rectangle around the region of interest
         cv2.rectangle(image, ordered[0], ordered[1],
@@ -107,7 +109,7 @@ def SP_Main(_camera=0):
     # image = cv2.imread(args["image"])
     clone = image.copy()
     cv2.namedWindow("image")
-    cv2.setMouseCallback("image", click_and_crop)
+    cv2.setMouseCallback("image", click_and_crop, _camera)
 
     # keep looping until the 'c' key is pressed
     while True:
