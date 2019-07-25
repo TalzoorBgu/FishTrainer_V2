@@ -87,11 +87,11 @@ def Feed():
     sys.stdout.flush()
 
 def on1L():
-    global chb_Var
-    global FeedVar
+    # global chb_Var
+    # global FeedVar
+    print('ClientGUI_support.on1L')
 
     try:
-        print('ClientGUI_support.on1L')
         Fish_traningGUI.print_and_update_main_log("Test motor - 1L")
 
         steps_no = Fish_traningGUI.txtStepNum.get()
@@ -102,24 +102,26 @@ def on1L():
         else:
             feed_object.move_steps(steps_no, motor)
 
-        # fish_client = FishClient(Fish_traningGUI)
-        #print('chb_Var:{}'.format(chb_Var.get()))
-
-        # fish_client.send('test_1L', Fish_traningGUI.txtStepNum.get())
-        # fish_client.kill()
         sys.stdout.flush()
     except TypeError:
         pass
 
 def on1R():
     print('ClientGUI_support.on1R')
-    Fish_traningGUI.print_and_update_main_log("Test motor - 1R")
-    program = 0; motor = 0
-    feed_object.new_feeder_run(program, motor)
-    # fish_client = FishClient(Fish_traningGUI)
-    # fish_client.send('test_1R', Fish_traningGUI.txtStepNum.get())
-    # fish_client.kill()
-    sys.stdout.flush()
+    try:
+        Fish_traningGUI.print_and_update_main_log("Test motor - 1R")
+
+        steps_no = Fish_traningGUI.txtStepNum.get()
+        motor = 0
+        if steps_no == '':
+            program = 0
+            feed_object.new_feeder_run(program, motor)
+        else:
+            feed_object.move_steps(steps_no, motor)
+
+        sys.stdout.flush()
+    except TypeError:
+        pass
 
 def on2L():
     print('ClientGUI_support.on2L')
