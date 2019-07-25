@@ -146,7 +146,7 @@ void loop() // run over and over
   if (Serial.available()) {
     strcpy(_str, serialEvent(0));
     //    Serial.print(F("IN:"));
-    Serial.println(_str);
+    Serial.print(_str);
     //delay(100);
     //    RPISerial.print(_str);
 
