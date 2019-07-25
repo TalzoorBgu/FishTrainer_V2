@@ -10,6 +10,11 @@ def time_stamp():
 class FishLog:
     def __init__(self, log_folder, fish_name):
         '''file name- fish_name+date+time, open new file, init counters to 0'''
+
+        # check if dir exist and create if not
+        if not os.path.exists(log_folder):
+            os.makedirs(log_folder)
+
         self.line_number = 0
         self.track_count = 0
         self.feed_count = {'left': 0, 'right': 0, 'center': 0}
