@@ -145,7 +145,7 @@ def SP_Main(_camera=0):
         print("script: __file__ is {}".format(repr(__file__)))
         print("script: cwd is {}".format(repr(os.getcwd())))
 
-        thefile = open(file_path, 'w')
+        thefile = open(file_path, 'w+')
 
         print ("file_path:{}".format(file_path))
 
