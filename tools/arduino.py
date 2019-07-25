@@ -176,10 +176,8 @@ class Arduino_Functions:
 
     def send_command(self, _command):
         res = self.serial_con.write(_command)
-        print("res1:{}".format(res))
         sleep(40/1000)   #ms
         res = self.recive_data()
-        print("res2:{}".format(res))
 
         return res
 
@@ -332,18 +330,10 @@ class Arduino_Functions:
 
         _str_to_send = self.command_str.select_motor(_motor)
         result = self.send_command(_str_to_send)
-        print("result:{}".format(result))
-        # self.serial_con.write(_str_to_send)
 
-        # result = ''
-        # while result == '':  # wait for respond before sending next command
-        #     result = self.serial_con.read()
         if "s_motor" in result:
             print('s_motor:{} --> OK'.format(_motor))
-        sleep(40.0 / 1000.0) # 20ms
-        # while result == '':  # wait for respond before sending next command
-        #     result = self.serial_con.read()
-        # print(result)
+        sleep(20.0 / 1000.0)  # 20ms
 
         _str_to_send = self.command_str.run_prog(_prog)
         result = self.send_command(_str_to_send)
