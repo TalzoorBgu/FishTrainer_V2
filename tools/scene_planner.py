@@ -45,14 +45,14 @@ def draw_current(_img, _camera):
         print ('file dosent exsit - cannot draw')
 
 
-def click_and_crop(event, x, y, flags, param, _camera):
+def click_and_crop(event, x, y, flags, param):
     global image, fish ,refPt
 
     # grab references to the global variables
     global refPt, cropping
 
 
-    print("_camera:{}".format(_camera))
+    print("param:{}".format(param))
     # if the left mouse button was clicked, record the starting
     # (x, y) coordinates and indicate that cropping is being
     # performed
