@@ -359,6 +359,7 @@ class Arduino_Functions:
 
         ser_inwait = self.serial_con.serial.inWaiting()
         print("ser_inwait:{}".format(ser_inwait))
+        sleep(1)
         while self.serial_con.serial.inWaiting():
             str_in = str_in + self.serial_con.serial.readline().decode()
             print("str_in:{}".format(str_in))
