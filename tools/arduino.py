@@ -368,7 +368,7 @@ class Arduino_Functions:
             sleep(1/1000) # 1ms
 
         if not str_in == "":
-            print("arduino_in: {}".format(str_in), end='')
+            print("arduino_in: {}".format(str_in))
         return str_in
 
     def __exit__(self, exc_type, exc_val, exc_tb):
