@@ -52,7 +52,7 @@ class Controller:
         #       format(full_script_path, full_root_script_path, log_folder))
 
         print("Main.__file__:{}".format(Main.__file__))
-        path = os.path.dirname(a_module.__file__)
+        path = os.path.dirname(Main.__file__)
         print("path:{}".format(path))
 
         #print_and_update_main_log('log:{}'.format(log_folder))
