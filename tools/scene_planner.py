@@ -21,12 +21,17 @@ refPt = []
 fish = []
 cropping = False
 
-full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '\\')
-file_path='{}tank_config_cam_{}.txt'.format(full_script_path, camera)
+
+def get_file_name(_camera):
+    full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '\\')
+    file_path = '{}tank_config_cam_{}.txt'.format(full_script_path, _camera)
+
+    return file_path
 
 
-def draw_current(_img):
+def draw_current(_img, _camera):
     try:
+        file_path = get_file_name(_camera)
 
         fish_draw = []
         with open(file_path) as f:
@@ -72,8 +77,7 @@ def click_and_crop(event, x, y, flags, param):
         cv2.imshow("image", image)
 
 def SP_Main(_camera=0):
-    global image, fish, refPt, camera
-    camera = _camera
+    global image, fish, refPt
     refPt = []
     fish = []
     # construct the argument parser and parse the arguments
@@ -138,7 +142,7 @@ def SP_Main(_camera=0):
     # from the image and display it
 
     if len(refPt) == 2:
-        print("file_path:{}".format(file_path))
+        file_path = get_file_name(_camera)
 
         thefile = open(file_path, 'w+')
 
