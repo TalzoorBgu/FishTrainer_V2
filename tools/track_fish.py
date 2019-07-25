@@ -3,6 +3,7 @@
 import cv2
 from time import sleep
 import os
+from .scene_planner import get_file_name
 
 width = []
 height = []
@@ -13,11 +14,15 @@ video_capture = None
 # stop_training=False
 
 #tank_config='../tracker/tank_config.txt'
-def init_tracking(_camera=0, tank_config='tracker/tank_config.txt',video=None):
+
+
+def init_tracking(_camera=0, video=None):
     global video_capture
 
-    tank_config = full_root_script_path = os.getcwd()
-    file_path = '{}\\tracker\\tank_config_cam_{}.txt'.format(full_root_script_path, _camera)
+    # tank_config = full_root_script_path = os.getcwd()
+    # file_path = '{}\\tracker\\tank_config_cam_{}.txt'.format(full_root_script_path, _camera)
+
+    file_path = get_file_name(_camera)
 
     with open(file_path) as f:
         lines = f.read().splitlines()
