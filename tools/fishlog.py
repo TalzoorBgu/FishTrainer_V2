@@ -9,12 +9,13 @@ def time_stamp():
     return datetime.today().strftime('%Y-%m-%d %H%M%S')
 
 class FishLog:
-    def __init__(self, log_folder, fish_name):
+    def __init__(self, _GUI_obj, log_folder, fish_name):
         '''file name- fish_name+date+time, open new file, init counters to 0'''
 
+        self.GUI_obj = _GUI_obj
         # check if dir exist and create if not
         if not os.path.exists(log_folder):
-            Fish_traning_GUI___Client.print_and_update_main_log("NO LOG FOLDER FOUND - rebuiling it. ")
+            self.GUI_obj.print_and_update_main_log("NO LOG FOLDER FOUND - rebuiling it. ")
             os.makedirs(log_folder)
 
         self.line_number = 0

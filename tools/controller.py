@@ -23,7 +23,7 @@ FEED_EVERY = 3          # feed every 3 sec
 
 
 class Controller:
-    def __init__(self, feed, cb_obj=None, _log_name=['test'], _camera=0):
+    def __init__(self, feed, GUI_obj=None, _log_name=['test'], _camera=0):
         global total_feed
         global time_counter
         total_feed = 0
@@ -32,8 +32,8 @@ class Controller:
         self.feed = feed
 
         self.time_count = TimeCounter()
-        self.cb_obj = cb_obj
-        self.chb_Var = cb_obj.chb_Var
+        self.GUI_obj = GUI_obj
+        self.chb_Var = GUI_obj.chb_Var
         print("chb_Var_cont:{}".format(self.chb_Var.get()))
         self.time_last_feed = int(round(time.time()))
 
@@ -65,7 +65,7 @@ class Controller:
         #print ('Tank(1, 1):' + str(Tank(1, 1)))
         for size in width:
             self.tank.append(Tank(id, size))
-            self.logger.append(fishlog.FishLog(self.log_folder(), "{}.({})".format(_log_name[id], str(id))))
+            self.logger.append(fishlog.FishLog(self.GUI_obj, self.log_folder(), "{}.({})".format(_log_name[id], str(id))))
             id = id + 1
 
 
@@ -88,10 +88,10 @@ class Controller:
         time_str = self.time_count.get_time_diff()
         if time_str:
             #print (time_str)
-            self.cb_obj.update_time(time_str)
+            self.GUI_obj.update_time(time_str)
 
     def check_traning(self):
-        _int_tmp = self.cb_obj.stop_traning
+        _int_tmp = self.GUI_obj.stop_traning
         return _int_tmp
 
     def end_training(self, fish_id):
@@ -125,8 +125,8 @@ class Controller:
             str_to_print = '{}\t,{}\t - \tTotal:{}'.format(fish_id, feed_side, total_feed)
             self.time_last_feed = time_now
 
-            if self.cb_obj is not None:
-                self.cb_obj.print_and_update_main_log(str_to_print)
+            if self.GUI_obj is not None:
+                self.GUI_obj.print_and_update_main_log(str_to_print)
             fish_client = FishClient()
             if self.chb_Var.get() == '1':
                 print("FEED NOW")
