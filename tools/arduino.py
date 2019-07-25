@@ -330,6 +330,7 @@ class Arduino_Functions:
 
         _str_to_send = self.command_str.select_motor(_motor)
         result = self.send_command(_str_to_send)
+        print("result:{}".format(result))
         # self.serial_con.write(_str_to_send)
 
         # result = ''
