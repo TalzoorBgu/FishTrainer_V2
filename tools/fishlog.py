@@ -3,6 +3,7 @@ import datetime
 # from time import gmtime, strftime
 import os
 from datetime import datetime
+from Main import Fish_traning_GUI___Client
 
 def time_stamp():
     return datetime.today().strftime('%Y-%m-%d %H%M%S')
@@ -13,6 +14,7 @@ class FishLog:
 
         # check if dir exist and create if not
         if not os.path.exists(log_folder):
+            Fish_traning_GUI___Client.print_and_update_main_log("NO LOG FOLDER FOUND - rebuiling it. ")
             os.makedirs(log_folder)
 
         self.line_number = 0
