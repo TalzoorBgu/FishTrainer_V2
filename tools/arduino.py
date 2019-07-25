@@ -337,7 +337,7 @@ class Arduino_Functions:
         #     result = self.serial_con.read()
         if "s_motor" in result:
             print('s_motor:{} --> OK'.format(_motor))
-        sleep(20.0 / 1000.0) # 20ms
+        sleep(40.0 / 1000.0) # 20ms
         # while result == '':  # wait for respond before sending next command
         #     result = self.serial_con.read()
         # print(result)
