@@ -356,7 +356,9 @@ class Arduino_Functions:
 
     def recive_data(self):
         str_in = ""
-        print("here")
+
+        ser_inwait = self.serial_con.serial.inWaiting()
+        print("ser_inwait:{}".format(ser_inwait))
         while self.serial_con.serial.inWaiting():
             str_in = str_in + self.serial_con.serial.readline().decode()
             print("str_in:{}".format(str_in))
