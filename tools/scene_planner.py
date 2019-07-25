@@ -137,13 +137,17 @@ def SP_Main(_camera=0):
     # from the image and display it
 
     if len(refPt) == 2:
-        #full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '/')
+        full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '/')
         #full_root_script_path = full_script_path[:12+full_script_path.find('fish-trainer')]
+
         full_root_script_path = os.getcwd()
         file_path='{}\\tracker\\tank_config_cam_{}.txt'.format(full_root_script_path, camera)
 
+
         print("script: __file__ is {}".format(repr(__file__)))
         print("script: cwd is {}".format(repr(os.getcwd())))
+
+        print("full_script_path:{}".format(full_script_path))
 
         thefile = open(file_path, 'w+')
 
