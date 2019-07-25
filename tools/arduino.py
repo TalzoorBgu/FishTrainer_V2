@@ -45,10 +45,10 @@ class SendCommand:
         return _str_to_send
 
     def move(self, _steps, _dir):
-        _steps = float(_steps) / 360.0 * FULL_CYCLE
-        _steps = int(_steps)
-        _str_to_send = 'move,{},{}'.format(_steps, _dir)
-        return _str_to_send
+        steps = float(_steps) / 360.0 * FULL_CYCLE
+        steps = int(steps)
+        str_to_send = 'move,{},{}'.format(steps, _dir)
+        return str_to_send
 
     def moveto(self, _pos):
         _pos = float(_pos) / 360.0 * FULL_CYCLE
@@ -321,6 +321,19 @@ class Arduino_Functions:
         result = ''
         while result == '':  # wait for respond before sending next command
             result = self.serial_con.read()
+
+    def motor_move(self, _step_no, _motor):
+        _str_to_send = self.command_str.select_motor(_motor)
+        result = self.send_command(_str_to_send)
+        if "s_motor" in result:
+            print('s_motor:{} --> OK'.format(_motor))
+        sleep(20.0 / 1000.0)  # 20ms
+
+        _str_to_send = self.command_str.move(_step_no, 'R')
+        result = self.send_command(_str_to_send)
+
+        return result
+
 
     def prog_run(self, _prog, _motor):
         # ser = MySerial("/dev/ttyS0", 9600)

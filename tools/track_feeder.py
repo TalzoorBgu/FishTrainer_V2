@@ -31,6 +31,7 @@ class tracker_Feeder:
         return self.ardu_conn
 
     def new_feeder_run(self, _feeder, _side):
+        res = ''
         print("inside new_feeder_run, side={}".format(_side))
         if _side == 'left' or _side == 1:
             _motor = 1
@@ -42,6 +43,21 @@ class tracker_Feeder:
         else:
             pass
         return res
+
+    def move_steps(self, _step_no, _side):
+        res = ''
+        if _side == 'left' or _side == 1:
+            _motor = 1
+        else:
+            _motor = 2
+
+        if self.ardu_conn == True:
+            res = self.Arduino.
+        else:
+            pass
+        return res
+
+
 
     def set_zero(self, _int_on):
         if _int_on == 1:
