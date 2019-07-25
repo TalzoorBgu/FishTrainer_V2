@@ -329,25 +329,22 @@ class Arduino_Functions:
         res = ''
 
         _str_to_send = self.command_str.select_motor(_motor)
-        self.serial_con.write(_str_to_send)
-
-        result = ''
-        while result == '':  # wait for respond before sending next command
-            result = self.serial_con.read()
-        if "s_motor" in result:
-            print('s_motor:{} --> OK'.format(_motor))
-        sleep(100.0 / 1000.0)
-        while result == '':  # wait for respond before sending next command
-            result = self.serial_con.read()
-        print(result)
-
-        _str_to_send = self.command_str.run_prog(_prog)
         result = self.send_command(_str_to_send)
         # self.serial_con.write(_str_to_send)
 
         # result = ''
         # while result == '':  # wait for respond before sending next command
         #     result = self.serial_con.read()
+        if "s_motor" in result:
+            print('s_motor:{} --> OK'.format(_motor))
+        sleep(20.0 / 1000.0) # 20ms
+        # while result == '':  # wait for respond before sending next command
+        #     result = self.serial_con.read()
+        # print(result)
+
+        _str_to_send = self.command_str.run_prog(_prog)
+        result = self.send_command(_str_to_send)
+
         if "run_prog" in result:
             print('run_prog --> OK'.format(_motor))
             res = 'Program runing on motor {}'.format(_motor)
