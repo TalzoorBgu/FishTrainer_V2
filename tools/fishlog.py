@@ -35,7 +35,7 @@ class FishLog:
     def add_tracked_point(self,x,y):
         self.fo.write(str(self.line_number)+' ') #
         self.fo.write(str(self.track_count)+' ') #
-        self.fo.write(str(datetime.datetime.now().time())+' ') #
+        self.fo.write(str(datetime.now().time())+' ') #
         self.fo.write('track'+' ') #
 
         self.fo.write("{0:.2f} ".format(round(x, 2))) #self.fo.write(str(x)+' ') #
@@ -48,7 +48,7 @@ class FishLog:
     def add_feed(self,side):
         self.fo.write(str(self.line_number)+' ') #
         self.fo.write(str(self.feed_count[side])+' ') #
-        self.fo.write(str(datetime.datetime.now().time())+' ') #
+        self.fo.write(str(datetime.now().time())+' ') #
         self.fo.write('feed'+' ') #
         self.fo.write(side+' ') #
         self.fo.write('\n') #

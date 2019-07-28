@@ -77,8 +77,10 @@ def click_and_crop(event, x, y, flags, param):
                       (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), 2)
         cv2.imshow("image", image)
 
-def SP_Main(_camera=0):
-    global image, fish, refPt
+
+def SP_Main(_exception_class, _camera=0):
+    global image, fish, refPt, exception_class
+    exception_class = _exception_class
     refPt = []
     fish = []
     # construct the argument parser and parse the arguments
@@ -96,70 +98,76 @@ def SP_Main(_camera=0):
     # otherwise, grab a reference to the video file
     else:
         video_capture = cv2.VideoCapture(args["video"])
+    try:
+        ret, image = video_capture.read()
 
-    ret, image = video_capture.read()
-
-    if(image is None):#check for empty frames
-        print ('No Image')
-
-    # draw current configuration
-    draw_current(image, _camera)
-
-    # image = cv2.imread(args["image"])
-    clone = image.copy()
-    cv2.namedWindow("image")
-    cv2.setMouseCallback("image", click_and_crop, _camera)
-
-    # keep looping until the 'c' key is pressed
-    while True:
-
-        # Write Text
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        fontScale = 1
-        fontColor = (255, 255, 255)
-        lineType = 2
-
-        cv2.putText(image, 'please mark your tanks',(50,50),font,fontScale,fontColor,lineType)
-        cv2.putText(image, 'press "c" to finish and "r" to reset',(50,100),font,fontScale,fontColor,lineType)
-        ''
-        # display the image and wait for a keypress
-        cv2.imshow("image", image)
-        key = cv2.waitKey(1) & 0xFF
-
-        # if the 'r' key is pressed, reset the cropping region
-        # 'r'=99            'c'=99
-        # 'R'=82            'C'=67
-        # 'heb(r)' = 248    'heb(c)=225
-
-        #print key
-        if (key == ord('r') or key == ord('R') or key == 248) :
-            image = clone.copy()
-
-        # if the 'c' key is pressed, break from the loop
-        elif (key == ord('c') or key == ord('C') or key == 225):
-            break
-
-    # if there are two reference points, then crop the region of interest
-    # from the image and display it
-
-    if len(refPt) == 2:
-        file_path = get_file_name(_camera)
-
-        thefile = open(file_path, 'w+')
-
-        print ("file_path:{}".format(file_path))
-
-        for fishy in fish:
-            print(fishy)
-            thefile.write("%s\n" % fishy)
-        thefile.flush()
-        thefile.close()
-        print("tank_config.txt saved!")
+        if image is None:     # check for empty frames
+            exception_class.error("No Image, camera failed to properly initialize!")
 
 
+        # draw current configuration
+        draw_current(image, _camera)
 
-    # close all open windows
-    cv2.destroyAllWindows()
+        # image = cv2.imread(args["image"])
+        clone = image.copy()
+        cv2.namedWindow("image")
+        cv2.setMouseCallback("image", click_and_crop, _camera)
+
+        # keep looping until the 'c' key is pressed
+        while True:
+
+            # Write Text
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            fontScale = 1
+            fontColor = (255, 255, 255)
+            lineType = 2
+
+            cv2.putText(image, 'please mark your tanks',(50,50),font,fontScale,fontColor,lineType)
+            cv2.putText(image, 'press "c" to finish and "r" to reset',(50,100),font,fontScale,fontColor,lineType)
+            ''
+            # display the image and wait for a keypress
+            cv2.imshow("image", image)
+            key = cv2.waitKey(1) & 0xFF
+
+            # if the 'r' key is pressed, reset the cropping region
+            # 'r'=99            'c'=99
+            # 'R'=82            'C'=67
+            # 'heb(r)' = 248    'heb(c)=225
+
+            #print key
+            if (key == ord('r') or key == ord('R') or key == 248) :
+                image = clone.copy()
+
+            # if the 'c' key is pressed, break from the loop
+            elif (key == ord('c') or key == ord('C') or key == 225):
+                break
+
+        # if there are two reference points, then crop the region of interest
+        # from the image and display it
+
+        if len(refPt) == 2:
+            file_path = get_file_name(_camera)
+
+            thefile = open(file_path, 'w+')
+
+            print ("file_path:{}".format(file_path))
+
+            for fishy in fish:
+                print(fishy)
+                thefile.write("%s\n" % fishy)
+            thefile.flush()
+            thefile.close()
+            print("tank_config.txt saved!")
+
+    except (AttributeError, NameError) as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        exception_class.error("{},{} line:{}".format(exc_type, fname, exc_tb.tb_lineno))
+
+    finally:
+        # close all open windows
+        cv2.destroyAllWindows()
+
 
 if __name__ == '__main__':
     SP_Main()

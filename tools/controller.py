@@ -57,8 +57,6 @@ class Controller:
         file_name = self.log_file_name(_log_name)
         print("file_name:{}".format(file_name))
 
-
-        #print_and_update_main_log('log:{}'.format(log_folder))
         self.logger = []
 
         #init tank
@@ -128,8 +126,8 @@ class Controller:
             self.time_last_feed = time_now
 
             if self.GUI_obj is not None:
-                self.GUI_obj.print_and_update_main_log(str_to_print)
-            fish_client = FishClient()
+                self.Exception_log.info_wo_tstamp(str_to_print)
+            # fish_client = FishClient()
             if self.chb_Var.get() == '1':
                 print("FEED NOW")
 

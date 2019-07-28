@@ -2,8 +2,10 @@
 
 try:
     from Tkinter import *
+    from Tkinter.font import Font
 except ImportError:
     from tkinter import *
+    from tkinter.font import Font
 
 try:
     import ttk
@@ -84,7 +86,7 @@ def vp_start_gui():
     Excp = exception_class.RaiseException(Fish_traning_GUI)
     Arduino_obj = ClientGUI_support.feed_object.Arduino
     if Arduino_obj.connection == 'NO':
-        Excp.error("No Arduino conn. check serial port (USB)")
+        Excp.error("No Arduino conn. check serial port (USB)", bold=True)
     else:
         Excp.info("Arduino connection OK, port:{}".format(Arduino_obj.serial_con.serial.port))
 
@@ -853,11 +855,15 @@ class Fish_traning_GUI___Client:
         self.Label8.configure(highlightcolor="black")
         self.Label8.configure(text='''Log''')
 
+        myFont_reg = Font(family="TkTextFont", size=14)
+        myFont_bold = Font(family="TkTextFont", size=14, weight="bold")
+
+
         self.txtMainLog = Text(self.frmLog)
         self.txtMainLog.place(relx=0.01, rely=0.14, relheight=0.75
                               , relwidth=0.98)
         self.txtMainLog.configure(background="white")
-        self.txtMainLog.configure(font="TkTextFont")
+        self.txtMainLog.configure(font=myFont_reg)
         self.txtMainLog.configure(foreground="black")
         self.txtMainLog.configure(highlightbackground="#d9d9d9")
         self.txtMainLog.configure(highlightcolor="black")
@@ -867,6 +873,7 @@ class Fish_traning_GUI___Client:
         self.txtMainLog.configure(undo="1")
         self.txtMainLog.configure(width=842)
         self.txtMainLog.configure(wrap=WORD)
+        self.txtMainLog.tag_configure("bold", font=myFont_bold)
 
         self.frmLogClear = Button(self.frmLog)
         self.frmLogClear.place(relx=0.01, rely=0.89, height=22, width=70)
@@ -911,7 +918,7 @@ class Fish_traning_GUI___Client:
 
         self.vars_init()
         self.fillValue()
-        self.print_and_update_main_log("{} ---Started---".format(self.time_stamp()))
+        self.Exception.info(" --- Program started --- ")
 
 
     def vars_init(self):
@@ -997,12 +1004,15 @@ class Fish_traning_GUI___Client:
         #check = True
         #print('self.chb_NewMotor:{}'.format(self.chb_NewMotor.getboolean(check)))
 
-    def print_and_update_main_log(self, str_to_print, new_line=True):
+    def print_and_update_main_log(self, str_to_print, _bold, new_line=True):
         global Fish_traningGUI, top
         str_temp = '{}'.format(str_to_print)
         print (str_temp)
         if new_line: str_temp = '{}\n'.format(str_temp)
-        self.txtMainLog.insert(END, str_temp)
+        if _bold:
+            self.txtMainLog.insert(END, str_temp, "bold")
+        else:
+            self.txtMainLog.insert(END, str_temp)
         self.txtMainLog.see(END)
 
     def update_time(self, time_str):

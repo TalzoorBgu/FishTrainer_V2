@@ -176,7 +176,8 @@ def onRunTraining():
     _tmp1 = type(controller)
     print("type:{}".format(_tmp1))
     training_type = "edge" if TraningVar.get() is 'E' else "center"
-    thread_track_fish = threading.Thread(target=track_fish.track_loop, args=(controller, training_type, ))
+    track_loop_args = (controller, exception_class, training_type, )
+    thread_track_fish = threading.Thread(target=track_fish.track_loop, args=track_loop_args)
 
     thread_track_fish.daemon = True
     thread_track_fish.start()
@@ -202,11 +203,12 @@ def onStatClear():
 
 
 def onTankConfig():
-    global CamVar1
+    global CamVar1, exception_class
+
     print('ClientGUI_support.onTankConfig')
     sys.stdout.flush()
     relvant_camera = CamVar1.get()
-    scene_planner.SP_Main(relvant_camera)
+    scene_planner.SP_Main(exception_class, relvant_camera)
     # thread_track_fish = threading.Thread(target=scene_planner.SP_Main, args=(CamVar1.get()))
     # thread_track_fish.start()
 

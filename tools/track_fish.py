@@ -49,11 +49,12 @@ def init_tracking(_camera=0, video=None):
     return width
 
 
-def track_loop(cb, _version='edge'): #cb is an object that has a do() function in the calling script
+def track_loop(cb, exception_class, _version='edge'): #cb is an object that has a do() function in the calling script
     global stop_training
     stop_training = False
 
     print("_version:{}".format(_version))
+    exception_class.info("Training started. version:{}".format(_version), bold=True)
     while stop_training is False:
         stop_training = cb.check_traning()
         cb.time()
