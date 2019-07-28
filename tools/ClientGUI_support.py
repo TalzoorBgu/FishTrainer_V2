@@ -70,12 +70,15 @@ def R3Sel():
     print('ClientGUI_support.R3Sel')
     r_button_val = TraningVar.get()
     print("TraningVar.get():{}".format(r_button_val))
+    motor_notification = ""
+
     if r_button_val is 'E':
         train_type = 'Edge'
     elif r_button_val is 'C':
         train_type = 'Center'
+        motor_notification = "motor A will be active"
 
-    exception_class.info_wo_tstamp("\tSeleced traning type : {}".format(train_type))
+    exception_class.info_wo_tstamp("\tSeleced traning type : {}{}".format(train_type, motor_notification))
 
     sys.stdout.flush()
 

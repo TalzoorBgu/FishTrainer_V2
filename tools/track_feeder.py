@@ -34,9 +34,9 @@ class tracker_Feeder:
         res = ''
         print("inside new_feeder_run, side={}".format(_side))
         if _side == 'left' or _side == 1:
-            _motor = 1
-        else:
             _motor = 2
+        else:
+            _motor = 1
 
         if self.ardu_conn == True:
             res = self.Arduino.prog_run(0, _motor)  #back to motor 1 or 2
