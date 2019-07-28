@@ -90,11 +90,11 @@ void setup()
   delay(10);
 
   Serial.print(F("Stepper_Pin[i]=("));
-  for (i = 1; i < 7; i++) {
+  for (i = 1; i < 6; i++) {
     Serial.print(Stepper_Pins[i]);
     Serial.print(F(","));
   }
-  Serial.write(12); // Backspace
+  Serial.print(Stepper_Pins[7]);
   Serial.println(")");
 
   for (i = 1; i < 3; i++) {
