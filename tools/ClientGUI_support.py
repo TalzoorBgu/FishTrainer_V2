@@ -76,7 +76,7 @@ def R3Sel():
         train_type = 'Edge'
     elif r_button_val is 'C':
         train_type = 'Center'
-        motor_notification = ".\tmotor A will be active"
+        motor_notification = ".\tmotor B will be active"
 
     exception_class.info_wo_tstamp("\tSeleced traning type : {}{}".format(train_type, motor_notification))
 
@@ -150,16 +150,16 @@ def on2R():
     sys.stdout.flush()
 
 def onExit():
-    global exit_var, stop_traning
+    global exit_var, stop_traning, Fish_traningGUI
     print('ClientGUI_support.onExit')
     sys.stdout.flush()
 
     # exit_var = True
 
     Fish_traningGUI.stop_traning = True
-
-    sleep(1)
-    sys.exit(1)
+    destroy_window()
+    # sleep(1)
+    # sys.exit(1)
 
 def onRunTraining():
     global stop_traning, TraningVar, thread_track_fish
@@ -252,8 +252,8 @@ def init(top, gui, _exception_class,  *args, **kwargs):
     top_level = top
     root = top
     exception_class = _exception_class
-    root.protocol("WM_DELETE_WINDOW", onStopTraining)
-    root.bind("<Destroy>", onStopTraining)
+    # root.protocol("WM_DELETE_WINDOW", onStopTraining)
+    # root.bind("<Destroy>", onStopTraining)
 
 def destroy_window():
     # Function which closes the window.
@@ -261,6 +261,7 @@ def destroy_window():
     global top_level
     top_level.destroy()
     top_level = None
+    sys.exit(0)
 
 class ThreadingProcess(object):
 
