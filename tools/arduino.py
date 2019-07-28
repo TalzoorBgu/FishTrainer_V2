@@ -154,6 +154,7 @@ class Arduino_Functions:
         try:
             self.connection = 'NO'
             for port in serial_ports_list:
+                print("checking port:{}".format(port))
                 # str_res = port.find("usbmodem")
                 # if (str_res is not -1):
                 self.serial_con = MySerial(port, 9600)
