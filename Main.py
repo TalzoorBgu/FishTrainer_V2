@@ -63,8 +63,6 @@ class ConfigSectionMap:
                     for option in options:
                         try:
                             dict1[option] = Config.get(section, option)
-                            if dict1[option] == -1:
-                                DebugPrint("skip: %s" % option)
                         except:
                             print("exception on %s!" % option)
                             dict1[option] = None
@@ -94,15 +92,15 @@ def vp_start_gui():
     root.mainloop()
 
 Fish_traningGUI = None
-def create_Fish_traning_GUI___Client(root, *args, **kwargs):
-    '''Starting point when module is imported by another program.'''
-    global Fish_traningGUI, w_win, rt
-    rt = root
-    Fish_traningGUI = Toplevel (root)
-    ClientGUI_support.set_Tk_var()
-    top = Fish_traning_GUI___Client (w)
-    ClientGUI_support.init(w, top, *args, **kwargs)
-    return (w, top)
+# def create_Fish_traning_GUI___Client(root, *args, **kwargs):
+#     '''Starting point when module is imported by another program.'''
+#     global Fish_traningGUI, w_win, rt
+#     rt = root
+#     Fish_traningGUI = Toplevel (root)
+#     ClientGUI_support.set_Tk_var()
+#     top = Fish_traning_GUI___Client (w)
+#     ClientGUI_support.init(w, top, *args, **kwargs)
+#     return (w, top)
 
 def destroy_Fish_traning_GUI___Client():
     global Fish_traningGUI

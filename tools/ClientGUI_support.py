@@ -76,7 +76,7 @@ def R3Sel():
         train_type = 'Edge'
     elif r_button_val is 'C':
         train_type = 'Center'
-        motor_notification = "motor A will be active"
+        motor_notification = ".\tmotor A will be active"
 
     exception_class.info_wo_tstamp("\tSeleced traning type : {}{}".format(train_type, motor_notification))
 

@@ -83,23 +83,23 @@ class tracker_Feeder:
             velocity = max_velocity
         return velocity
 
-    def accl(self, direction, i, percentage, total_steps):
-        func = 100
-        try:
-            if direction == 'up':
-                func = math.exp((20.0 * 100.0 * i) / (2.0 * percentage * total_steps))
-            if direction == 'down':
-                func = math.exp((20.0 * 100.0 * (total_steps - i) ) / (2.0 * percentage * total_steps))
-            accl = func
-            if accl > 100.0: accl = 100
-        except ZeroDivisionError as error:
-            print ("Error: ZeroDivisionError")
-            accl = func
-        return accl
+    # def accl(self, direction, i, percentage, total_steps):
+    #     func = 100
+    #     try:
+    #         if direction == 'up':
+    #             func = math.exp((20.0 * 100.0 * i) / (2.0 * percentage * total_steps))
+    #         if direction == 'down':
+    #             func = math.exp((20.0 * 100.0 * (total_steps - i) ) / (2.0 * percentage * total_steps))
+    #         accl = func
+    #         if accl > 100.0: accl = 100
+    #     except ZeroDivisionError as error:
+    #         print ("Error: ZeroDivisionError")
+    #         accl = func
+    #     return accl
 
-    def destruct():
-        GPIO.cleanup()
-        return
+    # def destruct():
+    #     GPIO.cleanup()
+    #     return
 
 
 # spin(16,int(sys.argv[1])) # uncomment for fast testing
