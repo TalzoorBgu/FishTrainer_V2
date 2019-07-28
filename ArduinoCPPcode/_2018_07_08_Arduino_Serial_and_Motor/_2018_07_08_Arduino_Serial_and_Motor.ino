@@ -89,12 +89,13 @@ void setup()
   EEPROMexInit();
   delay(10);
 
+  Serial.print(F("Stepper_Pin[i]=("));
   for (i = 1; i < 7; i++) {
-    Serial.print(F("Stepper_Pin["));
-    Serial.print(i);
-    Serial.print(F("]="));
-    Serial.println(Stepper_Pins[i]);
+    Serial.print(Stepper_Pins[i]);
+    Serial.print(F(","));
   }
+  Serial.write(12); // Backspace
+  Serial.println(")");
 
   for (i = 1; i < 3; i++) {
     stp_Pin[i] = Stepper_Pins[1 + (3 * (i - 1))];
