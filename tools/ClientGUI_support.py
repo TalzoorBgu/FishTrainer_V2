@@ -74,7 +74,9 @@ def R3Sel():
         train_type = 'Edge'
     elif r_button_val is 'C':
         train_type = 'Center'
-    Fish_traningGUI.print_and_update_main_log("Seleced traning type : {}".format(train_type))
+
+    exception_class.info_wo_tstamp("\tSeleced traning type : {}".format(train_type))
+
     sys.stdout.flush()
 
 def onLogClear():
@@ -92,7 +94,7 @@ def on1L():
     print('ClientGUI_support.on1L')
 
     try:
-        Fish_traningGUI.print_and_update_main_log("Test motor - 1L")
+        exception_class.info_wo_tstamp("\tTest motor - 1L")
 
         steps_no = Fish_traningGUI.txtStepNum.get()
         motor = 1
@@ -109,7 +111,7 @@ def on1L():
 def on1R():
     print('ClientGUI_support.on1R')
     try:
-        Fish_traningGUI.print_and_update_main_log("Test motor - 1R")
+        exception_class.info_wo_tstamp("\tTest motor - 1R")
 
         steps_no = Fish_traningGUI.txtStepNum.get()
         motor = 0
@@ -128,9 +130,9 @@ def on2L():
     velocity = Fish_traningGUI.txtVelocity.get()
     acceleration = Fish_traningGUI.txtAccl.get()
 
-    fish_client = FishClient(Fish_traningGUI)
-    fish_client.send('test_2L', 0, Fish_traningGUI.txtStepNum.get(), velocity, acceleration)
-    fish_client.kill()
+    # fish_client = FishClient(Fish_traningGUI)
+    # fish_client.send('test_2L', 0, Fish_traningGUI.txtStepNum.get(), velocity, acceleration)
+    # fish_client.kill()
 
     sys.stdout.flush()
 
@@ -139,9 +141,9 @@ def on2R():
     velocity = Fish_traningGUI.txtVelocity.get()
     acceleration = Fish_traningGUI.txtAccl.get()
 
-    fish_client = FishClient(Fish_traningGUI)
-    fish_client.send('test_2R', 0, Fish_traningGUI.txtStepNum.get(), velocity, acceleration)
-    fish_client.kill()
+    # fish_client = FishClient(Fish_traningGUI)
+    # fish_client.send('test_2R', 0, Fish_traningGUI.txtStepNum.get(), velocity, acceleration)
+    # fish_client.kill()
     sys.stdout.flush()
 
 def onExit():
@@ -162,13 +164,15 @@ def onRunTraining():
 
     Fish_traningGUI.stop_traning = False
     log_name = []
-    log_name.append('F{}DAY{}'.format(Fish_traningGUI.txtFishNo1.get('0.0', 'end-1c'), Fish_traningGUI.txtTrainingDay1.get('0.0', 'end-1c')))
+    fish_no = Fish_traningGUI.txtFishNo1.get('0.0', 'end-1c')
+    training_day = Fish_traningGUI.txtTrainingDay1.get('0.0', 'end-1c')
+    log_name.append('F{}DAY{}'.format(fish_no, training_day))
 
-    try:
-        _tmp1 = type(controller)
-        controller.__del__()
-    except UnboundLocalError:
-        print("there is not Controller instance")
+    # try:
+    #     _tmp1 = type(controller)
+    #     controller.__del__()
+    # except UnboundLocalError:
+    #     print("there is not Controller instance")
 
     camera = CamVar1.get()
 
@@ -193,9 +197,9 @@ def onStopTraining():
 def onSendtest():
     print('ClientGUI_support.onSendtest')
     sys.stdout.flush()
-    fish_client = FishClient()
-    fish_client.send('test', 0)
-    fish_client.kill()
+    # fish_client = FishClient()
+    # fish_client.send('test', 0)
+    # fish_client.kill()
 
 def onStatClear():
     sys.stdout.flush()
@@ -294,20 +298,20 @@ class ThreadingProcess(object):
         return output
 
 
-class Counter(object):
-    def __init__(self, start=0):
-        self.lock = threading.Lock()
-        self.value = start
-
-    def increment(self):
-        logging.debug('Waiting for a lock')
-        self.lock.acquire()
-        try:
-            logging.debug('Acquired a lock')
-            self.value = self.value + 1
-        finally:
-            logging.debug('Released a lock')
-            self.lock.release()
+# class Counter(object):
+#     def __init__(self, start=0):
+#         self.lock = threading.Lock()
+#         self.value = start
+#
+#     def increment(self):
+#         logging.debug('Waiting for a lock')
+#         self.lock.acquire()
+#         try:
+#             logging.debug('Acquired a lock')
+#             self.value = self.value + 1
+#         finally:
+#             logging.debug('Released a lock')
+#             self.lock.release()
 
 
 

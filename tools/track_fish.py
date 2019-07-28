@@ -75,7 +75,6 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
             tank_height = abs(fishy['left']-fishy['right'])
             # print("tank_dim:{}/{}".format(tank_width, tank_height))
 
-
             paint_lines(cv2, tank_width, tank_height, frame_cut, _version)
 
             cv2.imshow("image" + str(id), frame_cut)
