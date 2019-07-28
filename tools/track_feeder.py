@@ -33,10 +33,10 @@ class tracker_Feeder:
     def new_feeder_run(self, _feeder, _side):
         res = ''
         print("inside new_feeder_run, side={}".format(_side))
-        if _side == 'left' or _side == 1:
-            _motor = 2
-        else:
+        if _side == 'left' or _side == 1 or _side == 'center':
             _motor = 1
+        else:
+            _motor = 2
 
         if self.ardu_conn == True:
             res = self.Arduino.prog_run(0, _motor)  #back to motor 1 or 2
@@ -70,18 +70,18 @@ class tracker_Feeder:
 
 
 
-    def velocity_calc(self, max_velocity, total_steps, percentage, c_step):
-        action_range = total_steps*(percentage/100.0)
-
-        if (c_step <= action_range):
-            accl_pr = self.accl('up', c_step, percentage, total_steps)
-            velocity = (accl_pr/100.0)*max_velocity
-        elif (c_step >= total_steps - action_range):
-            accl_pr = self.accl('down', c_step, percentage, total_steps)
-            velocity = (accl_pr/100.0)*max_velocity
-        else:
-            velocity = max_velocity
-        return velocity
+    # def velocity_calc(self, max_velocity, total_steps, percentage, c_step):
+    #     action_range = total_steps*(percentage/100.0)
+    #
+    #     if (c_step <= action_range):
+    #         accl_pr = self.accl('up', c_step, percentage, total_steps)
+    #         velocity = (accl_pr/100.0)*max_velocity
+    #     elif (c_step >= total_steps - action_range):
+    #         accl_pr = self.accl('down', c_step, percentage, total_steps)
+    #         velocity = (accl_pr/100.0)*max_velocity
+    #     else:
+    #         velocity = max_velocity
+    #     return velocity
 
     # def accl(self, direction, i, percentage, total_steps):
     #     func = 100
