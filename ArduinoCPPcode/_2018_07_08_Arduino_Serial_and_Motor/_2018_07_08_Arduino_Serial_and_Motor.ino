@@ -94,7 +94,7 @@ void setup()
     Serial.print(Stepper_Pins[i]);
     Serial.print(F(","));
   }
-  Serial.print(Stepper_Pins[7]);
+  Serial.print(Stepper_Pins[6]);
   Serial.println(")");
 
   for (i = 1; i < 3; i++) {
