@@ -162,7 +162,7 @@ def onExit():
     # sys.exit(1)
 
 def onRunTraining():
-    global stop_traning, TraningVar, thread_track_fish
+    global stop_traning, TraningVar, thread_track_fish, controller
     sys.stdout.flush()
 
     Fish_traningGUI.stop_traning = False
@@ -171,17 +171,21 @@ def onRunTraining():
     training_day = Fish_traningGUI.txtTrainingDay1.get('0.0', 'end-1c')
     log_name.append('F{}DAY{}'.format(fish_no, training_day))
 
-    # try:
-    #     _tmp1 = type(controller)
-    #     controller.__del__()
-    # except UnboundLocalError:
-    #     print("there is not Controller instance")
+    try:
+        _tmp1 = type(controller)
+        controller.__del__()
+        exception_class.info("Controller closed")
+    except UnboundLocalError:
+        print("there is not Controller instance")
+    except NameError:
+        print("name 'controller' is not defined")
 
     camera = CamVar1.get()
 
     controller = Controller(feed_object, exception_class, Fish_traningGUI, log_name, camera)
     _tmp1 = type(controller)
     print("type:{}".format(_tmp1))
+
     training_type = "edge" if TraningVar.get() is 'E' else "center"
     track_loop_args = (controller, exception_class, training_type, )
     thread_track_fish = threading.Thread(target=track_fish.track_loop, args=track_loop_args)
@@ -193,8 +197,9 @@ def onRunTraining():
 def onStopTraining():
     global stop_traning, Fish_traningGUI
     sys.stdout.flush()
-    onExit()
-    #Fish_traningGUI.stop_traning = True
+
+    # onExit()
+    Fish_traningGUI.stop_traning = True
     #Fish_traningGUI.print_and_update_main_log("Stopped!")
 
 def onSendtest():
@@ -261,7 +266,7 @@ def destroy_window():
     global top_level
     top_level.destroy()
     top_level = None
-    sys.exit(0)
+    # sys.exit(0)
 
 class ThreadingProcess(object):
 

@@ -27,7 +27,7 @@ class FishLog:
         print ('start logging data')
         # Open a file
 
-        self.filename='{}\{}{}{}'.format(log_folder, time_stamp(), '_'+fish_name, ".txt") # time+name
+        self.filename='{}/{}{}{}'.format(log_folder, time_stamp(), '_'+fish_name, ".txt") # time+name
         print ('log file:{}'.format(self.filename))
 
         self.fo = open(self.filename, 'w+')

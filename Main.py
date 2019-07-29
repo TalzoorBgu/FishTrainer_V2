@@ -30,7 +30,6 @@ import os
 
 from pathlib import Path
 
-
 Config = configparser.ConfigParser()
 
 #Global vars
@@ -952,7 +951,8 @@ class Fish_traning_GUI___Client:
         if fish_statistics_dict=={}:
             pass
         else:
-            self.LogFolderName = fish_statistics_dict['log folder']
+            # self.LogFolderName = fish_statistics_dict['log folder']
+            self.LogFolderName = log_folder()
             self.Stat_days = fish_statistics_dict['days back']
             self.Stat_arg = fish_statistics_dict['arg']
         #self.Red_Feeder = ConfigSectionMap("Motor")['redFeeder']
@@ -1041,6 +1041,19 @@ def make_two_digit_num(int_to_check):
         str_temp = '0{}'.format(int_to_check)
     return str_temp
 
+
+def log_folder():
+    path = Path(os.path.dirname(__file__))
+    full_path = Path("{}/data/log".format(path))
+
+    return full_path
+
+
+def log_file_name(_file_name):
+    full_path = log_folder()
+    file_name = Path("{}/{}".format(full_path, _file_name))
+
+    return file_name
 
 
 if __name__ == '__main__':

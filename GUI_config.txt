@@ -1,5 +1,5 @@
 [Fish Statistics]
-log folder = C:\Users\Owner\PycharmProjects\fish-trainerNEW\data\log
+log folder =
 days back = 100
 arg = 1
 

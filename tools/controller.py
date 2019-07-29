@@ -34,7 +34,6 @@ class Controller:
         self.time_count = TimeCounter()
         self.GUI_obj = _GUI_obj
         self.chb_Var = _GUI_obj.chb_Var
-        print("chb_Var_cont:{}".format(self.chb_Var.get()))
         self.time_last_feed = int(round(time.time()))
 
         self.Exception_log = _exception_class
@@ -52,37 +51,27 @@ class Controller:
         # log_folder = os.path.join(full_root_script_path, r"data\log")
         # print("full_script_path:{}\nfull_root_script_path:{}\nlog_folder:{}".
         #       format(full_script_path, full_root_script_path, log_folder))
-
-
-        file_name = self.log_file_name(_log_name)
-        print("file_name:{}".format(file_name))
+        self.log_folder = Main.log_folder()
+        self.file_name = Main.log_file_name(_log_name)
+        print("file_name:{}".format(self.file_name))
 
         self.logger = []
 
         #init tank
         self.tank = []
-        id = 0
+        f_id = 0
         #print ('Tank(1, 1):' + str(Tank(1, 1)))
+
         for size in width:
-            self.tank.append(Tank(id, size))
-            self.logger.append(fishlog.FishLog(self.GUI_obj, self.log_folder(), "{}.({})".format(_log_name[id], str(id)), self.Exception_log))
-            id = id + 1
+            self.tank.append(Tank(f_id, size))
+            self.logger.append(fishlog.FishLog(self.GUI_obj, self.log_folder,
+                                               "{}.({})".format(_log_name[f_id], str(f_id)), self.Exception_log))
+            f_id = f_id + 1
 
 
     def __del__(self):  #Destroy
         print ('Controller closed')
 
-    def log_folder(self):
-        path = os.path.dirname(Main.__file__)
-        full_path = "{}\\data\\log".format(path)
-
-        return full_path
-
-    def log_file_name(self, _file_name):
-        full_path = self.log_folder()
-        file_name = "{}\\{}".format(full_path, _file_name)
-
-        return  file_name
 
     def time(self):
         time_str = self.time_count.get_time_diff()

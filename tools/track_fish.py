@@ -17,18 +17,18 @@ video_capture = None
 
 
 def init_tracking(_camera=0, video=None):
-    global video_capture
+    global video_capture, fish
 
     # tank_config = full_root_script_path = os.getcwd()
     # file_path = '{}\\tracker\\tank_config_cam_{}.txt'.format(full_root_script_path, _camera)
 
     file_path = get_file_name(_camera)
-
+    fish = []
+    width = []
     with open(file_path) as f:
         lines = f.read().splitlines()
     for line in lines:
         fish.append(eval(line))
-    print (fish)
 
     # if a video path was not supplied, grab the reference to the webcam
     if video is None:
@@ -55,6 +55,14 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     print("_version:{}".format(_version))
     exception_class.info("Training started. version:{}".format(_version), bold=True)
+
+    f_id = 0
+    img_name = "image" + str(f_id)
+    mask_name = "mask" + str(f_id)
+    cv2.namedWindow(img_name, cv2.WINDOW_AUTOSIZE)
+    cv2.namedWindow(mask_name, cv2.WINDOW_AUTOSIZE)
+    cv2.startWindowThread()
+
     while stop_training is False:
         stop_training = cb.check_traning()
         cb.time()
@@ -64,10 +72,10 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
             print ('No Image')
             break  # check for empty frames
 
-        id = 0
+        f_id = 0
         for fishy in fish:
             frame_cut = frame[fishy['upper']:fishy['lower'], fishy['left']:fishy['right']]
-            fgmask = fgbg[id].apply(frame_cut)
+            fgmask = fgbg[f_id].apply(frame_cut)
             fgmask = cv2.erode(fgmask, None, iterations=2)
             mask = cv2.dilate(fgmask, None, iterations=2)
 
@@ -77,8 +85,8 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
             paint_lines(cv2, tank_width, tank_height, frame_cut, _version)
 
-            cv2.imshow("image" + str(id), frame_cut)
-            cv2.imshow("mask" + str(id), fgmask)
+            cv2.imshow(img_name, frame_cut)
+            cv2.imshow(mask_name, fgmask)
             cv2.waitKey(1)
 
             # find contours in the mask and initialize the current
@@ -95,19 +103,25 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
             if len(cnts) > 0:
                 ((x, y), radius) = cv2.minEnclosingCircle(largest_cntr)
                 cv2.circle(frame_cut, (int(x), int(y)), int(radius), (0, 255, 255), 2)  # show radius for debbuging
-                cv2.imshow("image"+str(id), frame_cut)
+                cv2.imshow("image"+str(f_id), frame_cut)
                 cv2.waitKey(1)
 
                 if cb is not None:
-                    cb.do(x, y, id, _version)
+                    cb.do(x, y, f_id, _version)
 
 
-            id = id + 1
+            f_id = f_id + 1
         # TBD - inclear where to put
         # if cv2.waitKey(1) & 0xFF == ord('q'): break #Exit when Q is pressed
 
+    exception_class.info("Training stopped")
+
+    cv2.waitKey(1)
+    cv2.destroyAllWindows()
+    cv2.waitKey(1)
+
     # exit while loop:
-    print("stop_training=", stop_training)
+    print("stop_training={}".format(stop_training))
     id_out = 0
     for fishy in fish:
         print("OUT:fish_id:{}".format(id_out))
