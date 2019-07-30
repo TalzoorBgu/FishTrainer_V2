@@ -76,9 +76,11 @@ def R3Sel():
         train_type = 'Edge'
     elif r_button_val is 'C':
         train_type = 'Center'
-        motor_notification = ".\tmotor B will be active"
+        motor_notification = "\tmotor B will be active"
 
-    exception_class.info_wo_tstamp("\tSeleced traning type : {}{}".format(train_type, motor_notification))
+    exception_class.info_wo_tstamp("\tSeleced traning type : {}".format(train_type))
+    if motor_notification is not "":
+        exception_class.info_wo_tstamp(motor_notification)
 
     sys.stdout.flush()
 
@@ -130,8 +132,8 @@ def on1R():
 
 def on2L():
     print('ClientGUI_support.on2L')
-    velocity = Fish_traningGUI.txtVelocity.get()
-    acceleration = Fish_traningGUI.txtAccl.get()
+    # velocity = Fish_traningGUI.txtVelocity.get()
+    # acceleration = Fish_traningGUI.txtAccl.get()
 
     # fish_client = FishClient(Fish_traningGUI)
     # fish_client.send('test_2L', 0, Fish_traningGUI.txtStepNum.get(), velocity, acceleration)
@@ -141,8 +143,8 @@ def on2L():
 
 def on2R():
     print('ClientGUI_support.on2R')
-    velocity = Fish_traningGUI.txtVelocity.get()
-    acceleration = Fish_traningGUI.txtAccl.get()
+    # velocity = Fish_traningGUI.txtVelocity.get()
+    # acceleration = Fish_traningGUI.txtAccl.get()
 
     # fish_client = FishClient(Fish_traningGUI)
     # fish_client.send('test_2R', 0, Fish_traningGUI.txtStepNum.get(), velocity, acceleration)
@@ -150,14 +152,17 @@ def on2R():
     sys.stdout.flush()
 
 def onExit():
-    global exit_var, stop_traning, Fish_traningGUI
+    global exit_flag, stop_traning, Fish_traningGUI
     print('ClientGUI_support.onExit')
     sys.stdout.flush()
 
     # exit_var = True
+    # Fish_traningGUI.stop_traning = True
 
-    Fish_traningGUI.stop_traning = True
-    destroy_window()
+    Fish_traningGUI.exit_flag = True
+    onStopTraining()
+    # destroy_window()
+
     # sleep(1)
     # sys.exit(1)
 
@@ -169,12 +174,17 @@ def onRunTraining():
     log_name = []
     fish_no = Fish_traningGUI.txtFishNo1.get('0.0', 'end-1c')
     training_day = Fish_traningGUI.txtTrainingDay1.get('0.0', 'end-1c')
-    log_name.append('F{}DAY{}'.format(fish_no, training_day))
+
+    if fish_no is "" or training_day is "":
+        log_name.append('test')
+        exception_class.info_wo_tstamp("\t\t --- NO 'Fish no.' or 'Training day', file: test.txt ---", bold=True)
+    else:
+        log_name.append('F{}DAY{}'.format(fish_no, training_day))
 
     try:
         _tmp1 = type(controller)
         controller.__del__()
-        exception_class.info("Controller closed")
+        # exception_class.info("Controller closed")
     except UnboundLocalError:
         print("there is not Controller instance")
     except NameError:

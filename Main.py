@@ -33,7 +33,7 @@ from pathlib import Path
 Config = configparser.ConfigParser()
 
 #Global vars
-exit_var = False
+exit_flag = False
 
 
 def print_path():
@@ -103,7 +103,8 @@ Fish_traningGUI = None
 
 def destroy_Fish_traning_GUI___Client():
     global Fish_traningGUI
-    Fish_traningGUI.destroy()
+    ClientGUI_support.destroy_window()
+    # Fish_traningGUI.destroy()
     Fish_traningGUI = None
 
 
@@ -111,6 +112,7 @@ class Fish_traning_GUI___Client:
     def __init__(self, top = None, excp = None):
 
         self.stop_traning = False
+        self.exit_flag = False
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'

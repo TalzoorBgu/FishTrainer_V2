@@ -129,6 +129,11 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
         id_out += 1
         sleep(0.5)
 
+    exit_flag = cb.check_exit_flag()
+    if exit_flag:
+        cb.close_app()
+
+
 
 def paint_lines(_cv_obj, _tank_width, _tank_height, _frame, _ver):
 

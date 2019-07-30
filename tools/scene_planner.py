@@ -13,6 +13,7 @@ import cv2
 import random
 import os
 import sys
+from pathlib import Path
 
 # initialize the list of reference points and boolean indicating
 # whether cropping is being performed or not
@@ -23,8 +24,8 @@ cropping = False
 
 
 def get_file_name(_camera):
-    full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '\\')
-    file_path = '{}tank_config_cam_{}.txt'.format(full_script_path, _camera)
+    full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '/')
+    file_path = Path('{}tank_config_cam_{}.txt'.format(full_script_path, _camera))
 
     return file_path
 

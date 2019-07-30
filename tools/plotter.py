@@ -10,6 +10,8 @@ import os
 import sys
 import webbrowser
 import argparse
+import subprocess
+
 
 
 def find_nth_overlapping(haystack, needle, n):
@@ -39,8 +41,8 @@ class ReadFile:
                 file_h = open(_file_name, 'r')
                 text_lines = file_h.read().split('\n')
 
-                self.fish_no, \
-                self.t_date, \
+                self.fish_no,\
+                self.t_date,\
                 self.train_day = self.file_prop(_file_name)
 
                 training_end = training_start = self.extract_time(text_lines[0], self.t_date)
@@ -95,6 +97,11 @@ class ReadFile:
         traning_date = _file_name[log_place+4:date_end_place]
         traning_day = _file_name[DAY_place+3:DAY_end_place]
         fish_no = _file_name[_F_place+2:DAY_place]
+
+        print("_file_name:{}, _file_name.find(test):{}".format(_file_name, _file_name.find("test")))
+        if not _file_name.find("test") == -1:
+            traning_day = ""
+            fish_no = "test"
 
         return fish_no, traning_date, traning_day
 
@@ -238,6 +245,8 @@ class PlotTraj:
 
         self.line, = self.ax.plot(hte, hre, linewidth=0.5, color='black')
 
+        if self.open_png:
+            pass
         # plt.show()
 
 
@@ -249,15 +258,15 @@ class PlotTraj:
         # job()
         # job_server.print_stats()
 
-    def save(self, project_wd=''):
+    def save(self, _folder_name=''):
         #NOT USED ANYMORE
-        if not project_wd:
-            runing_dw = os.getcwd()
-            fish_trainerNEW_end_place = runing_dw.find("fish-trainerNEW") + len("fish-trainerNEW")
-            project_wd = runing_dw[:fish_trainerNEW_end_place]
+        # if not project_wd:
+        #     runing_dw = os.getcwd()
+        #     fish_trainerNEW_end_place = runing_dw.find("fish-trainerNEW") + len("fish-trainerNEW")
+        #     project_wd = runing_dw[:fish_trainerNEW_end_place]
 
         info = self.info
-        folder_name = os.path.join(project_wd, "data\log-img", info[0])
+        folder_name = os.path.join(_folder_name, info[0])
 
         dir_ex = os.path.exists(folder_name)
         print("folder_name:{}, exists:{}".format(folder_name, dir_ex))
@@ -269,14 +278,14 @@ class PlotTraj:
 
         time_info = str(info[2]).replace(':', '')
         file_name_to_save = "{}.png".format(time_info)
-        full_name = os.path.join(folder_name, file_name_to_save)
+        full_name = Path(os.path.join(folder_name, file_name_to_save))
         print("full_name:{}".format(full_name))
 
         self.ax.figure.savefig(full_name, dpi=600)
 
 
-def run(_file_to_plot, **kwargs):
-
+def run(_log_folder, _file_to_plot, **kwargs):
+    log_img_folder = "{}-img".format(_log_folder)
     show_at_end = True
     overwrite = True
 
@@ -295,6 +304,7 @@ def run(_file_to_plot, **kwargs):
     if len(file_data[0]) < 10 and len(file_data[1]) < 10:
         print("Not enough data!")
     else:
+        # print("file_data:{}".format(file_data))
         properties = [read_f.fish_no,
                          read_f.train_day,
                          read_f.traning_start_str,
@@ -302,6 +312,7 @@ def run(_file_to_plot, **kwargs):
 
         plot_fig = PlotTraj(properties, show_at_end, overwrite)
         plot_fig.plot_it(file_data)
+        plot_fig.save(log_img_folder)
 
 def folder_to_file_list():
     parser = argparse.ArgumentParser()
@@ -335,6 +346,13 @@ def folder_to_file_list():
         print("dir dose'nt exist")
 
     return folder, sorted_files
+
+def openImage(_img):
+    imageViewerFromCommandLine = {'linux':'xdg-open',
+                                  'win32':'explorer',
+                                  'darwin':'open'}[sys.platform]
+    subprocess.run([imageViewerFromCommandLine, _img])
+
 
 if __name__ == '__main__':
     #1280x1024

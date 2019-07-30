@@ -72,7 +72,6 @@ class Controller:
     def __del__(self):  #Destroy
         print ('Controller closed')
 
-
     def time(self):
         time_str = self.time_count.get_time_diff()
         if time_str:
@@ -83,13 +82,20 @@ class Controller:
         _int_tmp = self.GUI_obj.stop_traning
         return _int_tmp
 
-    def end_training(self, fish_id):
+    def check_exit_flag(self):
+        _int_tmp = self.GUI_obj.exit_flag
+        return _int_tmp
+
+    def close_app(self):
+        Main.destroy_Fish_traning_GUI___Client()
+
+    def end_training(self, fish_id):        # called in track_fish.py - cb.end_training(id_out)
         log_filename = self.logger[fish_id].filename
         self.logger[fish_id].fo.close()
         sleep(0.2)  # 200mS wait
         print("fish_id:{}, filename:{}".format(fish_id, log_filename))
 
-        plotter.run(log_filename, show=True, overwrite=True)
+        plotter.run(self.log_folder, log_filename, show=True, overwrite=True)
         sleep(1.5)
 
     def do(self, x, y, fish_id, _version):
@@ -115,7 +121,7 @@ class Controller:
             self.time_last_feed = time_now
 
             if self.GUI_obj is not None:
-                self.Exception_log.info_wo_tstamp(str_to_print)
+                self.Exception_log.feed_event(str_to_print)
             # fish_client = FishClient()
             if self.chb_Var.get() == '1':
                 print("FEED NOW")

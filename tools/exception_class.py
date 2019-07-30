@@ -31,6 +31,14 @@ class RaiseException():
                     _bold = value
         self.object.print_and_update_main_log("Info: {}".format(str_msg), _bold)
 
+    def feed_event(self, str_msg, **kwargs):
+        _bold = False
+        if kwargs is not None:
+            for key, value in kwargs.items():
+                if key == "bold":
+                    _bold = value
+        self.object.print_and_update_main_log("Feed event: {}".format(str_msg), _bold)
+
     def time_stamp(self):
         return datetime.today().strftime('%Y-%m-%d %H:%M.%S --> ')
 
