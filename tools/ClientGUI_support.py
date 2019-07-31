@@ -19,7 +19,6 @@ from . import track_fish
 from time import sleep
 from .track_feeder import tracker_Feeder
 
-stop_traning = True
 feed_object = tracker_Feeder()
 
 try:
@@ -66,7 +65,7 @@ def R2Sel():
     sys.stdout.flush()
 
 def R3Sel():
-    global TraningVar, Fish_traningGUI
+    global TraningVar, Fish_trainingGUI
     print('ClientGUI_support.R3Sel')
     r_button_val = TraningVar.get()
     print("TraningVar.get():{}".format(r_button_val))
@@ -86,7 +85,7 @@ def R3Sel():
 
 def onLogClear():
     sys.stdout.flush()
-    Fish_traningGUI.txtMainLog.delete('0.0', END)
+    Fish_trainingGUI.txtMainLog.delete('0.0', END)
 
 
 def Feed():
@@ -101,7 +100,7 @@ def on1L():
     try:
         exception_class.info_wo_tstamp("\tTest motor - 1L")
 
-        steps_no = Fish_traningGUI.txtStepNum.get()
+        steps_no = Fish_trainingGUI.txtStepNum.get()
         motor = 1
         if steps_no == '':
             program = 0
@@ -118,7 +117,7 @@ def on1R():
     try:
         exception_class.info_wo_tstamp("\tTest motor - 1R")
 
-        steps_no = Fish_traningGUI.txtStepNum.get()
+        steps_no = Fish_trainingGUI.txtStepNum.get()
         motor = 0
         if steps_no == '':
             program = 0
@@ -152,17 +151,18 @@ def on2R():
     sys.stdout.flush()
 
 def onExit():
-    global exit_flag, stop_traning, Fish_traningGUI
+    global exit_flag, Fish_trainingGUI
     print('ClientGUI_support.onExit')
     sys.stdout.flush()
 
     # exit_var = True
     # Fish_traningGUI.stop_traning = True
-    if stop_traning:
-        print("stop_traning:{}".format(stop_traning))
+    print("stop_training:{}".format(Fish_trainingGUI.stop_training))
+
+    if Fish_trainingGUI.stop_training:
         destroy_window()
     else:
-        Fish_traningGUI.exit_flag = True
+        Fish_trainingGUI.exit_flag = True
         onStopTraining()
 
     # destroy_window()
@@ -171,13 +171,13 @@ def onExit():
     # sys.exit(1)
 
 def onRunTraining():
-    global stop_traning, TraningVar, thread_track_fish, controller
+    global TraningVar, thread_track_fish, controller
     sys.stdout.flush()
 
-    Fish_traningGUI.stop_traning = False
+    Fish_trainingGUI.stop_training = False
     log_name = []
-    fish_no = Fish_traningGUI.txtFishNo1.get('0.0', 'end-1c')
-    training_day = Fish_traningGUI.txtTrainingDay1.get('0.0', 'end-1c')
+    fish_no = Fish_trainingGUI.txtFishNo1.get('0.0', 'end-1c')
+    training_day = Fish_trainingGUI.txtTrainingDay1.get('0.0', 'end-1c')
 
     if fish_no is "" or training_day is "":
         log_name.append('test')
@@ -196,7 +196,7 @@ def onRunTraining():
 
     camera = CamVar1.get()
 
-    controller = Controller(feed_object, exception_class, Fish_traningGUI, log_name, camera)
+    controller = Controller(feed_object, exception_class, Fish_trainingGUI, log_name, camera)
     _tmp1 = type(controller)
     print("type:{}".format(_tmp1))
 
@@ -209,11 +209,11 @@ def onRunTraining():
 
 
 def onStopTraining():
-    global stop_traning, Fish_traningGUI
+    global Fish_trainingGUI
     sys.stdout.flush()
 
     # onExit()
-    Fish_traningGUI.stop_traning = True
+    Fish_trainingGUI.stop_training = True
     #Fish_traningGUI.print_and_update_main_log("Stopped!")
 
 def onSendtest():
@@ -225,7 +225,7 @@ def onSendtest():
 
 def onStatClear():
     sys.stdout.flush()
-    Fish_traningGUI.txtStatLog.delete('0.0', END)
+    Fish_trainingGUI.txtStatLog.delete('0.0', END)
 
 
 def onTankConfig():
@@ -241,12 +241,12 @@ def onTankConfig():
 
 def onSetZero():
     print('ClientGUI_support.onSetZero')
-    btn_txt = Fish_traningGUI.btnSetZero['text']
+    btn_txt = Fish_trainingGUI.btnSetZero['text']
     if btn_txt == "Set ZERO pos.":
-        Fish_traningGUI.btnSetZero.configure(text='END')
+        Fish_trainingGUI.btnSetZero.configure(text='END')
         feed_object.Arduino.disable_pins(True)
     else:
-        Fish_traningGUI.btnSetZero.configure(text='Set ZERO pos.')
+        Fish_trainingGUI.btnSetZero.configure(text='Set ZERO pos.')
         feed_object.Arduino.disable_pins(False)
 
     #
@@ -255,19 +255,19 @@ def onSetZero():
     # fish_client.kill()
 
 def onStatRun():
-    global Fish_traningGUI
+    global Fish_trainingGUI
     sys.stdout.flush()
     _StatInfo = ThreadingProcess('fish_stat.py',
-                                 Fish_traningGUI.LogFolderName,
-                                 Fish_traningGUI.txtStatDaysBack.get('0.0', END),
-                                 Fish_traningGUI.txtStatArgs.get('0.0', END)).run()
-    Fish_traningGUI.txtStatLog.insert(END, _StatInfo)
-    Fish_traningGUI.txtStatLog.see(END)
+                                 Fish_trainingGUI.LogFolderName,
+                                 Fish_trainingGUI.txtStatDaysBack.get('0.0', END),
+                                 Fish_trainingGUI.txtStatArgs.get('0.0', END)).run()
+    Fish_trainingGUI.txtStatLog.insert(END, _StatInfo)
+    Fish_trainingGUI.txtStatLog.see(END)
     print ("HERE:{}".format(_StatInfo))
 
 def init(top, gui, _exception_class,  *args, **kwargs):
-    global Fish_traningGUI, top_level, root, exception_class
-    Fish_traningGUI = gui
+    global Fish_trainingGUI, top_level, root, exception_class
+    Fish_trainingGUI = gui
     top_level = top
     root = top
     exception_class = _exception_class

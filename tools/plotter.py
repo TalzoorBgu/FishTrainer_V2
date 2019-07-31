@@ -99,7 +99,7 @@ class ReadFile:
         traning_day = _file_name[DAY_place+3:DAY_end_place]
         fish_no = _file_name[_F_place+2:DAY_place]
 
-        print("_file_name:{}, _file_name.find(test):{}".format(_file_name, _file_name.find("test")))
+        # print("_file_name:{}, _file_name.find(test):{}".format(_file_name, _file_name.find("test")))
         if not _file_name.find("test") == -1:
             traning_day = ""
             fish_no = "test"
@@ -322,7 +322,7 @@ def folder_to_file_list():
 
     if args.path == 'auto':
         full_script_path = os.path.dirname(os.path.realpath(__file__))
-        trainerNEW_end_place = full_script_path.find(r"fish-trainerNEW") + len("fish-trainerNEW/")
+        trainerNEW_end_place = ""   # full_script_path.find(r"fish-trainerNEW") + len("fish-trainerNEW/")
         full_root_script_path = full_script_path[:trainerNEW_end_place]
         folder = os.path.join(full_root_script_path, r"data/log")
     else:

@@ -79,10 +79,6 @@ class Controller:
             #print (time_str)
             self.GUI_obj.update_time(time_str)
 
-    def check_traning(self):
-        _int_tmp = self.GUI_obj.stop_traning
-        return _int_tmp
-
     def check_exit_flag(self):
         _int_tmp = self.GUI_obj.exit_flag
         return _int_tmp
@@ -90,17 +86,24 @@ class Controller:
     def close_app(self):
         Main.destroy_Fish_traning_GUI___Client()
 
+    def check_training(self):
+        _int_tmp = self.GUI_obj.stop_training
+        return _int_tmp
+
     def end_training(self, fish_id):        # called in track_fish.py - cb.end_training(id_out)
+        print("1thread_plotter - starting")
         log_filename = self.logger[fish_id].filename
         self.logger[fish_id].fo.close()
         sleep(0.2)  # 200mS wait
         print("fish_id:{}, filename:{}".format(fish_id, log_filename))
 
         thread_plotter = threading.Thread(target=plotter.run,
-                                          args=(self.log_folder, log_filename, ), kwargs=dict(show=True, overwrite=True), )
-
-        thread_plotter.daemon = True
+                                          args=(self.log_folder, log_filename, ),
+                                          kwargs=dict(show=True, overwrite=True), )
+        thread_plotter.daemon = False
+        print("2thread_plotter - starting")
         thread_plotter.start()
+        thread_plotter.join()
 
         # plotter.run(self.log_folder, log_filename, show=True, overwrite=True)
         sleep(5)

@@ -70,12 +70,12 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
     f_id = 0
     img_name = "image" + str(f_id)
     mask_name = "mask" + str(f_id)
-    # cv2.namedWindow(img_name)
-    # cv2.namedWindow(mask_name)
+    cv2.namedWindow(img_name)
+    cv2.namedWindow(mask_name)
     cv2.startWindowThread()
 
     while stop_training is False:
-        stop_training = cb.check_traning()
+        stop_training = cb.check_training()
         cb.time()
         # Capture frame-by-frame
         ret, frame = video_capture.read()
@@ -133,12 +133,13 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     # exit while loop:
     print("stop_training={}".format(stop_training))
+    print("fish:{}".format(fish))
     id_out = 0
     for fishy in fish:
         print("OUT:fish_id:{}".format(id_out))
         cb.end_training(id_out)
         id_out += 1
-        sleep(0.5)
+        sleep(1.5)
 
     exit_flag = cb.check_exit_flag()
     if exit_flag:

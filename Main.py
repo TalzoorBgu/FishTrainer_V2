@@ -76,7 +76,7 @@ class ConfigSectionMap:
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
-    global val, Fish_traningGUI, root
+    global val, Fish_trainingGUI, root
     root = Tk()
     ClientGUI_support.set_Tk_var()
     Fish_traning_GUI = Fish_traning_GUI___Client(root)
@@ -90,7 +90,7 @@ def vp_start_gui():
     ClientGUI_support.init(root, Fish_traning_GUI, Excp)
     root.mainloop()
 
-Fish_traningGUI = None
+Fish_trainingGUI = None
 # def create_Fish_traning_GUI___Client(root, *args, **kwargs):
 #     '''Starting point when module is imported by another program.'''
 #     global Fish_traningGUI, w_win, rt
@@ -102,7 +102,7 @@ Fish_traningGUI = None
 #     return (w, top)
 
 def destroy_Fish_traning_GUI___Client():
-    global Fish_traningGUI
+    global Fish_trainingGUI
     ClientGUI_support.destroy_window()
     # Fish_traningGUI.destroy()
     Fish_traningGUI = None
@@ -111,7 +111,7 @@ def destroy_Fish_traning_GUI___Client():
 class Fish_traning_GUI___Client:
     def __init__(self, top = None, excp = None):
 
-        self.stop_traning = False
+        self.stop_training = False
         self.exit_flag = False
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -1005,7 +1005,7 @@ class Fish_traning_GUI___Client:
         #print('self.chb_NewMotor:{}'.format(self.chb_NewMotor.getboolean(check)))
 
     def print_and_update_main_log(self, str_to_print, _bold, new_line=True):
-        global Fish_traningGUI, top
+        global Fish_trainingGUI, top
         str_temp = '{}'.format(str_to_print)
         print (str_temp)
         if new_line: str_temp = '{}\n'.format(str_temp)
