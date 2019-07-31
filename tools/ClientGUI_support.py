@@ -280,7 +280,6 @@ def destroy_window():
     # Function which closes the window.
     # print("Quiting.")
     controller.__del__()
-    thread_track_fish.exit()
 
     top_level.destroy()
     top_level = None
