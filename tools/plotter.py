@@ -349,10 +349,10 @@ def folder_to_file_list():
     return folder, sorted_files
 
 def openImage(_img):
-    imageViewerFromCommandLine = {'linux':'xdg-open',
-                                  'win32':'explorer',
-                                  'darwin':'open'}[sys.platform]
-    subprocess.run([imageViewerFromCommandLine, _img])
+    imageViewerFromCommandLine = {'linux': 'xdg-open',
+                                  'win32': 'explorer',
+                                  'darwin': 'open'}[sys.platform]
+    subprocess.run([imageViewerFromCommandLine, str(_img)])
 
 
 if __name__ == '__main__':
