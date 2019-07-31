@@ -69,6 +69,7 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     cv2.waitKey(1)
     cv2.destroyAllWindows()
+    cv2.waitKey(1)
 
     f_id = 0
     img_name = "image" + str(f_id)
