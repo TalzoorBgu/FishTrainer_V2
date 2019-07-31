@@ -72,7 +72,7 @@ class Controller:
 
 
     def __del__(self):  #Destroy
-        self.thread_plotter.exit()
+        self.thread_plotter.cancel()
         print('Controller closed')
 
     def time(self):
