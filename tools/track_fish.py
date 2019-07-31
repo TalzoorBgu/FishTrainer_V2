@@ -67,10 +67,6 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     exception_class.info("Training started. version:{}".format(_version), bold=True)
 
-    cv2.waitKey(1)
-    cv2.destroyAllWindows()
-    cv2.waitKey(1)
-
     f_id = 0
     img_name = "image" + str(f_id)
     mask_name = "mask" + str(f_id)
