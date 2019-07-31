@@ -285,6 +285,7 @@ class PlotTraj:
             open_img_thread = threading.Thread(target=openImage, args=(full_name, ))
             open_img_thread.start()
             open_img_thread.join()
+            print("OpenImg thread finished")
             # openImage(full_name)
 
 
