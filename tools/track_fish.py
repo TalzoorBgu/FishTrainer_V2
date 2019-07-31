@@ -126,9 +126,9 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     # exception_class.info("Training stopped")
 
-    # cv2.waitKey(1)
-    # cv2.destroyAllWindows()
-    # cv2.waitKey(1)
+    cv2.waitKey(1)
+    cv2.destroyAllWindows()
+    cv2.waitKey(1)
     video_capture.release()
     # exit while loop:
     id_out = 0
