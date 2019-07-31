@@ -258,13 +258,13 @@ def onSetZero():
 def onStatRun():
     global Fish_trainingGUI
     sys.stdout.flush()
-    _StatInfo = ThreadingProcess('fish_stat.py',
-                                 Fish_trainingGUI.LogFolderName,
-                                 Fish_trainingGUI.txtStatDaysBack.get('0.0', END),
-                                 Fish_trainingGUI.txtStatArgs.get('0.0', END)).run()
-    Fish_trainingGUI.txtStatLog.insert(END, _StatInfo)
-    Fish_trainingGUI.txtStatLog.see(END)
-    print ("HERE:{}".format(_StatInfo))
+    # _StatInfo = ThreadingProcess('fish_stat.py',
+    #                              Fish_trainingGUI.LogFolderName,
+    #                              Fish_trainingGUI.txtStatDaysBack.get('0.0', END),
+    #                              Fish_trainingGUI.txtStatArgs.get('0.0', END)).run()
+    # Fish_trainingGUI.txtStatLog.insert(END, _StatInfo)
+    # Fish_trainingGUI.txtStatLog.see(END)
+    # print ("HERE:{}".format(_StatInfo))
 
 def init(top, gui, _exception_class,  *args, **kwargs):
     global Fish_trainingGUI, top_level, root, exception_class
@@ -291,6 +291,7 @@ class ThreadingProcess(object):
         self.arg0 = arg0
         self.arg1 = arg1
         self.arg2 = arg2
+        print("ThreadingProcess:{}".format(file_name))
 
 
     def runTrack(self, process):
