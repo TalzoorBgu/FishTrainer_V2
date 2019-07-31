@@ -96,7 +96,7 @@ class Controller:
         print("fish_id:{}, filename:{}".format(fish_id, log_filename))
 
         plotter.run(self.log_folder, log_filename, show=True, overwrite=True)
-        sleep(1.5)
+        sleep(5)
 
     def do(self, x, y, fish_id, _version):
         global total_feed
