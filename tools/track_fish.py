@@ -80,7 +80,8 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
         # Capture frame-by-frame
         ret, frame = video_capture.read()
         if frame is None:
-            print ('No Image')
+            # print('No Image')
+            exception_class.error('No Image! check that camera closed on other apps')
             break  # check for empty frames
 
         f_id = 0
@@ -126,11 +127,11 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     # exception_class.info("Training stopped")
 
+    # exit while loop:
     cv2.waitKey(1)
     cv2.destroyAllWindows()
     cv2.waitKey(1)
     video_capture.release()
-    # exit while loop:
     id_out = 0
     for fishy in fish:
         print("OUT:fish_id:{}".format(id_out))
