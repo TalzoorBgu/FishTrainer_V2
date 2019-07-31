@@ -11,7 +11,7 @@ import sys
 import webbrowser
 import argparse
 import subprocess
-
+import threading
 
 
 def find_nth_overlapping(haystack, needle, n):
@@ -282,7 +282,10 @@ class PlotTraj:
 
         self.ax.figure.savefig(full_name, dpi=600)
         if self.open_png:
-            openImage(full_name)
+            open_img_thread = threading.Thread(target=openImage, args=(full_name, ))
+            open_img_thread.start()
+            open_img_thread.join()
+            # openImage(full_name)
 
 
 def run(_log_folder, _file_to_plot, **kwargs):
@@ -354,6 +357,7 @@ def openImage(_img):
                                   'win32': 'explorer',
                                   'darwin': 'open'}[sys.platform]
     subprocess.run([imageViewerFromCommandLine, str(_img)])
+
 
 
 if __name__ == '__main__':
