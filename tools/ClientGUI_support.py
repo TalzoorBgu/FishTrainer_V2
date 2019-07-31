@@ -151,7 +151,7 @@ def on2R():
     sys.stdout.flush()
 
 def onExit():
-    global exit_flag, Fish_trainingGUI
+    global exit_flag, Fish_trainingGUI, thread_track_fish
     print('ClientGUI_support.onExit')
     sys.stdout.flush()
 
@@ -164,6 +164,8 @@ def onExit():
     else:
         Fish_trainingGUI.exit_flag = True
         onStopTraining()
+        thread_track_fish.join()
+        destroy_window()
 
     # destroy_window()
 
