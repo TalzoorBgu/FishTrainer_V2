@@ -97,7 +97,7 @@ class Controller:
         print("fish_id:{}, filename:{}".format(fish_id, log_filename))
 
         thread_plotter = threading.Thread(target=plotter.run,
-                                          args="self.log_folder, log_filename, show=True, overwrite=True, ")
+                                          args=(self.log_folder, log_filename, ), kwargs=dict(show=True, overwrite=True), )
 
         thread_plotter.daemon = True
         thread_plotter.start()
