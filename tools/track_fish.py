@@ -132,8 +132,6 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
     # cv2.waitKey(1)
 
     # exit while loop:
-    print("stop_training={}".format(stop_training))
-    print("fish:{}".format(fish))
     id_out = 0
     for fishy in fish:
         print("OUT:fish_id:{}".format(id_out))
