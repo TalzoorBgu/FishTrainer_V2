@@ -276,13 +276,14 @@ def init(top, gui, _exception_class,  *args, **kwargs):
     # root.bind("<Destroy>", onStopTraining)
 
 def destroy_window():
-    global top_level, thread_track_fish, controller
+    global top_level, thread_track_fish, controller, root
     # Function which closes the window.
     # print("Quiting.")
     controller.__del__()
 
-    top_level.destroy()
-    top_level = None
+    root.destroy()
+    # top_level.destroy()
+    # top_level = None
     # sys.exit(0)
 
 # class ThreadingProcess(object):
