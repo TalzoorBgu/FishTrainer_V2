@@ -70,8 +70,8 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
     f_id = 0
     img_name = "image" + str(f_id)
     mask_name = "mask" + str(f_id)
-    cv2.namedWindow(img_name, cv2.WINDOW_AUTOSIZE)
-    cv2.namedWindow(mask_name, cv2.WINDOW_AUTOSIZE)
+    cv2.namedWindow(img_name, cv2.WINDOW_GUI_EXPANDED)
+    cv2.namedWindow(mask_name, cv2.WINDOW_GUI_EXPANDED)
     cv2.startWindowThread()
 
     while stop_training is False:
