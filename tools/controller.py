@@ -30,6 +30,7 @@ class Controller:
         total_feed = 0
         time_counter = 0
 
+        self.thread_plotter = None
         self.feed = feed
 
         self.time_count = TimeCounter()
@@ -71,7 +72,8 @@ class Controller:
 
 
     def __del__(self):  #Destroy
-        print ('Controller closed')
+        self.thread_plotter.exit()
+        print('Controller closed')
 
     def time(self):
         time_str = self.time_count.get_time_diff()
@@ -102,6 +104,7 @@ class Controller:
         thread_plotter.daemon = False
         thread_plotter.start()
         thread_plotter.join()
+        self.thread_plotter = thread_plotter
 
         # plotter.run(self.log_folder, log_filename, show=True, overwrite=True)
         # sleep(5)

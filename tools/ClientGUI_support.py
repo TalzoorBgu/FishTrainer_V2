@@ -276,51 +276,54 @@ def init(top, gui, _exception_class,  *args, **kwargs):
     # root.bind("<Destroy>", onStopTraining)
 
 def destroy_window():
-    global top_level
+    global top_level, thread_track_fish, controller
     # Function which closes the window.
     # print("Quiting.")
+    controller.__del__()
+    thread_track_fish.exit()
+
     top_level.destroy()
     top_level = None
     # sys.exit(0)
 
-class ThreadingProcess(object):
-
-    def __init__(self, file_name, arg0='', arg1='', arg2=''):
-        self.interval = 1
-        self.file_name = file_name
-        self.arg0 = arg0
-        self.arg1 = arg1
-        self.arg2 = arg2
-        print("ThreadingProcess:{}".format(file_name))
-
-
-    def runTrack(self, process):
-        try:
-
-            str_name = [sys.executable, self.file_name, self.arg0, self.arg1, self.arg2]
-            process = subprocess.Popen(str_name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            output, error_output = process.communicate()
-            print(process.stdout.readline())
-        except:
-            print ('Err - Check (.py) call file')
-            if output=='': output=error_output
-
-        #return output
-
-    def run(self):
-        #print self.file_name
-        #while True:
-        #    print('Doing something imporant in the background')
-        #file = '/Users/talzoor/PycharmProjects/test/fish_stat.py'
-        try:
-            process = subprocess.Popen(['python', self.file_name, self.arg0, self.arg1, self.arg2], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            output, error_output = process.communicate()
-
-        except:
-            print ('Err - Check (fish_stat.py) call file')
-
-        if output=='': output=error_output
-        return output
+# class ThreadingProcess(object):
+#
+#     def __init__(self, file_name, arg0='', arg1='', arg2=''):
+#         self.interval = 1
+#         self.file_name = file_name
+#         self.arg0 = arg0
+#         self.arg1 = arg1
+#         self.arg2 = arg2
+#         print("ThreadingProcess:{}".format(file_name))
+#
+#
+#     def runTrack(self, process):
+#         try:
+#
+#             str_name = [sys.executable, self.file_name, self.arg0, self.arg1, self.arg2]
+#             process = subprocess.Popen(str_name, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#             output, error_output = process.communicate()
+#             print(process.stdout.readline())
+#         except:
+#             print ('Err - Check (.py) call file')
+#             if output=='': output=error_output
+#
+#         #return output
+#
+#     def run(self):
+#         #print self.file_name
+#         #while True:
+#         #    print('Doing something imporant in the background')
+#         #file = '/Users/talzoor/PycharmProjects/test/fish_stat.py'
+#         try:
+#             process = subprocess.Popen(['python', self.file_name, self.arg0, self.arg1, self.arg2], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#             output, error_output = process.communicate()
+#
+#         except:
+#             print ('Err - Check (fish_stat.py) call file')
+#
+#         if output=='': output=error_output
+#         return output
 
 
 # class Counter(object):
