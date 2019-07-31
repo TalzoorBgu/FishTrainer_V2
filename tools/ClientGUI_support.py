@@ -275,6 +275,7 @@ def init(top, gui, _exception_class,  *args, **kwargs):
     # root.protocol("WM_DELETE_WINDOW", onStopTraining)
     # root.bind("<Destroy>", onStopTraining)
 
+
 def destroy_window():
     global top_level, thread_track_fish, controller, root
     # Function which closes the window.
