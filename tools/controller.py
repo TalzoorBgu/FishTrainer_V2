@@ -91,7 +91,6 @@ class Controller:
         return _int_tmp
 
     def end_training(self, fish_id):        # called in track_fish.py - cb.end_training(id_out)
-        print("1thread_plotter - starting")
         log_filename = self.logger[fish_id].filename
         self.logger[fish_id].fo.close()
         sleep(0.2)  # 200mS wait
@@ -101,12 +100,11 @@ class Controller:
                                           args=(self.log_folder, log_filename, ),
                                           kwargs=dict(show=True, overwrite=True), )
         thread_plotter.daemon = False
-        print("2thread_plotter - starting")
         thread_plotter.start()
         thread_plotter.join()
 
         # plotter.run(self.log_folder, log_filename, show=True, overwrite=True)
-        sleep(5)
+        # sleep(5)
 
     def do(self, x, y, fish_id, _version):
         global total_feed
