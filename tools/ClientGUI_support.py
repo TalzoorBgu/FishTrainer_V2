@@ -206,6 +206,7 @@ def onRunTraining():
 
     thread_track_fish.daemon = True
     thread_track_fish.start()
+    thread_track_fish.join()
 
 
 def onStopTraining():
