@@ -67,6 +67,9 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     exception_class.info("Training started. version:{}".format(_version), bold=True)
 
+    cv2.waitKey(1)
+    cv2.destroyAllWindows()
+
     f_id = 0
     img_name = "image" + str(f_id)
     mask_name = "mask" + str(f_id)
@@ -99,7 +102,6 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
             cv2.imshow(img_name, frame_cut)
             cv2.imshow(mask_name, fgmask)
             cv2.waitKey(1)
-
             # find contours in the mask and initialize the current
             # (x, y) center of the ball
             cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
