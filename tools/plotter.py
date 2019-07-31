@@ -314,6 +314,7 @@ def run(_log_folder, _file_to_plot, **kwargs):
         plot_fig = PlotTraj(properties, show_at_end, overwrite)
         plot_fig.plot_it(file_data)
         plot_fig.save(log_img_folder)
+        print("Plotter finished")
 
 def folder_to_file_list():
     parser = argparse.ArgumentParser()
