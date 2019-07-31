@@ -45,7 +45,7 @@ def init_tracking(exception_class, _camera=0, video=None):
             width.append(fishy['right'] - fishy['left'])
             height.append(fishy['lower'] - fishy['upper'])
             tmp_str = 'width: {0}, height: {1}'.format(width[id], height[id])
-            print (tmp_str)
+            print(tmp_str)
             id = id + 1
     except FileNotFoundError:
         exception_class.error("No cam config file!, Press 'Tank conf.' first.")
@@ -129,7 +129,7 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
     # cv2.waitKey(1)
     # cv2.destroyAllWindows()
     # cv2.waitKey(1)
-
+    video_capture.release()
     # exit while loop:
     id_out = 0
     for fishy in fish:
