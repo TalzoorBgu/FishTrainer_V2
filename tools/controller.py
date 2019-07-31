@@ -11,6 +11,7 @@ import time
 from . import plotter
 from time import sleep
 import Main
+import threading
 
 
 FEED_EVERY = 3          # feed every 3 sec
@@ -95,7 +96,13 @@ class Controller:
         sleep(0.2)  # 200mS wait
         print("fish_id:{}, filename:{}".format(fish_id, log_filename))
 
-        plotter.run(self.log_folder, log_filename, show=True, overwrite=True)
+        thread_plotter = threading.Thread(target=plotter.run,
+                                          args=str(self.log_folder, log_filename, show=True, overwrite=True, ))
+
+        thread_plotter.daemon = True
+        thread_plotter.start()
+
+        # plotter.run(self.log_folder, log_filename, show=True, overwrite=True)
         sleep(5)
 
     def do(self, x, y, fish_id, _version):
