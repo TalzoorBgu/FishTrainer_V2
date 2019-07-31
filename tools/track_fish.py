@@ -143,7 +143,8 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     exit_flag = cb.check_exit_flag()
     if exit_flag:
-        exception_class.info("Quiting.", bold=True)
+        pass
+        # exception_class.info("Quiting.", bold=True)
         # cb.close_app()
     print("thread_track_fish Finished")
 
