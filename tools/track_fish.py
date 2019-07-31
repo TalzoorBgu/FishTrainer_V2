@@ -125,7 +125,7 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
         # TBD - inclear where to put
         # if cv2.waitKey(1) & 0xFF == ord('q'): break #Exit when Q is pressed
 
-    exception_class.info("Training stopped")
+    # exception_class.info("Training stopped")
 
     # cv2.waitKey(1)
     # cv2.destroyAllWindows()
