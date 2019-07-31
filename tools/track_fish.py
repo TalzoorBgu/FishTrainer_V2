@@ -16,7 +16,7 @@ video_capture = None
 #tank_config='../tracker/tank_config.txt'
 
 
-def init_tracking(_camera=0, video=None):
+def init_tracking(exception_class, _camera=0, video=None):
     global video_capture, fish
 
     # tank_config = full_root_script_path = os.getcwd()
@@ -25,35 +25,46 @@ def init_tracking(_camera=0, video=None):
     file_path = get_file_name(_camera)
     fish = []
     width = []
-    with open(file_path) as f:
-        lines = f.read().splitlines()
-    for line in lines:
-        fish.append(eval(line))
+    f = []
+    try:
+        with open(file_path) as f:
+            lines = f.read().splitlines()
+        for line in lines:
+            fish.append(eval(line))
 
-    # if a video path was not supplied, grab the reference to the webcam
-    if video is None:
-        video_capture = cv2.VideoCapture(int(_camera))
-    # otherwise, grab a reference to the video file
-    else:
-        video_capture = cv2.VideoCapture(video)
+        # if a video path was not supplied, grab the reference to the webcam
+        if video is None:
+            video_capture = cv2.VideoCapture(int(_camera))
+        # otherwise, grab a reference to the video file
+        else:
+            video_capture = cv2.VideoCapture(video)
 
-    id = 0
-    for fishy in fish:
-        fgbg.append(cv2.bgsegm.createBackgroundSubtractorMOG())
-        width.append(fishy['right'] - fishy['left'])
-        height.append(fishy['lower'] - fishy['upper'])
-        tmp_str = 'width: {0}, height: {1}'.format(width[id], height[id])
-        print (tmp_str)
-        id = id + 1
+        id = 0
+        for fishy in fish:
+            fgbg.append(cv2.bgsegm.createBackgroundSubtractorMOG())
+            width.append(fishy['right'] - fishy['left'])
+            height.append(fishy['lower'] - fishy['upper'])
+            tmp_str = 'width: {0}, height: {1}'.format(width[id], height[id])
+            print (tmp_str)
+            id = id + 1
+    except FileNotFoundError:
+        exception_class.error("No cam config file!, Press 'Tank conf.' first.")
+    finally:
+        print("f:{}".format(f))
+        if not f == []:
+            f.close()
 
     return width
 
 
 def track_loop(cb, exception_class, _version='edge'): #cb is an object that has a do() function in the calling script
-    global stop_training
+    global stop_training, video_capture
     stop_training = False
 
-    print("_version:{}".format(_version))
+    if video_capture is None:
+        exception_class.error("Having problem to get image from camera")
+        return 0
+
     exception_class.info("Training started. version:{}".format(_version), bold=True)
 
     f_id = 0
@@ -131,6 +142,7 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
     exit_flag = cb.check_exit_flag()
     if exit_flag:
+        exception_class.info("Quiting.", bold=True)
         cb.close_app()
 
 

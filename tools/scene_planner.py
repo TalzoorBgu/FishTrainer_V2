@@ -99,6 +99,7 @@ def SP_Main(_exception_class, _camera=0):
     # otherwise, grab a reference to the video file
     else:
         video_capture = cv2.VideoCapture(args["video"])
+
     try:
         ret, image = video_capture.read()
 
@@ -156,6 +157,7 @@ def SP_Main(_exception_class, _camera=0):
             for fishy in fish:
                 print(fishy)
                 thefile.write("%s\n" % fishy)
+
             thefile.flush()
             thefile.close()
             print("tank_config.txt saved!")

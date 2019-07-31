@@ -38,7 +38,7 @@ class Controller:
 
         self.Exception_log = _exception_class
 
-        width = track_fish.init_tracking(int(_camera))
+        width = track_fish.init_tracking(self.Exception_log, int(_camera))
 
         # init logger
         #   full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '/')
@@ -124,8 +124,6 @@ class Controller:
                 self.Exception_log.feed_event(str_to_print)
             # fish_client = FishClient()
             if self.chb_Var.get() == '1':
-                print("FEED NOW")
-
                 self.feed.new_feeder_run(0, feed_side)
                 # fish_client.send(fish_id + 11, feed_side)
             else:

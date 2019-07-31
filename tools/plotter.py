@@ -25,6 +25,7 @@ def find_nth_overlapping(haystack, needle, n):
 class ReadFile:
 
     def __init__(self, _file_name):
+        file_ex = ""
         try:
             self.fish_no = -1
             self.date = -1
@@ -145,38 +146,38 @@ class ReadFile:
         return [self.data_x, self.data_y]
 
 
-def save_plot(_info, _ax, open_png, overwrite, _project_wd=''):
-
-    if not _project_wd:
-        runing_dw = os.getcwd()
-        fish_trainerNEW_end_place = runing_dw.find("fish-trainerNEW") + len("fish-trainerNEW")
-        project_wd = runing_dw[:fish_trainerNEW_end_place]
-
-    info = _info
-    folder_name = os.path.join(project_wd, "data/log-img", info[0])
-
-    time_info = str(info[2]).replace(':', '')
-    file_name_to_save = "{}.png".format(time_info)
-    full_name = os.path.join(folder_name, file_name_to_save)
-    print("full fig name:{}".format(full_name))
-
-    fig_already_exsits = os.path.isfile(full_name)
-
-    if (fig_already_exsits and overwrite) or (not fig_already_exsits):
-
-        dir_ex = os.path.exists(folder_name)
-        print("folder_name:{}, exists:{}".format(folder_name, dir_ex))
-
-        if dir_ex:
-            pass
-        else:
-            os.makedirs(folder_name)
-
-        _ax.figure.savefig(full_name, dpi=600)
-        if open_png:
-            webbrowser.open(full_name)
-    else:
-        print("figure already exists, skipping")
+# def save_plot(_info, _ax, open_png, overwrite, _project_wd=''):
+#
+#     if not _project_wd:
+#         runing_dw = os.getcwd()
+#         fish_trainerNEW_end_place = runing_dw.find("fish-trainerNEW") + len("fish-trainerNEW")
+#         project_wd = runing_dw[:fish_trainerNEW_end_place]
+#
+#     info = _info
+#     folder_name = os.path.join(project_wd, "data/log-img", info[0])
+#
+#     time_info = str(info[2]).replace(':', '')
+#     file_name_to_save = "{}.png".format(time_info)
+#     full_name = os.path.join(folder_name, file_name_to_save)
+#     print("full fig name:{}".format(full_name))
+#
+#     fig_already_exsits = os.path.isfile(full_name)
+#
+#     if (fig_already_exsits and overwrite) or (not fig_already_exsits):
+#
+#         dir_ex = os.path.exists(folder_name)
+#         print("folder_name:{}, exists:{}".format(folder_name, dir_ex))
+#
+#         if dir_ex:
+#             pass
+#         else:
+#             os.makedirs(folder_name)
+#
+#         _ax.figure.savefig(full_name, dpi=600)
+#         if open_png:
+#             webbrowser.open(full_name)
+#     else:
+#         print("figure already exists, skipping")
 
 
 class PlotTraj:
@@ -245,8 +246,6 @@ class PlotTraj:
 
         self.line, = self.ax.plot(hte, hre, linewidth=0.5, color='black')
 
-        if self.open_png:
-            pass
         # plt.show()
 
 
@@ -282,6 +281,8 @@ class PlotTraj:
         print("full_name:{}".format(full_name))
 
         self.ax.figure.savefig(full_name, dpi=600)
+        if self.open_png:
+            openImage(full_name)
 
 
 def run(_log_folder, _file_to_plot, **kwargs):

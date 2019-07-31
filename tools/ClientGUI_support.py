@@ -19,7 +19,7 @@ from . import track_fish
 from time import sleep
 from .track_feeder import tracker_Feeder
 
-stop_traning = False
+stop_traning = True
 feed_object = tracker_Feeder()
 
 try:
@@ -158,9 +158,13 @@ def onExit():
 
     # exit_var = True
     # Fish_traningGUI.stop_traning = True
+    if stop_traning:
+        print("stop_traning:{}".format(stop_traning))
+        destroy_window()
+    else:
+        Fish_traningGUI.exit_flag = True
+        onStopTraining()
 
-    Fish_traningGUI.exit_flag = True
-    onStopTraining()
     # destroy_window()
 
     # sleep(1)
@@ -271,9 +275,9 @@ def init(top, gui, _exception_class,  *args, **kwargs):
     # root.bind("<Destroy>", onStopTraining)
 
 def destroy_window():
-    # Function which closes the window.
-    print("Quiting.")
     global top_level
+    # Function which closes the window.
+    # print("Quiting.")
     top_level.destroy()
     top_level = None
     # sys.exit(0)
