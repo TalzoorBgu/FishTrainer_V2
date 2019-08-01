@@ -4,6 +4,7 @@ import cv2
 from time import sleep
 import os
 from .scene_planner import get_file_name
+import sys
 
 width = []
 height = []
@@ -57,8 +58,9 @@ def init_tracking(exception_class, _camera=0, video=None):
     return width
 
 
-def track_loop(cb, exception_class, _version='edge'): #cb is an object that has a do() function in the calling script
-    global stop_training, video_capture
+def track_loop(cb, exception_class, event,  _version='edge'): #cb is an object that has a do() function in the calling script
+    global stop_training, video_capture, i
+    i=0
     stop_training = False
 
     if video_capture is None:
@@ -73,10 +75,13 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
     cv2.namedWindow(img_name)
     cv2.namedWindow(mask_name)
     cv2.startWindowThread()
+    stop_training = cb.check_training()
+    exit_flag = cb.check_exit_flag()
 
     while stop_training is False:
-        stop_training = cb.check_training()
+        sys.stdout.flush()
         cb.time()
+
         # Capture frame-by-frame
         ret, frame = video_capture.read()
         if frame is None:
@@ -122,12 +127,23 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
 
 
             f_id = f_id + 1
+
+            stop_training = cb.check_training()
+            exit_flag = cb.check_exit_flag()
+
         # TBD - inclear where to put
         # if cv2.waitKey(1) & 0xFF == ord('q'): break #Exit when Q is pressed
 
-    # exception_class.info("Training stopped")
 
     # exit while loop:
+    print("Loop exit")
+    # event.set()
+    if exit_flag:
+        pass
+        # exception_class.info("Quiting.", bold=True)
+        # cb.close_app()
+    exception_class.info("Training stopped")
+
     cv2.waitKey(1)
     cv2.destroyAllWindows()
     cv2.waitKey(1)
@@ -137,16 +153,8 @@ def track_loop(cb, exception_class, _version='edge'): #cb is an object that has 
         print("OUT:fish_id:{}".format(id_out))
         cb.end_training(id_out)
         id_out += 1
-        sleep(1.5)
-
-    exit_flag = cb.check_exit_flag()
-    if exit_flag:
-        pass
-        # exception_class.info("Quiting.", bold=True)
-        # cb.close_app()
+        # sleep(1.5)
     print("thread_track_fish Finished")
-
-
 
 def paint_lines(_cv_obj, _tank_width, _tank_height, _frame, _ver):
 

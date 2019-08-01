@@ -85,7 +85,7 @@ class Controller:
         return _int_tmp
 
     def close_app(self):
-        Main.destroy_Fish_traning_GUI___Client()
+        Main.destroy_Fish_training_GUI___Client()
 
     def check_training(self):
         _int_tmp = self.GUI_obj.stop_training

@@ -1,5 +1,5 @@
 [Fish Statistics]
-log folder =
+DB file = "Fish training database.db"
 days back = 100
 arg = 1
 
@@ -22,7 +22,6 @@ argument2 = --n=
 
 [Others]
 Route: 66
-
 
 [Arduino]
 send stepper pins = False

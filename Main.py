@@ -27,6 +27,7 @@ except ImportError:
 import configparser
 from datetime import datetime
 import os
+import threading
 
 from pathlib import Path
 
@@ -79,15 +80,15 @@ def vp_start_gui():
     global val, Fish_trainingGUI, root
     root = Tk()
     ClientGUI_support.set_Tk_var()
-    Fish_traning_GUI = Fish_traning_GUI___Client(root)
-    Excp = exception_class.RaiseException(Fish_traning_GUI)
+    Fish_trainingGUI = Fish_training_GUI___Client(root)
+    Excp = exception_class.RaiseException(Fish_trainingGUI)
     Arduino_obj = ClientGUI_support.feed_object.Arduino
     if Arduino_obj.connection == 'NO':
         Excp.error("No Arduino conn. check serial port (USB)", bold=True)
     else:
         Excp.info("Arduino connection OK, port:{}".format(Arduino_obj.serial_con.serial.port))
 
-    ClientGUI_support.init(root, Fish_traning_GUI, Excp)
+    ClientGUI_support.init(root, Fish_trainingGUI, Excp)
     root.mainloop()
 
 Fish_trainingGUI = None
@@ -101,18 +102,20 @@ Fish_trainingGUI = None
 #     ClientGUI_support.init(w, top, *args, **kwargs)
 #     return (w, top)
 
-def destroy_Fish_traning_GUI___Client():
+def destroy_Fish_training_GUI___Client():
     global Fish_trainingGUI
     ClientGUI_support.destroy_window()
     # Fish_traningGUI.destroy()
     Fish_traningGUI = None
 
 
-class Fish_traning_GUI___Client:
+class Fish_training_GUI___Client:
     def __init__(self, top = None, excp = None):
 
-        self.stop_training = False
+        self.stop_training = True
         self.exit_flag = False
+        self.Font_init()
+
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
@@ -854,15 +857,11 @@ class Fish_traning_GUI___Client:
         self.Label8.configure(highlightcolor="black")
         self.Label8.configure(text='''Log''')
 
-        myFont_reg = Font(family="TkTextFont", size=14)
-        myFont_bold = Font(family="TkTextFont", size=14, weight="bold")
-
-
         self.txtMainLog = Text(self.frmLog)
         self.txtMainLog.place(relx=0.01, rely=0.14, relheight=0.75
                               , relwidth=0.98)
         self.txtMainLog.configure(background="white")
-        self.txtMainLog.configure(font=myFont_reg)
+        self.txtMainLog.configure(font=self.myFont_reg)
         self.txtMainLog.configure(foreground="black")
         self.txtMainLog.configure(highlightbackground="#d9d9d9")
         self.txtMainLog.configure(highlightcolor="black")
@@ -872,7 +871,7 @@ class Fish_traning_GUI___Client:
         self.txtMainLog.configure(undo="1")
         self.txtMainLog.configure(width=842)
         self.txtMainLog.configure(wrap=WORD)
-        self.txtMainLog.tag_configure("bold", font=myFont_bold)
+
 
         self.frmLogClear = Button(self.frmLog)
         self.frmLogClear.place(relx=0.01, rely=0.89, height=22, width=70)
@@ -919,6 +918,9 @@ class Fish_traning_GUI___Client:
         self.fillValue()
         self.Exception.info(" --- Program started --- ")
 
+    def Font_init(self):
+        self.myFont_reg = Font(family="TkTextFont", size=14)
+        self.myFont_bold = Font(family="TkTextFont", size=14, weight="bold")
 
     def vars_init(self):
         self.LogFolderName = ""
@@ -936,8 +938,9 @@ class Fish_traning_GUI___Client:
 
         return results
 
-
     def fillValue(self):
+        self.txtMainLog.tag_configure("bold", font=self.myFont_bold)
+
         ConfigVals = ConfigSectionMap(self.Exception)
         self.chb_Var = ClientGUI_support.chb_Var
 
@@ -950,43 +953,56 @@ class Fish_traning_GUI___Client:
         pin_step_2a_list = self.str_pins_split(pins_2a)
         pin_step_2b_list = self.str_pins_split(pins_2b)
 
-        if fish_statistics_dict=={}:
-            pass
-        else:
-            # self.LogFolderName = fish_statistics_dict['log folder']
-            self.LogFolderName = log_folder()
-            self.Stat_days = fish_statistics_dict['days back']
-            self.Stat_arg = fish_statistics_dict['arg']
-        #self.Red_Feeder = ConfigSectionMap("Motor")['redFeeder']
+        try:
+            if fish_statistics_dict == {}:
+                pass
+            else:
+                # self.LogFolderName = fish_statistics_dict['log folder']
+                self.DB_fish_file = fish_statistics_dict['DB file']
+                print("self.DB_fish_file:{}".format(self.DB_fish_file))
+                self.LogFolderName = log_folder()
+                self.Stat_days = fish_statistics_dict['days back']
+                self.Stat_arg = fish_statistics_dict['arg']
+            #self.Red_Feeder = ConfigSectionMap("Motor")['redFeeder']
 
-        if communication_dist == {}:
-            pass
-        else:
-            self.ServerIP = communication_dist['server ip']
+            if communication_dist == {}:
+                pass
+            else:
+                self.ServerIP = communication_dist['server ip']
 
-        if fish_dict == {}:
-            pass
-        else:
-            Arg1 = fish_dict['argument1']
-            Arg2 = fish_dict['argument2']
-            self.Args = '{} {}'.format(Arg1, Arg2)
+            if fish_dict == {}:
+                pass
+            else:
+                Arg1 = fish_dict['argument1']
+                Arg2 = fish_dict['argument2']
+                self.Args = '{} {}'.format(Arg1, Arg2)
 
-        if arduino_dict == {}:
-            pass
-        else:
-            set_stepper_pins = arduino_dict['send stepper pins']
-            if set_stepper_pins == 'True':
-                ardu_conn = ClientGUI_support.feed_object.Arduino.connection
-                if ardu_conn == 'OK':
-                    arduino_obj = ClientGUI_support.feed_object.Arduino
-                    p2a_st = pin_step_2a_list[0]; p2a_dir = pin_step_2a_list[1]; p2a_en = pin_step_2a_list[2];
-                    p2b_st = pin_step_2b_list[0]; p2b_dir = pin_step_2b_list[1]; p2b_en = pin_step_2b_list[2];
+            if arduino_dict == {}:
+                pass
+            else:
+                set_stepper_pins = arduino_dict['send stepper pins']
+                if set_stepper_pins == 'True':
+                    ardu_conn = ClientGUI_support.feed_object.Arduino.connection
+                    if ardu_conn == 'OK':
+                        arduino_obj = ClientGUI_support.feed_object.Arduino
+                        p2a_st = pin_step_2a_list[0]; p2a_dir = pin_step_2a_list[1]; p2a_en = pin_step_2a_list[2];
+                        p2b_st = pin_step_2b_list[0]; p2b_dir = pin_step_2b_list[1]; p2b_en = pin_step_2b_list[2];
 
-                    arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_1(p2a_st, p2a_dir, p2a_en))
-                    arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_2(p2b_st, p2b_dir, p2b_en))
-                    arduino_obj.send_command(arduino_obj.command_str.define_default_vel_acc(10, 20, 10))
-
-        #print self.Args
+                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_1(p2a_st, p2a_dir, p2a_en))
+                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_2(p2b_st, p2b_dir, p2b_en))
+                        arduino_obj.send_command(arduino_obj.command_str.define_default_vel_acc(10, 20, 10))
+        except KeyError as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+            self.Exception.error("{}({}) - somthing is wrong with config file.".
+                                 format(exc_type.__name__, exc_obj))
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+            self.Exception.error("{}({}) - somthing is wrong.".
+                                 format(exc_type.__name__, exc_obj))
 
         self.txtLogFolder.insert('0.0', self.LogFolderName)
         self.txtServerIP.insert('0', self.ServerIP)
@@ -1029,13 +1045,14 @@ class Fish_traning_GUI___Client:
         else:  # >20 --> make it green
             self.Label15.configure(text=time_str, fg='#5eaf24')
 
-
         def __call__(self):
             print("RUN Command")
 
+    def exit_press(self):
+        ClientGUI_support.onExit()
+
     def time_stamp(self):
         return datetime.today().strftime('%Y-%m-%d %H:%M.%S --> ')
-
 
 def make_two_digit_num(int_to_check):
     str_temp = '{}'.format(int_to_check)
@@ -1057,6 +1074,23 @@ def log_file_name(_file_name):
 
     return file_name
 
+# def start_working_interval():
+#     global Fish_trainingGUI
+#
+#     def timer_tick():
+#         try:
+#             is_al = Fish_trainingGUI.thread_track_fish.isAlive()
+#             print("is_al:{}".format(is_al))
+#         except AttributeError as e:
+#             exc_type, exc_obj, exc_tb = sys.exc_info()
+#             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+#             print(exc_type, fname, exc_tb.tb_lineno)
+#         timer = threading.Timer(2.0, timer_tick)
+#         timer.start()
+#     timer_tick()
+
 
 if __name__ == '__main__':
+
+    # start_working_interval()
     vp_start_gui()

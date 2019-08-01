@@ -9,6 +9,10 @@
 import sys
 import subprocess
 import threading
+from threading import Event
+
+event = Event()
+
 try:
     import scene_planner
 except ImportError:
@@ -20,6 +24,7 @@ from time import sleep
 from .track_feeder import tracker_Feeder
 
 feed_object = tracker_Feeder()
+thread_track_fish = []
 
 try:
     from Tkinter import *
@@ -151,7 +156,7 @@ def on2R():
     sys.stdout.flush()
 
 def onExit():
-    global exit_flag, Fish_trainingGUI, thread_track_fish
+    global exit_flag, Fish_trainingGUI, thread_track_fish, root
     print('ClientGUI_support.onExit')
     sys.stdout.flush()
 
@@ -159,18 +164,17 @@ def onExit():
     # Fish_traningGUI.stop_traning = True
     print("stop_training:{}".format(Fish_trainingGUI.stop_training))
 
-    if Fish_trainingGUI.stop_training:
+    if Fish_trainingGUI.stop_training == True:
         destroy_window()
-    else:
+    else:       # False
         Fish_trainingGUI.exit_flag = True
         onStopTraining()
-        thread_track_fish.join()
+        # Fish_trainingGUI.stop_training = True
+        # thread_track_fish.join()
+
+        while thread_track_fish.isAlive():
+            root.update()
         destroy_window()
-
-    # destroy_window()
-
-    # sleep(1)
-    # sys.exit(1)
 
 def onRunTraining():
     global TraningVar, thread_track_fish, controller
@@ -203,9 +207,8 @@ def onRunTraining():
     print("type:{}".format(_tmp1))
 
     training_type = "edge" if TraningVar.get() is 'E' else "center"
-    track_loop_args = (controller, exception_class, training_type, )
-    thread_track_fish = threading.Thread(target=track_fish.track_loop, args=track_loop_args)
-
+    track_loop_args = (controller, exception_class, event, training_type, )
+    thread_track_fish = threading.Thread(target=track_fish.track_loop, name="track_loop", args=track_loop_args)
     thread_track_fish.daemon = True
     thread_track_fish.start()
 

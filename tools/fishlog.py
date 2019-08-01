@@ -3,7 +3,7 @@ import datetime
 # from time import gmtime, strftime
 import os
 from datetime import datetime
-from Main import Fish_traning_GUI___Client
+# from Main import Fish_training_GUI___Client
 
 def time_stamp():
     return datetime.today().strftime('%Y-%m-%d %H%M%S')
