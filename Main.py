@@ -991,6 +991,7 @@ class MainGUI:
 
     def fillValue(self):
         self.txtMainLog.tag_configure("bold", font=self.myFont_bold)
+        self.txtMainLog.configure(font=self.myFont_reg)
 
         self.radF1.configure(font=self.myFont_small)
         self.radN1.configure(font=self.myFont_small)
