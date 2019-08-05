@@ -190,6 +190,8 @@ class ReadFile:
             self.max_x = 0
             self.max_y = 0
 
+            self.traning_start_str = ""
+
             my_file = Path(_file_name)
             file_ex = my_file.is_file()
             if file_ex:
