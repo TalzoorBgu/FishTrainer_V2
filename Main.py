@@ -856,7 +856,7 @@ class MainGUI:
         self.Label14.configure(highlightbackground="#d9d9d9")
         self.Label14.configure(highlightcolor="black")
         self.Label14.configure(text='''Time runing:''')
-        self.Label14.configure(width=91)
+        self.Label14.configure(width=105)
 
         self.lblTimeCount = tk.Label(self.frmLog)
         self.lblTimeCount.place(relx=0.751, rely=0.019, height=24, width=121)
@@ -927,7 +927,6 @@ class MainGUI:
         tv.heading(col, command=lambda: self.treeview_sort_column(tv, col, not reverse))
 
     def tree_view_create(self):
-        # self.DB.delete(*self.DB.get_children())
         self.DB.pack()
         self.DB.pack_forget()
         #
