@@ -297,7 +297,7 @@ def destroy_window():
 
 def show_file(path):
     if platform.system() == "Windows":
-        subprocess.Popen(["explorer", "/select,", path])
+        subprocess.Popen(["explorer", " /select,", path])
         # os.startfile(path)
     elif platform.system() == "Darwin":
         subprocess.Popen(["open", "-R", path])
@@ -306,13 +306,17 @@ def show_file(path):
 
 
 def open_folder(path):
-    if platform.system() == "Windows":
-        os.startfile(path)
-    elif platform.system() == "Darwin":
-        subprocess.Popen(["open", path])
-    else:
-        subprocess.Popen(["xdg-open", path])
+    try:
+        if platform.system() == "Windows":
+            os.startfile(path)
+        elif platform.system() == "Darwin":
+            subprocess.Popen(["open", path])
+        else:
+            subprocess.Popen(["xdg-open", path])
+    except FileNotFoundError:
+        exception_class.error("cannot find the folder")
 
+#TypeError: argument of type 'WindowsPath' is not iterable
 
 if __name__ == '__main__':
     import ClientGUI
