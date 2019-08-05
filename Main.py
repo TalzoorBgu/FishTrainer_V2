@@ -848,7 +848,7 @@ class MainGUI:
         self.frmLogClear.configure(text='''Clear''')
 
         self.Label14 = tk.Label(self.frmLog)
-        self.Label14.place(relx=0.636, rely=0.038, height=14, width=91)
+        self.Label14.place(relx=0.636, rely=0.032, height=14, width=91)
         self.Label14.configure(activebackground="#f9f9f9")
         self.Label14.configure(activeforeground="black")
         self.Label14.configure(background="#d9d9d9")
