@@ -150,7 +150,7 @@ def track_loop(cb, exception_class, event,  _version='edge'): #cb is an object t
     video_capture.release()
     id_out = 0
     for fishy in fish:
-        print("OUT:fish_id:{}".format(id_out))
+        # print("OUT:fish_id:{}".format(id_out))
         cb.end_training(id_out)
         id_out += 1
         # sleep(1.5)

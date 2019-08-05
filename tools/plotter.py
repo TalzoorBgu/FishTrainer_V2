@@ -148,7 +148,7 @@ class PlotTraj:
         time_info = str(info[2]).replace(':', '')
         file_name_to_save = "{}.png".format(time_info)
         full_name = Path(os.path.join(folder_name, file_name_to_save))
-        print("full_name:{}".format(full_name))
+        print("img full_name:{}".format(full_name))
 
         self.ax.figure.savefig(full_name, dpi=600)
         if self.open_png:

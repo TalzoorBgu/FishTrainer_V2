@@ -982,7 +982,7 @@ class MainGUI:
 
         fish_db = SQL_DB.Database(str_db_path)
         fish_list = fish_db.db_fish_view()
-        print("fish_list:{}".format(fish_list))
+        # print("fish_list:{}".format(fish_list))
         for i, each_fish in enumerate(fish_list):
             fish_rec = fish_db.extract_fish_records(each_fish)
             ttl_feeds = fish_db.calc_total_and_avg_feed(fish_rec)
