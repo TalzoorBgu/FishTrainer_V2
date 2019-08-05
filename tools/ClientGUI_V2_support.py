@@ -297,7 +297,7 @@ def destroy_window():
 
 def show_file(path):
     if platform.system() == "Windows":
-        str_db_file = "explorer /select,\"{}\"".format(repr(str(path)))
+        str_db_file = "explorer /select,\"{}\"".format(str(path))
         print("str_db_file:{}".format(str_db_file))
         subprocess.Popen(str_db_file)
         # os.startfile(path)
