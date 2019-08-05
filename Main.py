@@ -927,10 +927,13 @@ class MainGUI:
         tv.heading(col, command=lambda: self.treeview_sort_column(tv, col, not reverse))
 
     def tree_view_create(self):
-        self.DB.delete(*self.DB.get_children())
+        # self.DB.delete(*self.DB.get_children())
+        self.DB.pack()
+        self.DB.pack_forget()
+        #
         self.style.configure('Treeview.Heading', font="TkDefaultFont")
         self.DB = ScrolledTreeView(self.Frame1)
-        self.DB.place(relx=0.012, rely=0.057, relheight=0.874, relwidth=0.96)
+        self.DB.place(relx=0.012, rely=0.057, relheight=0.874, relwidth=0.98)
 
         # build_treeview_support starting.
         col_names = ['Fish no.', 'Last training', 'Training day', 'Total feed', 'Avg feed p. records']

@@ -211,7 +211,7 @@ def onRunTraining():
                             log_name,
                             camera)
     _tmp1 = type(controller)
-    print("type:{}".format(_tmp1))
+    # print("type:{}".format(_tmp1))
 
     training_type = "edge" if TrainingVar.get() is 'E' else "center"
     track_loop_args = (controller, exception_class, event, training_type, )
