@@ -888,7 +888,7 @@ class MainGUI:
         self.myFont_bold = Font(family="TkTextFont", size=14, weight="bold")
         self.myFont_big_bold = Font(family="TkTextFont", size=18, weight="bold")
         self.myFont_big = Font(family="TkTextFont", size=18)
-        self.myFont_small = Font(family="TkTextFont", size=12)
+        self.myFont_small = Font(family="TkTextFont", size=8)
 
 
 
