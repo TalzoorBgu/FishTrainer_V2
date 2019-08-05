@@ -105,25 +105,28 @@ class Controller:
         self.logger[fish_id].fo.close()
         sleep(0.2)  # 200mS wait
         t_data = ReadFile(log_filename)
-        t_dt_str = t_data.traning_start_str
-        time_str = t_dt_str[:t_dt_str.rindex(" ") + 6]
+        if not t_data.file_empty:       # continue only when there is data
+            t_dt_str = t_data.traning_start_str
+            time_str = t_dt_str[:t_dt_str.rindex(" ") + 6]
 
-        fish_db.create_fish_record(t_data.fish_no)
-        fish_db.create_training_record([t_data.train_day,
-                                        t_data.fish_no,
-                                        time_str,
-                                        total_feed,
-                                        log_filename,
-                                        str(t_data.total_training_time),
-                                        ""])
-        self.GUI_obj.db_tree_view_data_refresh()
+            fish_db.create_fish_record(t_data.fish_no)
+            fish_db.create_training_record([t_data.train_day,
+                                            t_data.fish_no,
+                                            time_str,
+                                            total_feed,
+                                            log_filename,
+                                            str(t_data.total_training_time),
+                                            ""])
+            self.GUI_obj.db_tree_view_data_refresh()
 
-        thread_plotter = threading.Thread(target=plotter.run,
-                                          args=(t_data, self.log_folder, log_filename, ),
-                                          kwargs=dict(show=True, overwrite=True), )
-        thread_plotter.daemon = False
-        thread_plotter.start()
-        thread_plotter.join()
+            thread_plotter = threading.Thread(target=plotter.run,
+                                              args=(t_data, self.log_folder, log_filename, ),
+                                              kwargs=dict(show=True, overwrite=True), )
+            thread_plotter.daemon = False
+            thread_plotter.start()
+            thread_plotter.join()
+        else:
+            self.Exception_log.error("No data. DB record is not created")
         # self.thread_plotter = thread_plotter
 
         # plotter.run(self.log_folder, log_filename, show=True, overwrite=True)
@@ -191,6 +194,7 @@ class ReadFile:
             self.max_y = 0
 
             self.traning_start_str = ""
+            self.file_empty = False
 
             my_file = Path(_file_name)
             file_ex = my_file.is_file()
@@ -226,6 +230,7 @@ class ReadFile:
                     self.total_training_time = ttl_training_time
                 else:
                     print("File is empty")
+                    self.file_empty = True
 
             elif not file_ex:
                 print("File does not exist!")
