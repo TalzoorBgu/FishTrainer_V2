@@ -1,5 +1,5 @@
 [Fish Statistics]
-DB file = "Fish training database.db"
+DB file = Fish training db.db
 days back = 100
 arg = 1
 

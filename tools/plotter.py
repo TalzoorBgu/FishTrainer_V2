@@ -8,145 +8,12 @@ import matplotlib.gridspec as gridspec
 
 import numpy
 from pathlib import Path
-from datetime import datetime
 import os
 import sys
 import webbrowser
 import argparse
 import subprocess
 import threading
-
-
-def find_nth_overlapping(haystack, needle, n):
-    start = haystack.find(needle)
-    while start >= 0 and n > 1:
-        start = haystack.find(needle, start+1)
-        n -= 1
-    return start
-
-
-class ReadFile:
-
-    def __init__(self, _file_name):
-        file_ex = ""
-        try:
-            self.fish_no = -1
-            self.date = -1
-            self.ttl_time = -1
-
-            self.data_x = []
-            self.data_y = []
-            self.max_x = 0
-            self.max_y = 0
-
-            my_file = Path(_file_name)
-            file_ex = my_file.is_file()
-            if file_ex:
-                file_h = open(_file_name, 'r')
-                text_lines = file_h.read().split('\n')
-
-                self.fish_no,\
-                self.t_date,\
-                self.train_day = self.file_prop(_file_name)
-
-                training_end = training_start = self.extract_time(text_lines[0], self.t_date)
-
-                for num, word in enumerate(text_lines):
-                    data = self.extract_x_y(word)
-                    self.max_x = data[1][0] if data[1][0] > self.max_x else self.max_x
-                    self.max_y = data[1][1] if data[1][1] > self.max_y else self.max_y
-
-                    timeformat_time = self.extract_time(word, self.t_date)
-                    if type(timeformat_time) == type(training_end):
-                        bool_later = True if timeformat_time > training_end else False
-                        if bool_later:
-                            training_end = timeformat_time
-
-                    if data[0] is True:
-                        self.add(data[1])
-
-                # print(" self.max_x:",  self.max_x, "  self.max_y:",  self.max_y)
-                if num > 10:
-                    ttl_training_time = training_end - training_start
-                    print("training_start:{}".format(training_start))
-                    self.traning_start_str = str(training_start)
-                    self.total_training_time = ttl_training_time
-                else:
-                    print("File is empty")
-
-            elif not file_ex:
-                print("File does not exist!")
-
-        except:
-            print("Error")
-            raise
-        finally:
-            if file_ex: file_h.close()
-            print("File closed")
-
-    def add(self, _data):
-        self.data_x.append(_data[0])
-        self.data_y.append(_data[1])
-        pass
-
-
-    @staticmethod
-    def file_prop(_file_name):
-        log_place = _file_name.find("log")
-        date_end_place = _file_name.find(" ", log_place)
-        _F_place = _file_name.find("_F", log_place)
-        DAY_place = _file_name.find("DAY")
-        DAY_end_place = _file_name.find(".", DAY_place)
-
-        traning_date = _file_name[log_place+4:date_end_place]
-        traning_day = _file_name[DAY_place+3:DAY_end_place]
-        fish_no = _file_name[_F_place+2:DAY_place]
-
-        # print("_file_name:{}, _file_name.find(test):{}".format(_file_name, _file_name.find("test")))
-        if not _file_name.find("test") == -1:
-            traning_day = ""
-            fish_no = "test"
-
-        return fish_no, traning_date, traning_day
-
-    @staticmethod
-    def extract_x_y(_str):
-        data_ok = False
-        [x, y] = [0, 0]
-        track_place = _str.find("track")
-
-        if track_place is not -1:
-            data_ok = True
-            x_pos_start = track_place+len("track") + 1
-            x_pos_end = _str.find(' ', x_pos_start)
-            y_pos_start = x_pos_end + 1
-            try:
-                [x, y] = _str[x_pos_start:x_pos_end], _str[y_pos_start:]
-                [x, y] = [float(x), float(y)]
-            except ValueError:
-                data_ok = False
-                pass
-
-        return data_ok, [x, y]
-
-    @staticmethod
-    def extract_time(_str, _date):
-        time_timeformat = ''
-        try:
-            if _str:
-                time_start_place = find_nth_overlapping(_str, " ", 2)
-                time_end_place = _str.find('.')
-                time_str = _str[time_start_place+1:time_end_place]
-                time_date_str = "{} {}".format(_date, time_str)
-                t_format = '%Y-%m-%d %H:%M:%S'
-                time_timeformat = datetime.strptime(time_date_str, t_format)
-        except ValueError:
-            time_timeformat = ''
-            pass
-        return time_timeformat
-
-    def file_data(self):
-        return [self.data_x, self.data_y]
 
 
 # def save_plot(_info, _ax, open_png, overwrite, _project_wd=''):
@@ -292,7 +159,8 @@ class PlotTraj:
             # openImage(full_name)
 
 
-def run(_log_folder, _file_to_plot, **kwargs):
+def run(_read_file_class, _log_folder, _file_to_plot, **kwargs):
+    read_file_class = _read_file_class
     log_img_folder = "{}-img".format(_log_folder)
     show_at_end = True
     overwrite = True
@@ -306,17 +174,17 @@ def run(_log_folder, _file_to_plot, **kwargs):
     # _file_to_plot = r"C:\Users\Owner\PycharmProjects\fish-trainerNEW\data\log\2019-02-10 175510_F315DAY3.(0).txt"
 
     print("Checking file-{}".format(_file_to_plot))
-    read_f = ReadFile(_file_to_plot)
 
-    file_data = read_f.file_data()
+    file_data = read_file_class.file_data()
     if len(file_data[0]) < 10 and len(file_data[1]) < 10:
         print("Not enough data!")
     else:
         # print("file_data:{}".format(file_data))
-        properties = [read_f.fish_no,
-                         read_f.train_day,
-                         read_f.traning_start_str,
-                         read_f.total_training_time, [read_f.max_x, read_f.max_y]]
+
+        properties = [read_file_class.fish_no,
+                      read_file_class.train_day,
+                      read_file_class.traning_start_str,
+                      read_file_class.total_training_time, [read_file_class.max_x, read_file_class.max_y]]
 
         plot_fig = PlotTraj(properties, show_at_end, overwrite)
         plot_fig.plot_it(file_data)
