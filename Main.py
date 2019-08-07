@@ -23,6 +23,11 @@ except ImportError:
     from .tools import exception_class
 
 try:
+    from tools.stdout_Logger import Logger
+except ImportError:
+    from .tools.stdout_Logger import Logger
+
+try:
     from tools import ClientGUI_V2_support
 except ImportError:
     from .tools import ClientGUI_V2_support
@@ -86,6 +91,7 @@ class ConfigSectionMap:
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
     global val, Fish_trainingGUI, root
+    sys.stdout = Logger()               # start main stdout logger - logfile.log
     root = tk.Tk()
     ClientGUI_V2_support.set_Tk_var()
     Fish_trainingGUI = MainGUI(root)
@@ -1088,8 +1094,8 @@ class MainGUI:
         ClientGUI_V2_support.chb_Var.set('1') # NEW feeder
         ClientGUI_V2_support.FeedVar1.set('F')
         ClientGUI_V2_support.FeedVar2.set('F')
-        ClientGUI_V2_support.CamVar1.set('0')
-        ClientGUI_V2_support.TrainingVar.set('E')
+        ClientGUI_V2_support.CamVar1.set('1')
+        ClientGUI_V2_support.TrainingVar.set('C')
         self.db_tree_view_data_refresh()
 
 
