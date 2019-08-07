@@ -895,8 +895,6 @@ class MainGUI:
         self.myFont_big18 = Font(family="TkTextFont", size=18)
         self.myFont_small = Font(family="TkTextFont", size=8)
 
-
-
     def vars_init(self):
         self.LogFolderName = ""
         self.Stat_days = ""

@@ -10,7 +10,7 @@ from datetime import datetime
 import glob
 import os
 
-FULL_CYCLE = 2 * 400
+FULL_CYCLE = 2 * 200
 HALF_CYCLE = FULL_CYCLE / 2
 
 bool_send_default_program = False
