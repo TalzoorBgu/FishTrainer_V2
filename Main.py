@@ -930,7 +930,7 @@ class MainGUI:
         self.DB.pack()
         self.DB.pack_forget()
         #
-        self.style.configure('Treeview.Heading', font=self.myFont_big)
+        self.style.configure('Treeview.Heading', font="TkDefaultFont")
         self.DB = ScrolledTreeView(self.Frame1)
         self.DB.place(relx=0.012, rely=0.057, relheight=0.874, relwidth=0.98)
 
@@ -952,6 +952,7 @@ class MainGUI:
             self.DB.column(col_idx, minwidth="20")
             self.DB.column(col_idx, stretch="1")
             self.DB.column(col_idx, anchor="w")
+            self.DB.column(col_idx, font=self.myFont_big)
             self.DB.bind("<Double-1>", self.OnTreeDoubleClick)
 
     def OnTreeDoubleClick(self, event):
