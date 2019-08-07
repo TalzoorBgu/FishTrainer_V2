@@ -890,7 +890,9 @@ class MainGUI:
         self.myFont_reg = Font(family="TkTextFont", size=14)
         self.myFont_bold = Font(family="TkTextFont", size=14, weight="bold")
         self.myFont_big_bold = Font(family="TkTextFont", size=18, weight="bold")
-        self.myFont_big = Font(family="TkTextFont", size=18)
+        self.myFont_big14 = Font(family="TkTextFont", size=14)
+        self.myFont_big16 = Font(family="TkTextFont", size=16)
+        self.myFont_big18 = Font(family="TkTextFont", size=18)
         self.myFont_small = Font(family="TkTextFont", size=8)
 
 
@@ -930,7 +932,7 @@ class MainGUI:
         self.DB.pack()
         self.DB.pack_forget()
         #
-        self.style.configure('Treeview', font=self.myFont_big)
+        self.style.configure('Treeview', font=self.myFont_big14)
         self.style.configure('Treeview.Heading', font="TkDefaultFont")
         self.DB = ScrolledTreeView(self.Frame1)
         self.DB.place(relx=0.012, rely=0.057, relheight=0.874, relwidth=0.98)
@@ -1004,10 +1006,10 @@ class MainGUI:
         self.radF2.configure(font=self.myFont_small)
         self.radN2.configure(font=self.myFont_small)
 
-        self.txtFishNo1.configure(font=self.myFont_big)
-        self.txtTrainingDay1.configure(font=self.myFont_big)
-        self.txtFishNo2.configure(font=self.myFont_big)
-        self.txtTrainingDay2.configure(font=self.myFont_big)
+        self.txtFishNo1.configure(font=self.myFont_big18)
+        self.txtTrainingDay1.configure(font=self.myFont_big18)
+        self.txtFishNo2.configure(font=self.myFont_big18)
+        self.txtTrainingDay2.configure(font=self.myFont_big18)
 
         self.lblTimeCount.configure(font=self.myFont_big_bold)
 
