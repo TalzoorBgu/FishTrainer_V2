@@ -954,7 +954,7 @@ class MainGUI:
             self.DB.column(col_idx, width=col_width[no])
             self.DB.column(col_idx, minwidth="20")
             self.DB.column(col_idx, stretch="1")
-            self.DB.column(col_idx, anchor="w")
+            self.DB.column(col_idx, anchor="center")
             self.DB.bind("<Double-1>", self.OnTreeDoubleClick)
 
     def OnTreeDoubleClick(self, event):
