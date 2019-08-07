@@ -57,7 +57,6 @@ def init_tracking(exception_class, _camera=0, video=None):
 
     return width
 
-
 def track_loop(cb, exception_class, event,  _version='edge'): #cb is an object that has a do() function in the calling script
     global stop_training, video_capture, i
     i=0
@@ -100,7 +99,7 @@ def track_loop(cb, exception_class, event,  _version='edge'): #cb is an object t
             tank_height = abs(fishy['left']-fishy['right'])
             # print("tank_dim:{}/{}".format(tank_width, tank_height))
 
-            paint_lines(cv2, tank_width, tank_height, frame_cut, _version)
+            draw_lines(cv2, tank_width, tank_height, frame_cut, _version)
 
             cv2.imshow(img_name, frame_cut)
             cv2.imshow(mask_name, fgmask)
@@ -156,7 +155,7 @@ def track_loop(cb, exception_class, event,  _version='edge'): #cb is an object t
         # sleep(1.5)
     print("thread_track_fish Finished")
 
-def paint_lines(_cv_obj, _tank_width, _tank_height, _frame, _ver):
+def draw_lines(_cv_obj, _tank_width, _tank_height, _frame, _ver):
 
     if _ver is 'edge':
         low_boundry = 1.0/4.0
@@ -180,13 +179,13 @@ def paint_lines(_cv_obj, _tank_width, _tank_height, _frame, _ver):
     elif _ver is 'center':
         _cv_obj.rectangle(_frame, (left, down), (right, up), (255, 255, 255), 1)
 
-def paint_single_line(_cv_obj, r0, r1, _frame, gap = 0):
-    (x0, y0) = r0
-    (x1, y1) = r1
-    if gap == 0:
-        _cv_obj.line(_frame, (x0, y0), (x1, y1), (255, 255, 255), 1)
-    else:
-        pass
+# def draw_single_line(_cv_obj, r0, r1, _frame, gap = 0):
+#     (x0, y0) = r0
+#     (x1, y1) = r1
+#     if gap == 0:
+#         _cv_obj.line(_frame, (x0, y0), (x1, y1), (255, 255, 255), 1)
+#     else:
+#         pass
 
 if __name__ == '__main__':
     import argparse
