@@ -939,7 +939,7 @@ class MainGUI:
 
         # build_treeview_support starting.
         col_names = ['Fish no.', 'Last training', 'Training day', 'Total feed', 'Avg feed p. records']
-        col_width = [75, 160, 95, 95, 135]
+        col_width = [70, 170, 90, 95, 135]
         columns_list = []
         for i in range(len(col_names)):
             columns_list.append("Col{}".format(i))
