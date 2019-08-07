@@ -930,7 +930,7 @@ class MainGUI:
         self.DB.pack()
         self.DB.pack_forget()
         #
-        self.style.configure('Treeview.Heading', font="TkDefaultFont")
+        self.style.configure('Treeview.Heading', font=self.myFont_big)
         self.DB = ScrolledTreeView(self.Frame1)
         self.DB.place(relx=0.012, rely=0.057, relheight=0.874, relwidth=0.98)
 
