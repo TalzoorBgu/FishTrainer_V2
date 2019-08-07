@@ -246,35 +246,65 @@ class Arduino_Functions:
         # command = SendCommand(0, 0, 0, 1, 1, 1, FULL_CYCLE)
         # command = SendCommand(FULL_CYCLE)
 
-        PROG_arry = [['prog_start',     0,      0,      0],
-                     ['moveto',         0,      0,      0],
-                     ['def_v_a',        60,     40,    20],
-                     ['moveto',         30,      0,      0],
-                     ['def_v_a',        600,     300,    20],
-                     ['delay',          400, 'L', 0],
-                     #['move',           360*4,   0,      0],
+        PROG_arry = [['prog_start', 0, 0, 0],
+                     ['moveto', 0, 0, 0],
+                     ['def_v_a', 60, 40, 20],
+                     ['moveto', 30, 0, 0],
+                     ['def_v_a', 600, 300, 20],
+                     ['delay', 400, 'L', 0],
+                     # ['move',           360*4,   0,      0],
 
-                     ['move',           180+30, 'L', 0],
-                     ['delay',          450,    'L', 0],
-                     ['def_v_a',        60,     60,     40],
-                     ['move',           80,     'R',    0],
-                     ['delay',          300,     'L',    0],
-                     ['move',           80,     'L',    0],
-                     ['delay',          200,    'L',    0],
+                     ['move', 180 + 30, 'L', 0],
+                     ['delay', 450, 'L', 0],
+                     ['def_v_a', 60, 60, 40],
+                     ['move', 80, 'R', 0],
+                     ['delay', 300, 'L', 0],
+                     ['move', 80, 'L', 0],
+                     ['delay', 200, 'L', 0],
 
-                     ['def_v_a',        25,     1,    20],
+                     ['def_v_a', 25, 1, 20],
 
-                     ['move',           30,     'L',    0],
-                     ['move',           25,     'L',    0],
-                     ['delay',          60, 'L', 0],
-                     ['move',           25,     'R',    0],
+                     ['move', 30, 'L', 0],
+                     ['move', 25, 'L', 0],
+                     ['delay', 60, 'L', 0],
+                     ['move', 25, 'R', 0],
 
-                     ['def_v_a',        40,     20,     30],
-                     ['moveto',         0,      0,      0],
+                     ['def_v_a', 40, 20, 30],
+                     ['moveto', 0, 0, 0],
 
-                     ['def_v_a',        100,    80,     30],
-                     ['prog_end',       0,      0,      0]
+                     ['def_v_a', 100, 80, 30],
+                     ['prog_end', 0, 0, 0]
                      ]
+
+        # PROG_arry = [['prog_start',     0,      0,      0],
+        #              ['moveto',         0,      0,      0],
+        #              ['def_v_a',        60,     40,    20],
+        #              ['moveto',         30,      0,      0],
+        #              ['def_v_a',        600,     300,    20],
+        #              ['delay',          400, 'L', 0],
+        #              #['move',           360*4,   0,      0],
+        #
+        #              ['move',           180+30, 'L', 0],
+        #              ['delay',          450,    'L', 0],
+        #              ['def_v_a',        60,     60,     40],
+        #              ['move',           80,     'R',    0],
+        #              ['delay',          300,     'L',    0],
+        #              ['move',           80,     'L',    0],
+        #              ['delay',          200,    'L',    0],
+        #
+        #              ['def_v_a',        25,     1,    20],
+        #
+        #              ['move',           30,     'L',    0],
+        #              ['move',           25,     'L',    0],
+        #              ['delay',          60, 'L', 0],
+        #              ['move',           25,     'R',    0],
+        #
+        #              ['def_v_a',        40,     20,     30],
+        #              ['moveto',         0,      0,      0],
+        #
+        #              ['def_v_a',        100,    80,     30],
+        #              ['prog_end',       0,      0,      0]
+        #              ]
 
         for step in PROG_arry:
             _str_to_send = ''
