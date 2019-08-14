@@ -457,7 +457,7 @@ class MainGUI:
         self.txtTrainingStop.configure(textvariable=ClientGUI_V2_support.txtTrainingStop)
 
         self.Label17 = tk.Label(self.frmTraining)
-        self.Label17.place(relx=0.657, rely=0.382, height=24, width=118)
+        self.Label17.place(relx=0.65, rely=0.458, height=24, width=118)
         self.Label17.configure(activebackground="#f9f9f9")
         self.Label17.configure(activeforeground="black")
         self.Label17.configure(background="#d9d9d9")
@@ -858,14 +858,11 @@ class MainGUI:
         self.lblTimeCount.configure(foreground="#0000fe")
         self.lblTimeCount.configure(highlightbackground="#d9d9d9")
         self.lblTimeCount.configure(highlightcolor="black")
-        self.lblTimeCount.configure(text='''00:00:00''')
-        self.lblTimeCount.configure(width=211)
         self.lblTimeCount.configure(justify='left')
-
+        self.lblTimeCount.configure(text='''00:00''')
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
-
 
     def __init__(self, top = None):
 
