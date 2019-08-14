@@ -133,5 +133,5 @@ dmypy.json
 out
 gen
 .DS_Store
-data/.DS_Store
-data/log/
+/tools/trash/
+/data/

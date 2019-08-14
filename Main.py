@@ -1,7 +1,13 @@
 #! /usr/bin/env python
 
 import sys
-import subprocess
+import platform
+import configparser
+from datetime import datetime
+import os
+from pathlib import Path
+import tools.log as fish_log
+
 
 try:
     import Tkinter as tk
@@ -17,42 +23,17 @@ except ImportError:
     import tkinter.ttk as ttk
     py3 = 1
 
-try:
-    from tools import exception_class
-except ImportError:
-    from .tools import exception_class
-
-try:
-    from tools.stdout_Logger import Logger
-except ImportError:
-    from .tools.stdout_Logger import Logger
 
 try:
     from tools import ClientGUI_V2_support
 except ImportError:
     from .tools import ClientGUI_V2_support
 
-try:
-    from tools import SQL_DB
-except ImportError:
-    from .tools import SQL_DB
-
-import configparser
-from datetime import datetime
-import os
-import threading
-
-from pathlib import Path
-
 Config = configparser.ConfigParser()
 script_dir = os.path.dirname(os.path.realpath(__file__))  # script dir
 
 #Global vars
 exit_flag = False
-
-
-def print_path():
-    pass
 
 
 class ConfigSectionMap:
@@ -88,43 +69,7 @@ class ConfigSectionMap:
         return dict1
 
 
-def vp_start_gui():
-    '''Starting point when module is the main routine.'''
-    global val, Fish_trainingGUI, root
-    sys.stdout = Logger()               # start main stdout logger - logfile.log
-    root = tk.Tk()
-    ClientGUI_V2_support.set_Tk_var()
-    Fish_trainingGUI = MainGUI(root)
-    Excp = exception_class.RaiseException(Fish_trainingGUI)
-    Arduino_obj = ClientGUI_V2_support.feed_object.Arduino
-    if Arduino_obj.connection == 'NO':
-        Excp.error("No Arduino conn. check serial port (USB)", bold=True)
-    else:
-        Excp.info("Arduino connection OK, port:{}".format(Arduino_obj.serial_con.serial.port))
-
-    ClientGUI_V2_support.init(root, Fish_trainingGUI, Excp)
-    root.mainloop()
-
-Fish_trainingGUI = None
-# def create_Fish_traning_GUI___Client(root, *args, **kwargs):
-#     '''Starting point when module is imported by another program.'''
-#     global Fish_traningGUI, w_win, rt
-#     rt = root
-#     Fish_traningGUI = Toplevel (root)
-#     ClientGUI_support.set_Tk_var()
-#     top = Fish_traning_GUI___Client (w)
-#     ClientGUI_support.init(w, top, *args, **kwargs)
-#     return (w, top)
-
-def destroy_Fish_training_GUI___Client():
-    global Fish_trainingGUI
-    ClientGUI_V2_support.destroy_window()
-    # Fish_traningGUI.destroy()
-    Fish_traningGUI = None
-
-
 class MainGUI:
-
     def __init__from_page(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -149,18 +94,18 @@ class MainGUI:
         top.configure(highlightcolor="black")
 
         self.frmTraining = tk.Frame(top)
-        self.frmTraining.place(relx=0.352, rely=0.388, relheight=0.175
-                , relwidth=0.641)
+        self.frmTraining.place(relx=0.25, rely=0.388, relheight=0.175
+                , relwidth=0.743)
         self.frmTraining.configure(relief='groove')
         self.frmTraining.configure(borderwidth="2")
         self.frmTraining.configure(relief="groove")
         self.frmTraining.configure(background="#d9d9d9")
         self.frmTraining.configure(highlightbackground="#d9d9d9")
         self.frmTraining.configure(highlightcolor="black")
-        self.frmTraining.configure(width=564)
+        self.frmTraining.configure(width=654)
 
         self.btnRunTraining = tk.Button(self.frmTraining)
-        self.btnRunTraining.place(relx=0.709, rely=0.076, height=110, width=70)
+        self.btnRunTraining.place(relx=0.856, rely=0.076, height=50, width=80)
         self.btnRunTraining.configure(activebackground="#d9d9d9")
         self.btnRunTraining.configure(activeforeground="#000000")
         self.btnRunTraining.configure(background="#d9d9d9")
@@ -170,11 +115,10 @@ class MainGUI:
         self.btnRunTraining.configure(highlightcolor="black")
         self.btnRunTraining.configure(pady="0")
         self.btnRunTraining.configure(text='''Run training''')
-        self.btnRunTraining.configure(width=70)
         self.btnRunTraining.configure(wraplength="50")
 
         self.Label2 = tk.Label(self.frmTraining)
-        self.Label2.place(relx=0.496, rely=0.076, height=24, width=85)
+        self.Label2.place(relx=0.428, rely=0.076, height=24, width=85)
         self.Label2.configure(activebackground="#f9f9f9")
         self.Label2.configure(activeforeground="black")
         self.Label2.configure(background="#d9d9d9")
@@ -184,7 +128,8 @@ class MainGUI:
         self.Label2.configure(text='''Training day''')
 
         self.radF1 = tk.Radiobutton(self.frmTraining)
-        self.radF1.place(relx=0.55, rely=0.229, relheight=0.168, relwidth=0.106)
+        self.radF1.place(relx=0.505, rely=0.229, relheight=0.168, relwidth=0.092)
+
         self.radF1.configure(activebackground="#d9d9d9")
         self.radF1.configure(activeforeground="#000000")
         self.radF1.configure(background="#d9d9d9")
@@ -198,7 +143,8 @@ class MainGUI:
         self.radF1.configure(variable=ClientGUI_V2_support.FeedVar1)
 
         self.radN1 = tk.Radiobutton(self.frmTraining)
-        self.radN1.place(relx=0.55, rely=0.382, relheight=0.168, relwidth=0.14)
+        self.radN1.place(relx=0.505, rely=0.382, relheight=0.168, relwidth=0.121)
+
         self.radN1.configure(activebackground="#d9d9d9")
         self.radN1.configure(activeforeground="#000000")
         self.radN1.configure(background="#d9d9d9")
@@ -212,7 +158,7 @@ class MainGUI:
         self.radN1.configure(variable=ClientGUI_V2_support.FeedVar1)
 
         self.Label1 = tk.Label(self.frmTraining)
-        self.Label1.place(relx=0.39, rely=0.076, height=24, width=57)
+        self.Label1.place(relx=0.336, rely=0.076, height=24, width=57)
         self.Label1.configure(activebackground="#f9f9f9")
         self.Label1.configure(activeforeground="black")
         self.Label1.configure(background="#d9d9d9")
@@ -222,7 +168,7 @@ class MainGUI:
         self.Label1.configure(text='''Fish no.''')
 
         self.btnStopTraining = tk.Button(self.frmTraining)
-        self.btnStopTraining.place(relx=0.851, rely=0.076, height=110, width=70)
+        self.btnStopTraining.place(relx=0.856, rely=0.534, height=50, width=80)
         self.btnStopTraining.configure(activebackground="#d9d9d9")
         self.btnStopTraining.configure(activeforeground="#000000")
         self.btnStopTraining.configure(background="#d9d9d9")
@@ -232,12 +178,11 @@ class MainGUI:
         self.btnStopTraining.configure(highlightcolor="black")
         self.btnStopTraining.configure(pady="0")
         self.btnStopTraining.configure(text='''Stop training''')
-        self.btnStopTraining.configure(width=70)
         self.btnStopTraining.configure(wraplength="50")
 
         self.txtFishNo1 = tk.Text(self.frmTraining)
-        self.txtFishNo1.place(relx=0.408, rely=0.229, relheight=0.244
-                , relwidth=0.089)
+        self.txtFishNo1.place(relx=0.352, rely=0.229, relheight=0.244
+                , relwidth=0.092)
         self.txtFishNo1.configure(background="white")
         self.txtFishNo1.configure(font="TkTextFont")
         self.txtFishNo1.configure(foreground="black")
@@ -247,12 +192,12 @@ class MainGUI:
         self.txtFishNo1.configure(selectbackground="#c4c4c4")
         self.txtFishNo1.configure(selectforeground="black")
         self.txtFishNo1.configure(undo="1")
-        self.txtFishNo1.configure(width=50)
+        self.txtFishNo1.configure(width=60)
         self.txtFishNo1.configure(wrap="word")
 
         self.txtTrainingDay1 = tk.Text(self.frmTraining)
-        self.txtTrainingDay1.place(relx=0.496, rely=0.229, relheight=0.244
-                , relwidth=0.057)
+        self.txtTrainingDay1.place(relx=0.443, rely=0.229, relheight=0.244
+                , relwidth=0.064)
         self.txtTrainingDay1.configure(background="white")
         self.txtTrainingDay1.configure(font="TkTextFont")
         self.txtTrainingDay1.configure(foreground="black")
@@ -262,12 +207,12 @@ class MainGUI:
         self.txtTrainingDay1.configure(selectbackground="#c4c4c4")
         self.txtTrainingDay1.configure(selectforeground="black")
         self.txtTrainingDay1.configure(undo="1")
-        self.txtTrainingDay1.configure(width=32)
+        self.txtTrainingDay1.configure(width=42)
         self.txtTrainingDay1.configure(wrap="word")
 
         self.txtFishNo2 = tk.Text(self.frmTraining)
-        self.txtFishNo2.place(relx=0.408, rely=0.534, relheight=0.244
-                , relwidth=0.089)
+        self.txtFishNo2.place(relx=0.352, rely=0.534, relheight=0.244
+                , relwidth=0.092)
         self.txtFishNo2.configure(background="white")
         self.txtFishNo2.configure(font="TkTextFont")
         self.txtFishNo2.configure(foreground="black")
@@ -277,12 +222,12 @@ class MainGUI:
         self.txtFishNo2.configure(selectbackground="#c4c4c4")
         self.txtFishNo2.configure(selectforeground="black")
         self.txtFishNo2.configure(undo="1")
-        self.txtFishNo2.configure(width=50)
+        self.txtFishNo2.configure(width=60)
         self.txtFishNo2.configure(wrap="word")
 
         self.txtTrainingDay2 = tk.Text(self.frmTraining)
-        self.txtTrainingDay2.place(relx=0.496, rely=0.534, relheight=0.244
-                , relwidth=0.057)
+        self.txtTrainingDay2.place(relx=0.443, rely=0.534, relheight=0.244
+                , relwidth=0.064)
         self.txtTrainingDay2.configure(background="white")
         self.txtTrainingDay2.configure(font="TkTextFont")
         self.txtTrainingDay2.configure(foreground="black")
@@ -292,11 +237,12 @@ class MainGUI:
         self.txtTrainingDay2.configure(selectbackground="#c4c4c4")
         self.txtTrainingDay2.configure(selectforeground="black")
         self.txtTrainingDay2.configure(undo="1")
-        self.txtTrainingDay2.configure(width=32)
+        self.txtTrainingDay2.configure(width=42)
         self.txtTrainingDay2.configure(wrap="word")
 
         self.radF2 = tk.Radiobutton(self.frmTraining)
-        self.radF2.place(relx=0.55, rely=0.534, relheight=0.168, relwidth=0.106)
+        self.radF2.place(relx=0.505, rely=0.534, relheight=0.168, relwidth=0.092)
+
         self.radF2.configure(activebackground="#d9d9d9")
         self.radF2.configure(activeforeground="#000000")
         self.radF2.configure(background="#d9d9d9")
@@ -310,7 +256,8 @@ class MainGUI:
         self.radF2.configure(variable=ClientGUI_V2_support.FeedVar2)
 
         self.radN2 = tk.Radiobutton(self.frmTraining)
-        self.radN2.place(relx=0.55, rely=0.687, relheight=0.168, relwidth=0.14)
+        self.radN2.place(relx=0.505, rely=0.687, relheight=0.168, relwidth=0.121)
+
         self.radN2.configure(activebackground="#d9d9d9")
         self.radN2.configure(activeforeground="#000000")
         self.radN2.configure(background="#d9d9d9")
@@ -324,8 +271,8 @@ class MainGUI:
         self.radN2.configure(variable=ClientGUI_V2_support.FeedVar2)
 
         self.radCam1 = tk.Radiobutton(self.frmTraining)
-        self.radCam1.place(relx=0.018, rely=0.076, relheight=0.168
-                , relwidth=0.161)
+        self.radCam1.place(relx=0.015, rely=0.076, relheight=0.168
+                , relwidth=0.139)
         self.radCam1.configure(activebackground="#d9d9d9")
         self.radCam1.configure(activeforeground="#000000")
         self.radCam1.configure(background="#d9d9d9")
@@ -369,8 +316,8 @@ class MainGUI:
         self.fra38_rad42.configure(variable=ClientGUI_V2_support.FeedVar1)
 
         self.radCam2 = tk.Radiobutton(self.frmTraining)
-        self.radCam2.place(relx=0.018, rely=0.229, relheight=0.168
-                , relwidth=0.161)
+        self.radCam2.place(relx=0.015, rely=0.229, relheight=0.168
+                , relwidth=0.139)
         self.radCam2.configure(activebackground="#d9d9d9")
         self.radCam2.configure(activeforeground="#000000")
         self.radCam2.configure(background="#d9d9d9")
@@ -384,7 +331,7 @@ class MainGUI:
         self.radCam2.configure(variable=ClientGUI_V2_support.CamVar1)
 
         self.btnTankConf = tk.Button(self.frmTraining)
-        self.btnTankConf.place(relx=0.018, rely=0.458, height=62, width=93)
+        self.btnTankConf.place(relx=0.015, rely=0.458, height=62, width=93)
         self.btnTankConf.configure(activebackground="#d9d9d9")
         self.btnTankConf.configure(activeforeground="#000000")
         self.btnTankConf.configure(background="#d9d9d9")
@@ -394,11 +341,10 @@ class MainGUI:
         self.btnTankConf.configure(highlightcolor="black")
         self.btnTankConf.configure(pady="0")
         self.btnTankConf.configure(text='''Tank conf.''')
-        self.btnTankConf.configure(width=93)
 
         self.radF1_2 = tk.Radiobutton(self.frmTraining)
-        self.radF1_2.place(relx=0.213, rely=0.458, relheight=0.168
-                , relwidth=0.142)
+        self.radF1_2.place(relx=0.183, rely=0.458, relheight=0.168
+                , relwidth=0.122)
         self.radF1_2.configure(activebackground="#d9d9d9")
         self.radF1_2.configure(activeforeground="#000000")
         self.radF1_2.configure(background="#d9d9d9")
@@ -410,11 +356,10 @@ class MainGUI:
         self.radF1_2.configure(text='''Center''')
         self.radF1_2.configure(value="C")
         self.radF1_2.configure(variable=ClientGUI_V2_support.TrainingVar)
-        self.radF1_2.configure(width=80)
 
         self.radF1_1 = tk.Radiobutton(self.frmTraining)
-        self.radF1_1.place(relx=0.213, rely=0.305, relheight=0.168
-                , relwidth=0.124)
+        self.radF1_1.place(relx=0.183, rely=0.305, relheight=0.168
+                , relwidth=0.107)
         self.radF1_1.configure(activebackground="#d9d9d9")
         self.radF1_1.configure(activeforeground="#000000")
         self.radF1_1.configure(background="#d9d9d9")
@@ -428,7 +373,7 @@ class MainGUI:
         self.radF1_1.configure(variable=ClientGUI_V2_support.TrainingVar)
 
         self.Label5 = tk.Label(self.frmTraining)
-        self.Label5.place(relx=0.213, rely=0.076, height=24, width=95)
+        self.Label5.place(relx=0.183, rely=0.076, height=24, width=95)
         self.Label5.configure(activebackground="#f9f9f9")
         self.Label5.configure(activeforeground="black")
         self.Label5.configure(background="#d9d9d9")
@@ -438,7 +383,7 @@ class MainGUI:
         self.Label5.configure(text='''Training type''')
 
         self.Label6 = tk.Label(self.frmTraining)
-        self.Label6.place(relx=0.372, rely=0.229, height=24, width=19)
+        self.Label6.place(relx=0.321, rely=0.229, height=24, width=19)
         self.Label6.configure(activebackground="#f9f9f9")
         self.Label6.configure(activeforeground="black")
         self.Label6.configure(background="#d9d9d9")
@@ -448,7 +393,7 @@ class MainGUI:
         self.Label6.configure(text='''1''')
 
         self.Label10 = tk.Label(self.frmTraining)
-        self.Label10.place(relx=0.372, rely=0.534, height=24, width=19)
+        self.Label10.place(relx=0.321, rely=0.534, height=24, width=19)
         self.Label10.configure(activebackground="#f9f9f9")
         self.Label10.configure(activeforeground="black")
         self.Label10.configure(background="#d9d9d9")
@@ -458,12 +403,69 @@ class MainGUI:
         self.Label10.configure(text='''2''')
 
         self.TSeparator1 = ttk.Separator(self.frmTraining)
-        self.TSeparator1.place(relx=0.195, rely=0.076, relheight=0.763)
+        self.TSeparator1.place(relx=0.168, rely=0.076, relheight=0.763)
         self.TSeparator1.configure(orient="vertical")
 
         self.TSeparator2 = ttk.Separator(self.frmTraining)
-        self.TSeparator2.place(relx=0.372, rely=0.076, relheight=0.763)
+        self.TSeparator2.place(relx=0.321, rely=0.076, relheight=0.763)
         self.TSeparator2.configure(orient="vertical")
+
+        self.Label15 = tk.Label(self.frmTraining)
+        self.Label15.place(relx=0.657, rely=0.076, height=24, width=98)
+        self.Label15.configure(activebackground="#f9f9f9")
+        self.Label15.configure(activeforeground="black")
+        self.Label15.configure(background="#d9d9d9")
+        self.Label15.configure(foreground="#000000")
+        self.Label15.configure(highlightbackground="#d9d9d9")
+        self.Label15.configure(highlightcolor="black")
+        self.Label15.configure(text='''Training time:''')
+
+        self.chbtn_StopTraining = tk.Checkbutton(self.frmTraining)
+        self.chbtn_StopTraining.place(relx=0.657, rely=0.229, relheight=0.168
+                , relwidth=0.142)
+        self.chbtn_StopTraining.configure(activebackground="#d9d9d9")
+        self.chbtn_StopTraining.configure(activeforeground="#000000")
+        self.chbtn_StopTraining.configure(background="#d9d9d9")
+        self.chbtn_StopTraining.configure(command=ClientGUI_V2_support.OnChkStopTraining)
+        self.chbtn_StopTraining.configure(foreground="#000000")
+        self.chbtn_StopTraining.configure(highlightbackground="#d9d9d9")
+        self.chbtn_StopTraining.configure(highlightcolor="black")
+        self.chbtn_StopTraining.configure(justify='left')
+        self.chbtn_StopTraining.configure(text='''Stop after''')
+        self.chbtn_StopTraining.configure(variable=ClientGUI_V2_support.chVar_stop_tr)
+
+        self.TSeparator4 = ttk.Separator(self.frmTraining)
+        self.TSeparator4.place(relx=0.642, rely=0.076, relheight=0.763)
+        self.TSeparator4.configure(orient="vertical")
+
+        self.TSeparator5 = ttk.Separator(self.frmTraining)
+        self.TSeparator5.place(relx=0.841, rely=0.076, relheight=0.763)
+        self.TSeparator5.configure(orient="vertical")
+
+        self.txtTrainingStop = tk.Entry(self.frmTraining)
+        self.txtTrainingStop.place(relx=0.657, rely=0.611, height=27
+                , relwidth=0.171)
+        self.txtTrainingStop.configure(background="white")
+        self.txtTrainingStop.configure(font="TkFixedFont")
+        self.txtTrainingStop.configure(foreground="#000000")
+        self.txtTrainingStop.configure(highlightbackground="#d9d9d9")
+        self.txtTrainingStop.configure(highlightcolor="black")
+        self.txtTrainingStop.configure(insertbackground="black")
+        self.txtTrainingStop.configure(justify='center')
+        self.txtTrainingStop.configure(selectbackground="#c4c4c4")
+        self.txtTrainingStop.configure(selectforeground="black")
+        self.txtTrainingStop.configure(textvariable=ClientGUI_V2_support.txtTrainingStop)
+
+        self.Label17 = tk.Label(self.frmTraining)
+        self.Label17.place(relx=0.657, rely=0.382, height=24, width=118)
+        self.Label17.configure(activebackground="#f9f9f9")
+        self.Label17.configure(activeforeground="black")
+        self.Label17.configure(background="#d9d9d9")
+        self.Label17.configure(font="self.myFont_small")
+        self.Label17.configure(foreground="#000000")
+        self.Label17.configure(highlightbackground="#d9d9d9")
+        self.Label17.configure(highlightcolor="black")
+        self.Label17.configure(text='''format- 00:00:00''')
 
         self.btnExit = tk.Button(top)
         self.btnExit.place(relx=0.784, rely=0.936, height=40, width=177)
@@ -689,17 +691,17 @@ class MainGUI:
 
         self.frmCom = tk.Frame(top)
         self.frmCom.place(relx=0.011, rely=0.388, relheight=0.175
-                , relwidth=0.334)
+                , relwidth=0.232)
         self.frmCom.configure(relief='groove')
         self.frmCom.configure(borderwidth="2")
         self.frmCom.configure(relief="groove")
         self.frmCom.configure(background="#d9d9d9")
         self.frmCom.configure(highlightbackground="#d9d9d9")
         self.frmCom.configure(highlightcolor="black")
-        self.frmCom.configure(width=294)
+        self.frmCom.configure(width=204)
 
         self.Label4 = tk.Label(self.frmCom)
-        self.Label4.place(relx=0.017, rely=0.038, height=24, width=77)
+        self.Label4.place(relx=0.025, rely=0.038, height=24, width=77)
         self.Label4.configure(activebackground="#f9f9f9")
         self.Label4.configure(activeforeground="black")
         self.Label4.configure(background="#d9d9d9")
@@ -709,7 +711,7 @@ class MainGUI:
         self.Label4.configure(text='''Motor test''')
 
         self.btnMotor1L = tk.Button(self.frmCom)
-        self.btnMotor1L.place(relx=0.374, rely=0.153, height=48, width=37)
+        self.btnMotor1L.place(relx=0.588, rely=0.153, height=48, width=37)
         self.btnMotor1L.configure(activebackground="#d9d9d9")
         self.btnMotor1L.configure(activeforeground="#000000")
         self.btnMotor1L.configure(background="#d9d9d9")
@@ -721,7 +723,7 @@ class MainGUI:
         self.btnMotor1L.configure(text='''(1)L''')
 
         self.btnMotor1R = tk.Button(self.frmCom)
-        self.btnMotor1R.place(relx=0.374, rely=0.534, height=48, width=37)
+        self.btnMotor1R.place(relx=0.588, rely=0.534, height=48, width=37)
         self.btnMotor1R.configure(activebackground="#d9d9d9")
         self.btnMotor1R.configure(activeforeground="#000000")
         self.btnMotor1R.configure(background="#d9d9d9")
@@ -733,7 +735,7 @@ class MainGUI:
         self.btnMotor1R.configure(text='''(1)R''')
 
         self.btnMotor2R = tk.Button(self.frmCom)
-        self.btnMotor2R.place(relx=0.51, rely=0.534, height=48, width=37)
+        self.btnMotor2R.place(relx=0.784, rely=0.534, height=48, width=37)
         self.btnMotor2R.configure(activebackground="#d9d9d9")
         self.btnMotor2R.configure(activeforeground="#000000")
         self.btnMotor2R.configure(background="#d9d9d9")
@@ -745,7 +747,7 @@ class MainGUI:
         self.btnMotor2R.configure(text='''(2)R''')
 
         self.btnMotor2L = tk.Button(self.frmCom)
-        self.btnMotor2L.place(relx=0.51, rely=0.153, height=48, width=37)
+        self.btnMotor2L.place(relx=0.784, rely=0.153, height=48, width=37)
         self.btnMotor2L.configure(activebackground="#d9d9d9")
         self.btnMotor2L.configure(activeforeground="#000000")
         self.btnMotor2L.configure(background="#d9d9d9")
@@ -757,7 +759,7 @@ class MainGUI:
         self.btnMotor2L.configure(text='''(2)L''')
 
         self.Label7 = tk.Label(self.frmCom)
-        self.Label7.place(relx=0.034, rely=0.305, height=21, width=99)
+        self.Label7.place(relx=0.049, rely=0.229, height=21, width=99)
         self.Label7.configure(activebackground="#f9f9f9")
         self.Label7.configure(activeforeground="black")
         self.Label7.configure(background="#d9d9d9")
@@ -765,10 +767,9 @@ class MainGUI:
         self.Label7.configure(highlightbackground="#d9d9d9")
         self.Label7.configure(highlightcolor="black")
         self.Label7.configure(text='''Steps number''')
-        self.Label7.configure(width=99)
 
         self.txtStepNum = tk.Entry(self.frmCom)
-        self.txtStepNum.place(relx=0.034, rely=0.458,height=27, relwidth=0.272)
+        self.txtStepNum.place(relx=0.049, rely=0.382,height=27, relwidth=0.392)
         self.txtStepNum.configure(background="white")
         self.txtStepNum.configure(font="TkFixedFont")
         self.txtStepNum.configure(foreground="#000000")
@@ -778,22 +779,8 @@ class MainGUI:
         self.txtStepNum.configure(selectbackground="#c4c4c4")
         self.txtStepNum.configure(selectforeground="black")
 
-        self.chb_NewMotor = tk.Checkbutton(self.frmCom)
-        self.chb_NewMotor.place(relx=0.646, rely=0.153, relheight=0.191
-                , relwidth=0.344)
-        self.chb_NewMotor.configure(activebackground="#d9d9d9")
-        self.chb_NewMotor.configure(activeforeground="#000000")
-        self.chb_NewMotor.configure(background="#d9d9d9")
-        self.chb_NewMotor.configure(foreground="#000000")
-        self.chb_NewMotor.configure(highlightbackground="#d9d9d9")
-        self.chb_NewMotor.configure(highlightcolor="black")
-        self.chb_NewMotor.configure(justify='left')
-        self.chb_NewMotor.configure(text='''Red Feeder''')
-        self.chb_NewMotor.configure(variable=ClientGUI_V2_support.chb_Var)
-        self.chb_NewMotor.configure(wraplength="100")
-
         self.btnSetZero = tk.Button(self.frmCom)
-        self.btnSetZero.place(relx=0.646, rely=0.458, height=58, width=97)
+        self.btnSetZero.place(relx=0.049, rely=0.611, height=38, width=107)
         self.btnSetZero.configure(activebackground="#d9d9d9")
         self.btnSetZero.configure(activeforeground="#000000")
         self.btnSetZero.configure(background="#d9d9d9")
@@ -803,7 +790,6 @@ class MainGUI:
         self.btnSetZero.configure(highlightcolor="black")
         self.btnSetZero.configure(pady="0")
         self.btnSetZero.configure(text='''Set ZERO pos.''')
-        self.btnSetZero.configure(width=97)
 
         self.frmLog = tk.Frame(top)
         self.frmLog.place(relx=0.011, rely=0.575, relheight=0.354
@@ -854,7 +840,7 @@ class MainGUI:
         self.frmLogClear.configure(text='''Clear''')
 
         self.Label14 = tk.Label(self.frmLog)
-        self.Label14.place(relx=0.636, rely=0.032, height=14, width=91)
+        self.Label14.place(relx=0.532, rely=0.019, height=24, width=91)
         self.Label14.configure(activebackground="#f9f9f9")
         self.Label14.configure(activeforeground="black")
         self.Label14.configure(background="#d9d9d9")
@@ -862,10 +848,9 @@ class MainGUI:
         self.Label14.configure(highlightbackground="#d9d9d9")
         self.Label14.configure(highlightcolor="black")
         self.Label14.configure(text='''Time runing:''')
-        self.Label14.configure(width=105)
 
         self.lblTimeCount = tk.Label(self.frmLog)
-        self.lblTimeCount.place(relx=0.751, rely=0.019, height=24, width=121)
+        self.lblTimeCount.place(relx=0.647, rely=0.019, height=24, width=211)
         self.lblTimeCount.configure(activebackground="#f9f9f9")
         self.lblTimeCount.configure(activeforeground="black")
         self.lblTimeCount.configure(background="#d9d9d9")
@@ -873,10 +858,14 @@ class MainGUI:
         self.lblTimeCount.configure(foreground="#0000fe")
         self.lblTimeCount.configure(highlightbackground="#d9d9d9")
         self.lblTimeCount.configure(highlightcolor="black")
-        self.lblTimeCount.configure(text='''00:00''')
+        self.lblTimeCount.configure(text='''00:00:00''')
+        self.lblTimeCount.configure(width=211)
+        self.lblTimeCount.configure(justify='left')
+
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
+
 
     def __init__(self, top = None):
 
@@ -886,11 +875,12 @@ class MainGUI:
 
         self.__init__from_page(top)
 
-        self.Exception = exception_class.RaiseException(self)
+        self.exception_obj = fish_log.RaiseException(self)
+        self.log_folder = log_folder()
 
         self.vars_init()
         self.fillValue()
-        self.Exception.info(" --- Program started --- ")
+        self.exception_obj.info(" --- Program started --- ")
 
     def Font_init(self):
         self.myFont_reg = Font(family="TkTextFont", size=14)
@@ -899,7 +889,9 @@ class MainGUI:
         self.myFont_big14 = Font(family="TkTextFont", size=14)
         self.myFont_big16 = Font(family="TkTextFont", size=16)
         self.myFont_big18 = Font(family="TkTextFont", size=18)
-        self.myFont_small = Font(family="TkTextFont", size=8)
+        self.myFont_Small = Font(family="TkTextFont", size=12)
+        self.myFont_Ssmall = Font(family="TkTextFont", size=10)
+        self.myFont_Sssmall = Font(family="TkTextFont", size=8)
 
     def vars_init(self):
         self.LogFolderName = ""
@@ -966,7 +958,10 @@ class MainGUI:
         item_val = self.DB.item(item, "values")
         if item_val is not "":
             fish_no = item_val[0]
-            training_no = int(item_val[2])
+            try:
+                training_no = int(item_val[2])
+            except ValueError:
+                training_no = 0
             # print("you clicked on", val)
             self.txtFishNo1.delete('1.0', tk.END)
             self.txtFishNo1.insert('0.0', fish_no)
@@ -974,7 +969,7 @@ class MainGUI:
             self.txtTrainingDay1.insert('0.0', training_no+1)
 
     def db_file_full_path(self):
-        full_path = Path("{}/tools/{}".format(script_dir, self.DB_fish_file))
+        full_path = Path("{}/data/{}".format(script_dir, self.DB_fish_file))
         return full_path
 
     @staticmethod
@@ -986,10 +981,10 @@ class MainGUI:
     def db_fill(self):
         str_db_path = self.db_file_full_path()
         if self.db_file_exists(str_db_path) is False:
-            self.Exception.error("\t\t\t ----- DB file not exist !! Creating new one -----",
-                                 bold=True)
+            self.exception_obj.error("\t\t\t ----- DB file not exist !! Creating new one -----",
+                                     bold=True)
 
-        fish_db = SQL_DB.Database(str_db_path)
+        fish_db = fish_log.Database(str_db_path)
         fish_list = fish_db.db_fish_view()
         # print("fish_list:{}".format(fish_list))
         for i, each_fish in enumerate(fish_list):
@@ -1005,10 +1000,10 @@ class MainGUI:
         self.txtMainLog.tag_configure("bold", font=self.myFont_bold)
         self.txtMainLog.configure(font=self.myFont_reg)
 
-        self.radF1.configure(font=self.myFont_small)
-        self.radN1.configure(font=self.myFont_small)
-        self.radF2.configure(font=self.myFont_small)
-        self.radN2.configure(font=self.myFont_small)
+        self.radF1.configure(font=self.myFont_Sssmall)
+        self.radN1.configure(font=self.myFont_Sssmall)
+        self.radF2.configure(font=self.myFont_Sssmall)
+        self.radN2.configure(font=self.myFont_Sssmall)
 
         self.txtFishNo1.configure(font=self.myFont_big18)
         self.txtTrainingDay1.configure(font=self.myFont_big18)
@@ -1017,7 +1012,7 @@ class MainGUI:
 
         self.lblTimeCount.configure(font=self.myFont_big_bold)
 
-        ConfigVals = ConfigSectionMap(self.Exception)
+        ConfigVals = ConfigSectionMap(self.exception_obj)
         self.chb_Var = ClientGUI_V2_support.chb_Var
 
         fish_statistics_dict = ConfigVals.get("Fish Statistics")
@@ -1033,12 +1028,10 @@ class MainGUI:
             if fish_statistics_dict == {}:
                 pass
             else:
-                # self.LogFolderName = fish_statistics_dict['log folder']
                 self.DB_fish_file = fish_statistics_dict['db file']
                 self.LogFolderName = log_folder()
                 self.Stat_days = fish_statistics_dict['days back']
                 self.Stat_arg = fish_statistics_dict['arg']
-            #self.Red_Feeder = ConfigSectionMap("Motor")['redFeeder']
 
             if communication_dist == {}:
                 pass
@@ -1070,14 +1063,14 @@ class MainGUI:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
-            self.Exception.error("{}({}) - somthing is wrong with config file.".
-                                 format(exc_type.__name__, exc_obj))
+            self.exception_obj.error("{}({}) - somthing is wrong with config file.".
+                                     format(exc_type.__name__, exc_obj))
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
-            self.Exception.error("{}({}) - somthing is wrong.".
-                                 format(exc_type.__name__, exc_obj))
+            self.exception_obj.error("{}({}) - somthing is wrong.".
+                                     format(exc_type.__name__, exc_obj))
 
         str_main_folder = str(main_folder())
         log_folder_only = str(log_folder()).replace(str_main_folder, "")
@@ -1088,14 +1081,21 @@ class MainGUI:
         self.txtDBfile.insert('0.0', db_file_only)
 
         self.txtStatDaysBack.insert('0.0', self.Stat_days)
-        # self.txtStatArgs.insert('0.0', self.Stat_arg)
-        # temp_run_arg = "{} {} {} {}".format('fish_stat.py', self.LogFolderName, self.Stat_days, self.Stat_arg)
-        # self.txtStatRunArgs.insert('0.0', temp_run_arg)
+        self.txtTrainingStop.configure(state='disabled')
+        ClientGUI_V2_support.txtTrainingStop.trace("w",
+                                                   lambda name,
+                                                          index,
+                                                          mode,
+                                                          txtTrainingStop = ClientGUI_V2_support.txtTrainingStop:
+        entryUpdateEndHour(self.txtTrainingStop))
+
         ClientGUI_V2_support.chb_Var.set('1') # NEW feeder
         ClientGUI_V2_support.FeedVar1.set('F')
         ClientGUI_V2_support.FeedVar2.set('F')
         ClientGUI_V2_support.CamVar1.set('1')
         ClientGUI_V2_support.TrainingVar.set('C')
+        ClientGUI_V2_support.chVar_stop_tr.set('0')
+
         self.db_tree_view_data_refresh()
 
 
@@ -1114,53 +1114,48 @@ class MainGUI:
             self.txtMainLog.insert(tk.END, str_temp)
         self.txtMainLog.see(tk.END)
 
-    def update_time(self, time_str):
-        _str_time_array = str(time_str).split(':')
+    def update_time(self, _time_timed_str, training_stop_timed_str=None):
+        # print("type:{}".format(type(time_str)))
+        _str_time_array = str(_time_timed_str).split(':')
         _str_time_array = list(map(int, _str_time_array))
 
         _str_hr = _str_time_array[0]
         _str_min = _str_time_array[1]
         _str_sec = _str_time_array[2]
         # time_str = '{}:{}:{}'.format(_str_hr, _str_min, _str_sec)
+        time_timed_str = str(_time_timed_str)
+        if training_stop_timed_str is not None:
+            time_timed_str = "{} / {}".format(str(_time_timed_str), training_stop_timed_str)
+        self.lblTimeCount.configure(text=time_timed_str)
 
-        if _str_min < 20:
-            self.lblTimeCount.configure(text=time_str)
-        else:  # >20 --> make it green
-            self.lblTimeCount.configure(text=time_str, fg='#5eaf24')
+        stop_training = self.check_if_auto_training_stop(_time_timed_str, training_stop_timed_str)
+
+        if _str_min > 1:
+            self.lblTimeCount.configure(fg='#5eaf24')
+
+        return stop_training
 
         def __call__(self):
             print("RUN Command")
+
+    def check_if_auto_training_stop(self, _time_timed_str, _training_stop_timed_str):
+        stop_training = False
+        try:
+            if _time_timed_str >= _training_stop_timed_str:
+                stop_training = True
+        except TypeError:
+            pass
+
+        return stop_training
+
+    def stop_training_func(self):
+        ClientGUI_V2_support.onStopTraining()
 
     def exit_press(self):
         ClientGUI_V2_support.onExit()
 
     def time_stamp(self):
         return datetime.today().strftime('%Y-%m-%d %H:%M.%S --> ')
-
-
-def make_two_digit_num(int_to_check):
-    str_temp = '{}'.format(int_to_check)
-    if int_to_check < 10:
-        str_temp = '0{}'.format(int_to_check)
-    return str_temp
-
-
-def main_folder():
-    path = Path(os.path.dirname(__file__))
-    return path
-
-
-def log_folder():
-    main_folder_path = main_folder()
-    full_path = Path("{}/data/log".format(main_folder_path))
-    return full_path
-
-
-def log_file_name(_file_name):
-    full_path = log_folder()
-    file_name = Path("{}/{}".format(full_path, _file_name))
-
-    return file_name
 
 
 # The following code is added to facilitate the Scrolled widgets you specified.
@@ -1233,15 +1228,6 @@ def _create_container(func):
         return func(cls, container, **kw)
     return wrapped
 
-class ScrolledTreeView(AutoScroll, ttk.Treeview):
-    '''A standard ttk Treeview widget with scrollbars that will
-    automatically show/hide as needed.'''
-    @_create_container
-    def __init__(self, master, **kw):
-        ttk.Treeview.__init__(self, master, **kw)
-        AutoScroll.__init__(self, master)
-
-import platform
 def _bound_to_mousewheel(event, widget):
     child = widget.winfo_children()[0]
     if platform.system() == 'Windows' or platform.system() == 'Darwin':
@@ -1285,7 +1271,74 @@ def _on_shiftmouse(event, widget):
         elif event.num == 5:
             widget.xview_scroll(1, 'units')
 
-if __name__ == '__main__':
+class ScrolledTreeView(AutoScroll, ttk.Treeview):
+    '''A standard ttk Treeview widget with scrollbars that will
+    automatically show/hide as needed.'''
+    @_create_container
+    def __init__(self, master, **kw):
+        ttk.Treeview.__init__(self, master, **kw)
+        AutoScroll.__init__(self, master)
 
-    # start_working_interval()
+def entryUpdateEndHour(entry):
+    try:
+        text = entry.get()
+        if len(text) in (2, 5):
+            entry.insert(tk.END, ':')
+            entry.icursor(len(text)+1)
+        elif len(text) not in (3, 6):
+            if not text[-1].isdigit():
+                entry.delete(0, tk.END)
+                entry.insert(0, text[:-1])
+        if len(text) > 8:
+            entry.delete(0, tk.END)
+            entry.insert(0, text[:8])
+    except IndexError:
+        pass
+
+def vp_start_gui():
+    '''Starting point when module is the main routine.'''
+    global val, Fish_trainingGUI, root
+    sys.stdout = fish_log.Logger_stdout()               # start main stdout logger - logfile.log
+    root = tk.Tk()
+    ClientGUI_V2_support.set_Tk_var()
+    Fish_trainingGUI = MainGUI(root)
+    Excp = Fish_trainingGUI.exception_obj
+    ClientGUI_V2_support.init(root, Fish_trainingGUI, Excp)
+    root.mainloop()
+
+
+def destroy_Fish_training_GUI___Client():
+    global Fish_trainingGUI
+    ClientGUI_V2_support.destroy_window()
+    Fish_traningGUI = None
+
+
+def make_two_digit_num(int_to_check):
+    str_temp = '{}'.format(int_to_check)
+    if int_to_check < 10:
+        str_temp = '0{}'.format(int_to_check)
+    return str_temp
+
+
+def main_folder():
+    path = Path(os.path.dirname(__file__))
+    return path
+
+
+def log_folder():
+    main_folder_path = main_folder()
+    full_path = Path("{}/data/log".format(main_folder_path))
+    return full_path
+
+
+def log_file_name(_file_name):
+    full_path = log_folder()
+    file_name = Path("{}/{}".format(full_path, _file_name))
+
+    return file_name
+
+
+
+if __name__ == '__main__':
+    Fish_trainingGUI = None
     vp_start_gui()

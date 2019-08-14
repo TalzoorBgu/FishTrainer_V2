@@ -4,7 +4,7 @@ from cx_Freeze import setup, Executable
 
 base = "Win32GUI"
 
-executables = [Executable('track_fish.py', base=base)]
+executables = [Executable('tracking.py', base=base)]
 build_exe_options = {"packages": ["os"], "excludes": ["tkinter"]}
 
 setup(
@@ -17,5 +17,5 @@ setup(
     options = '',
     version = '1.0',
     description = 'first build',
-    executables = 'tracker_client/track_fish.py'
+    executables = 'tracker_client/tracking.py'
 )

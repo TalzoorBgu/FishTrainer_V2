@@ -9,23 +9,16 @@
 import sys
 import subprocess
 import threading
-from threading import Event
 import platform
 import os
+from datetime import timedelta
+from contextlib import suppress
 
-event = Event()
 
-try:
-    import scene_planner
-except ImportError:
-    from . import scene_planner
-from .controller import Controller
-from . import track_fish
-# from tracker.old_tcp_client import FishClient
-from time import sleep
-from .track_feeder import tracker_Feeder
+from tools.fish import ScenePlanner, TrackerFeeder, Tracking, Controller
 
-feed_object = tracker_Feeder()
+# from . import track_fish
+
 thread_track_fish = []
 
 try:
@@ -52,6 +45,11 @@ def set_Tk_var():
     chb_Var = tk.StringVar()
     global CamVar1
     CamVar1 = tk.StringVar()
+    global chVar_stop_tr
+    chVar_stop_tr = tk.IntVar()
+    global txtTrainingStop
+    txtTrainingStop = tk.StringVar()
+
 
 def R_Cam1Sel():
     global CamVar1
@@ -59,17 +57,20 @@ def R_Cam1Sel():
     print("CamVar1.get():{}".format(CamVar1.get()))
     sys.stdout.flush()
 
+
 def R1Sel():
     global FeedVar1
     print('ClientGUI_support.R1Sel')
     print("FeedVar1.get():{}".format(FeedVar1.get()))
     sys.stdout.flush()
 
+
 def R2Sel():
     global FeedVar2
     print('ClientGUI_support.R2Sel')
     print("FeedVar2.get():{}".format(FeedVar2.get()))
     sys.stdout.flush()
+
 
 def R3Sel():
     global TrainingVar, Fish_trainingGUI
@@ -84,13 +85,15 @@ def R3Sel():
         train_type = 'Center'
         motor_notification = "\tmotor B will be active"
 
-    exception_class.info_wo_tstamp("\tSeleced traning type : {}".format(train_type))
+    exception_obj.info_wo_tstamp("\tSeleced traning type : {}".format(train_type))
     if motor_notification is not "":
-        exception_class.info_wo_tstamp(motor_notification)
+        exception_obj.info_wo_tstamp(motor_notification)
 
     sys.stdout.flush()
 
+
 def onLogClear():
+    print('ClientGUI_support.onLogClear')
     sys.stdout.flush()
     Fish_trainingGUI.txtMainLog.delete('0.0', tk.END)
 
@@ -99,62 +102,53 @@ def Feed():
     print('ClientGUI_support.Feed')
     sys.stdout.flush()
 
+
 def on1L():
     # global chb_Var
     # global FeedVar
     print('ClientGUI_support.on1L')
 
     try:
-        exception_class.info_wo_tstamp("\tTest motor - 1L")
+        exception_obj.info_wo_tstamp("\tTest motor - 1L")
 
         steps_no = Fish_trainingGUI.txtStepNum.get()
         motor = 1
         if steps_no == '':
             program = 0
-            feed_object.new_feeder_run(program, motor)
+            feed_obj.new_feeder_run(program, motor)
         else:
-            feed_object.move_steps(steps_no, motor)
+            feed_obj.move_steps(steps_no, motor)
 
         sys.stdout.flush()
     except TypeError:
         pass
 
+
 def on1R():
     print('ClientGUI_support.on1R')
     try:
-        exception_class.info_wo_tstamp("\tTest motor - 1R")
+        exception_obj.info_wo_tstamp("\tTest motor - 1R")
 
         steps_no = Fish_trainingGUI.txtStepNum.get()
         motor = 0
         if steps_no == '':
             program = 0
-            feed_object.new_feeder_run(program, motor)
+            feed_obj.new_feeder_run(program, motor)
         else:
-            feed_object.move_steps(steps_no, motor)
+            feed_obj.move_steps(steps_no, motor)
 
         sys.stdout.flush()
     except TypeError:
         pass
 
+
 def on2L():
     print('ClientGUI_support.on2L')
-    # velocity = Fish_traningGUI.txtVelocity.get()
-    # acceleration = Fish_traningGUI.txtAccl.get()
-
-    # fish_client = FishClient(Fish_traningGUI)
-    # fish_client.send('test_2L', 0, Fish_traningGUI.txtStepNum.get(), velocity, acceleration)
-    # fish_client.kill()
-
     sys.stdout.flush()
+
 
 def on2R():
     print('ClientGUI_support.on2R')
-    # velocity = Fish_traningGUI.txtVelocity.get()
-    # acceleration = Fish_traningGUI.txtAccl.get()
-
-    # fish_client = FishClient(Fish_traningGUI)
-    # fish_client.send('test_2R', 0, Fish_traningGUI.txtStepNum.get(), velocity, acceleration)
-    # fish_client.kill()
     sys.stdout.flush()
 
 
@@ -182,18 +176,29 @@ def onExit():
 
 def onRunTraining():
     global TrainingVar, thread_track_fish, controller
+    print('ClientGUI_support.onRunTraining')
     sys.stdout.flush()
+
+    training_stop_timed = check_auto_training_stop()
 
     Fish_trainingGUI.stop_training = False
     log_name = []
-    fish_no = Fish_trainingGUI.txtFishNo1.get('0.0', 'end-1c')
-    training_day = Fish_trainingGUI.txtTrainingDay1.get('0.0', 'end-1c')
 
-    if fish_no is "" or training_day is "":
-        log_name.append('test')
-        exception_class.info_wo_tstamp("\t\t --- NO 'Fish no.' or 'Training day', file: test.txt ---", bold=True)
-    else:
-        log_name.append('F{}DAY{}'.format(fish_no, training_day))
+    camera = CamVar1.get()
+    tracking_obj = Tracking(exception_obj, camera)
+    no_of_training = len(tracking_obj.fish)
+    check_fish_no_and_tday(no_of_training)
+    fish_no1 = Fish_trainingGUI.txtFishNo1.get('0.0', 'end-1c')
+    training_day1 = Fish_trainingGUI.txtTrainingDay1.get('0.0', 'end-1c')
+    fish_no2 = Fish_trainingGUI.txtFishNo2.get('0.0', 'end-1c')
+    training_day2 = Fish_trainingGUI.txtTrainingDay2.get('0.0', 'end-1c')
+
+    log_folder = Fish_trainingGUI.log_folder
+
+    log_name.append('F{}DAY{}'.format(fish_no1, training_day1))
+
+    if no_of_training == 2:
+        log_name.append('F{}DAY{}'.format(fish_no2, training_day2))
 
     try:
         _tmp1 = type(controller)
@@ -204,24 +209,59 @@ def onRunTraining():
     except NameError:
         print("name 'controller' is not defined")
 
-    camera = CamVar1.get()
-    controller = Controller(feed_object,
-                            exception_class,
-                            Fish_trainingGUI,
+
+    controller = Controller(tracking_obj,
+                            feed_obj,
+                            exception_obj,
+                            log_folder,
                             log_name,
-                            camera)
+                            Fish_trainingGUI,
+                            camera,
+                            training_stop_timed)
     _tmp1 = type(controller)
+    tracking_obj.set_controller_obj(controller)
     # print("type:{}".format(_tmp1))
 
     training_type = "edge" if TrainingVar.get() is 'E' else "center"
-    track_loop_args = (controller, exception_class, event, training_type, )
-    thread_track_fish = threading.Thread(target=track_fish.track_loop, name="track_loop", args=track_loop_args)
+    # controller, exception_class, _log_name=['test'], _camera=0, video=None
+
+    track_loop_args = (training_type,)
+    thread_track_fish = threading.Thread(target=tracking_obj.track_loop, name="track_loop", args=track_loop_args)
     thread_track_fish.daemon = True
     thread_track_fish.start()
 
 
+def check_auto_training_stop():
+    global Fish_trainingGUI, chVar_stop_tr
+    print('ClientGUI_support.check_auto_training_stop')
+    sys.stdout.flush()
+
+    timedelta_str = None
+    if chVar_stop_tr.get() == 1:
+        training_stop_str = txtTrainingStop.get()
+        tr_splt_list = training_stop_str.split(":")
+        # print("tr_splt_list:{}".format(tr_splt_list))
+        hr_str = min_str = sec_str = ''
+        with suppress(IndexError):
+            if tr_splt_list[0].isnumeric():
+                hr_str = int(tr_splt_list[0])
+            if tr_splt_list[1].isnumeric():
+                min_str = int(tr_splt_list[1])
+            if tr_splt_list[2].isnumeric():
+                sec_str = int(tr_splt_list[2])
+        if not (hr_str == '' and min_str == '' and sec_str == ''):
+            # print("TIME {}:{}:{}".format(hr_str, min_str, sec_str))
+            if min_str == '': min_str = 0
+            if sec_str == '': sec_str = 0
+            timedelta_str = timedelta(hours=hr_str, minutes=min_str, seconds=sec_str)
+            # print("timedelta_str:{}".format(timedelta_str))
+
+    return timedelta_str
+
+
 def onStopTraining():
     global Fish_trainingGUI
+    print('ClientGUI_support.onStopTraining')
     sys.stdout.flush()
 
     # onExit()
@@ -237,54 +277,73 @@ def onSendtest():
     # fish_client.kill()
 
 def onStatClear():
+    print('ClientGUI_support.onStatClear')
     sys.stdout.flush()
     # Fish_trainingGUI.txtStatLog.delete('0.0', END)
 
-
 def onTankConfig():
-    global CamVar1, exception_class
+    global CamVar1, exception_obj
 
     print('ClientGUI_support.onTankConfig')
     sys.stdout.flush()
     relvant_camera = CamVar1.get()
-    scene_planner.SP_Main(exception_class, relvant_camera)
-    # thread_track_fish = threading.Thread(target=scene_planner.SP_Main, args=(CamVar1.get()))
-    # thread_track_fish.start()
+    scene_planner = ScenePlanner(exception_obj)
+    scene_planner.SP_Main(relvant_camera)
 
 def onSetZero():
     print('ClientGUI_support.onSetZero')
     btn_txt = Fish_trainingGUI.btnSetZero['text']
     if btn_txt == "Set ZERO pos.":
         Fish_trainingGUI.btnSetZero.configure(text='END')
-        feed_object.Arduino.disable_pins(True)
+        feed_obj.Arduino.disable_pins(True)
     else:
         Fish_trainingGUI.btnSetZero.configure(text='Set ZERO pos.')
-        feed_object.Arduino.disable_pins(False)
+        feed_obj.Arduino.disable_pins(False)
 
-    # fish_client = FishClient()
-    # fish_client.send(_str_to_send, 0)
-    # fish_client.kill()
 
 def onShowDBFile():
     global Fish_trainingGUI
+    print('ClientGUI_support.onShowDBFile')
+    sys.stdout.flush()
+
     show_file(Fish_trainingGUI.db_file_full_path())
 
 def onOpenFolder():
     global Fish_trainingGUI
+    print('ClientGUI_support.onOpenFolder')
+    sys.stdout.flush()
     open_folder(Fish_trainingGUI.LogFolderName)
 
 def OnRefresh():
     global Fish_trainingGUI
+    print('ClientGUI_support.OnRefresh')
     sys.stdout.flush()
     Fish_trainingGUI.db_tree_view_data_refresh()
 
+def OnChkStopTraining():
+    global chVar_stop_tr, Fish_trainingGUI
+    print('ClientGUI_support.OnChkStopTraining')
+    sys.stdout.flush()
+    if chVar_stop_tr.get() == 1:
+        Fish_trainingGUI.txtTrainingStop.configure(state="normal")
+        Fish_trainingGUI.txtTrainingStop.focus()
+    else:
+        Fish_trainingGUI.txtTrainingStop.configure(state="disabled")
+
 
 def init(top, gui, _exception_class,  *args, **kwargs):
-    global Fish_trainingGUI, top_level, root, exception_class
+    global Fish_trainingGUI, top_level, root, exception_obj, feed_obj
     Fish_trainingGUI = gui
     top_level = top
     root = top
-    exception_class = _exception_class
+    exception_obj = _exception_class
+    feed_obj = TrackerFeeder()
+    arduino_obj = feed_obj.Arduino
+
+    if arduino_obj.connection == 'NO':
+        exception_obj.error("No Arduino conn. check serial port (USB)", bold=True)
+    else:
+        exception_obj.info("Arduino connection OK, port:{}".format(arduino_obj.serial_con.serial.port))
 
 
 def destroy_window():
@@ -314,9 +373,29 @@ def open_folder(path):
         else:
             subprocess.Popen(["xdg-open", path])
     except FileNotFoundError:
-        exception_class.error("cannot find the folder")
+        exception_obj.error("cannot find the folder")
 
-#TypeError: argument of type 'WindowsPath' is not iterable
+
+def check_fish_no_and_tday(_no_of_training):
+    fish_no = Fish_trainingGUI.txtFishNo1.get('0.0', 'end-1c')
+    training_day = Fish_trainingGUI.txtTrainingDay1.get('0.0', 'end-1c')
+    if fish_no is '' or training_day is '':
+        exception_obj.info("Fish no1. or Training day textbox were empty, filling automatically")
+    if fish_no is '':
+        Fish_trainingGUI.txtFishNo1.insert('0.0', 'test1')
+    if training_day is '':
+        Fish_trainingGUI.txtTrainingDay1.insert('0.0', '0')
+
+    if _no_of_training == 2:
+        fish_no = Fish_trainingGUI.txtFishNo2.get('0.0', 'end-1c')
+        training_day = Fish_trainingGUI.txtTrainingDay2.get('0.0', 'end-1c')
+        if fish_no is '' or training_day is '':
+            exception_obj.info("Fish no2. or Training day textbox were empty, filling automatically")
+        if fish_no is '':
+            Fish_trainingGUI.txtFishNo2.insert('0.0', 'test2')
+        if training_day is '':
+            Fish_trainingGUI.txtTrainingDay2.insert('0.0', '0')
+
 
 if __name__ == '__main__':
     import ClientGUI
