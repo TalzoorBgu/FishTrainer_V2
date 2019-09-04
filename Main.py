@@ -1,13 +1,14 @@
 #! /usr/bin/env python
 
 import sys
+from sys import platform as sys_pf
 import platform
 import configparser
 from datetime import datetime
 import os
 from pathlib import Path
 import tools.log as fish_log
-
+from tendo import singleton
 
 try:
     import Tkinter as tk
@@ -28,6 +29,12 @@ try:
     from tools import ClientGUI_V2_support
 except ImportError:
     from .tools import ClientGUI_V2_support
+
+try:
+    me = singleton.SingleInstance()    # will sys.exit(-1) if other instance is running
+except singleton.SingleInstanceException:
+    print("Bye.")
+    sys.exit(-1)
 
 Config = configparser.ConfigParser()
 script_dir = os.path.dirname(os.path.realpath(__file__))  # script dir
@@ -79,7 +86,7 @@ class MainGUI:
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
         _ana2color = '#ececec' # Closest X11 color: 'gray92'
         self.style = ttk.Style()
-        if sys.platform == "win32":
+        if sys_pf == "win32":
             self.style.theme_use('winnative')
         self.style.configure('.',background=_bgcolor)
         self.style.configure('.',foreground=_fgcolor)

@@ -9,6 +9,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import numpy
+
+from sys import platform as sys_pf
+if sys_pf == 'darwin':
+    import matplotlib
+    matplotlib.use("TkAgg")
+
 from matplotlib import pyplot as plt, gridspec as gridspec, patches
 
 

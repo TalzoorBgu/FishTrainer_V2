@@ -226,10 +226,10 @@ class TrackerFeeder:
 
     def new_feeder_run(self, _feeder, _side):
         res = ''
-        print("inside new_feeder_run, side={}".format(_side))
+        print("side={}".format(_side))
         if _side == 'left' or _side == 1 or _side == 'center':
             _motor = 1
-        else:
+        # else:
             _motor = 2
 
         if self.ardu_conn is True:
@@ -574,7 +574,7 @@ class ArduinoFunctions:
             sleep(1/1000) # 1ms
 
         if not str_in == "":
-            print("arduino_in: {}".format(str_in))
+            print("(Ardu_in): {}".format(str_in))
         return str_in
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -807,10 +807,10 @@ class Controller:
         print("_log_name:{}".format(_log_name))
         for i, size in enumerate(self.tracking_obj.width):
             self.total_feed.append(0)
-            print("i:{}".format(i))
+            # print("i:{}".format(i))
             self.tank.append(Tank(i, size))
             log_str = "{}.({})".format(_log_name[i], str(i))
-            print("log_str:{}".format(log_str))
+            # print("log_str:{}".format(log_str))
             self.logger.append(FishLog(self.log_folder,
                                        log_str,
                                        self.exception_log)
