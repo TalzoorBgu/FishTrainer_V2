@@ -30,12 +30,21 @@ try:
 except ImportError:
     from .tools import ClientGUI_V2_support
 
-try:
-    single_check = singleton.SingleInstance()    # will sys.exit(-1) if other instance is running
-    print("Lock file:{}".format(single_check.lockfile))
-except singleton.SingleInstanceException:
-    print("Bye.")
-    sys.exit(-1)
+# import fcntl, sys
+# pid_file = 'lock_file.pid'
+# fp = open(pid_file, 'w')
+# try:
+#     fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+# except IOError:
+#     # another instance is running
+#     sys.exit(0)
+
+# try:
+#     single_check = singleton.SingleInstance()    # will sys.exit(-1) if other instance is running
+#     print("Lock file:{}".format(single_check.lockfile))
+# except singleton.SingleInstanceException:
+#     print("Bye.")
+#     sys.exit(-1)
 
 Config = configparser.ConfigParser()
 script_dir = os.path.dirname(os.path.realpath(__file__))  # script dir
