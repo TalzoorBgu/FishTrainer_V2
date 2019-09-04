@@ -2,7 +2,7 @@
 
 import sys
 from sys import platform as sys_pf
-import fcntl
+# import fcntl
 import platform
 import configparser
 from datetime import datetime
@@ -26,19 +26,21 @@ except ImportError:
     py3 = 1
 
 
-try:
-    from tools import ClientGUI_V2_support
-except ImportError:
-    from .tools import ClientGUI_V2_support
+# try:
+#     from tools import ClientGUI_V2_support
+# except ImportError:
+#     from .tools import ClientGUI_V2_support
+#
+# pid_file = 'lock_file.pid'
+# fp = open(pid_file, 'w')
+# try:
+#     fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+# except IOError:
+#     # another instance is running
+#     print("another instance is running")
+#     sys.exit(0)
 
-pid_file = 'lock_file.pid'
-fp = open(pid_file, 'w')
-try:
-    fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
-except IOError:
-    # another instance is running
-    print("another instance is running")
-    sys.exit(0)
+###########
 
 # try:
 #     single_check = singleton.SingleInstance()    # will sys.exit(-1) if other instance is running
