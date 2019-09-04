@@ -31,7 +31,8 @@ except ImportError:
     from .tools import ClientGUI_V2_support
 
 try:
-    me = singleton.SingleInstance()    # will sys.exit(-1) if other instance is running
+    single_check = singleton.SingleInstance()    # will sys.exit(-1) if other instance is running
+    print("Lock file:{}".format(single_check.lockfile))
 except singleton.SingleInstanceException:
     print("Bye.")
     sys.exit(-1)
