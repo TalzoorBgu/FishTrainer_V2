@@ -197,13 +197,6 @@ class ScenePlanner:
             cv2.waitKey(1)
 
 
-def get_file_name(_camera):
-    full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '/')
-    file_path = Path('{}tank_config_cam_{}.txt'.format(full_script_path, _camera))
-
-    return file_path
-
-
 class TrackerFeeder:
     def __init__(self):
         global time_to_sleep
@@ -579,6 +572,13 @@ class ArduinoFunctions:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.serial_con.close()
+
+
+def get_file_name(_camera):
+    full_script_path = '{}{}'.format(os.path.dirname(os.path.realpath(__file__)), '/')
+    file_path = Path('{}tank_config_cam_{}.txt'.format(full_script_path, _camera))
+
+    return file_path
 
 
 def serial_ports():

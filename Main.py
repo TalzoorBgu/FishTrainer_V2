@@ -2,13 +2,14 @@
 
 import sys
 from sys import platform as sys_pf
+import fcntl
 import platform
 import configparser
 from datetime import datetime
 import os
 from pathlib import Path
 import tools.log as fish_log
-from tendo import singleton
+# from tendo import singleton
 
 try:
     import Tkinter as tk
@@ -30,14 +31,14 @@ try:
 except ImportError:
     from .tools import ClientGUI_V2_support
 
-# import fcntl, sys
-# pid_file = 'lock_file.pid'
-# fp = open(pid_file, 'w')
-# try:
-#     fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
-# except IOError:
-#     # another instance is running
-#     sys.exit(0)
+pid_file = 'lock_file.pid'
+fp = open(pid_file, 'w')
+try:
+    fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+except IOError:
+    # another instance is running
+    print("another instance is running")
+    sys.exit(0)
 
 # try:
 #     single_check = singleton.SingleInstance()    # will sys.exit(-1) if other instance is running
@@ -1242,6 +1243,7 @@ def _create_container(func):
         return func(cls, container, **kw)
     return wrapped
 
+
 def _bound_to_mousewheel(event, widget):
     child = widget.winfo_children()[0]
     if platform.system() == 'Windows' or platform.system() == 'Darwin':
@@ -1253,6 +1255,7 @@ def _bound_to_mousewheel(event, widget):
         child.bind_all('<Shift-Button-4>', lambda e: _on_shiftmouse(e, child))
         child.bind_all('<Shift-Button-5>', lambda e: _on_shiftmouse(e, child))
 
+
 def _unbound_to_mousewheel(event, widget):
     if platform.system() == 'Windows' or platform.system() == 'Darwin':
         widget.unbind_all('<MouseWheel>')
@@ -1262,6 +1265,7 @@ def _unbound_to_mousewheel(event, widget):
         widget.unbind_all('<Button-5>')
         widget.unbind_all('<Shift-Button-4>')
         widget.unbind_all('<Shift-Button-5>')
+
 
 def _on_mousewheel(event, widget):
     if platform.system() == 'Windows':
@@ -1274,6 +1278,7 @@ def _on_mousewheel(event, widget):
         elif event.num == 5:
             widget.yview_scroll(1, 'units')
 
+
 def _on_shiftmouse(event, widget):
     if platform.system() == 'Windows':
         widget.xview_scroll(-1*int(event.delta/120), 'units')
@@ -1285,6 +1290,7 @@ def _on_shiftmouse(event, widget):
         elif event.num == 5:
             widget.xview_scroll(1, 'units')
 
+
 class ScrolledTreeView(AutoScroll, ttk.Treeview):
     '''A standard ttk Treeview widget with scrollbars that will
     automatically show/hide as needed.'''
@@ -1292,6 +1298,7 @@ class ScrolledTreeView(AutoScroll, ttk.Treeview):
     def __init__(self, master, **kw):
         ttk.Treeview.__init__(self, master, **kw)
         AutoScroll.__init__(self, master)
+
 
 def entryUpdateEndHour(entry):
     try:
@@ -1308,6 +1315,7 @@ def entryUpdateEndHour(entry):
             entry.insert(0, text[:8])
     except IndexError:
         pass
+
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
