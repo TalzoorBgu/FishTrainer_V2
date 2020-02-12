@@ -9,6 +9,8 @@ from datetime import datetime
 import os
 from pathlib import Path
 import tools.log as fish_log
+from datetime import timedelta
+
 # from tendo import singleton
 
 try:
@@ -20,11 +22,12 @@ except ImportError:
 
 try:
     import ttk
+
     py3 = 0
 except ImportError:
     import tkinter.ttk as ttk
-    py3 = 1
 
+    py3 = 1
 
 try:
     from tools import ClientGUI_V2_support
@@ -52,25 +55,30 @@ except ImportError:
 Config = configparser.ConfigParser()
 script_dir = os.path.dirname(os.path.realpath(__file__))  # script dir
 
-#Global vars
+# Global vars
 exit_flag = False
 
 
 class ConfigSectionMap:
     def __init__(self, _exception=None):
         self.exception = _exception
+        self.file_name = 'GUI_config.txt'
 
     def get(self, section):
         dict1 = {}
 
-        file_name = 'GUI_config.txt'
+        file_name = self.file_name
 
         data_folder = Path(script_dir)
         file_to_open = data_folder / file_name
 
         try:
             with open(file_to_open) as f:
-                Config.read_file(f)
+                try:
+                    Config.read_file(f)
+                except configparser.DuplicateOptionError:
+                    self.exception.error("Config file error! 'DuplicateOptionError'")
+                    exit(1)
 
                 if Config.has_section(section):
                     options = Config.options(section)
@@ -80,7 +88,7 @@ class ConfigSectionMap:
                         except:
                             print("exception on %s!" % option)
                             dict1[option] = None
-                else:   # there is no such option
+                else:  # there is no such option
                     # print("Config file error!")
                     self.exception.error("Config file error! ({})".format(section))
                     dict1 = {}
@@ -95,17 +103,17 @@ class MainGUI:
            top is the toplevel containing window.'''
         _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
-        _compcolor = '#d9d9d9' # X11 color: 'gray85'
-        _ana1color = '#d9d9d9' # X11 color: 'gray85'
-        _ana2color = '#ececec' # Closest X11 color: 'gray92'
+        _compcolor = '#d9d9d9'  # X11 color: 'gray85'
+        _ana1color = '#d9d9d9'  # X11 color: 'gray85'
+        _ana2color = '#ececec'  # Closest X11 color: 'gray92'
         self.style = ttk.Style()
         if sys_pf == "win32":
             self.style.theme_use('winnative')
-        self.style.configure('.',background=_bgcolor)
-        self.style.configure('.',foreground=_fgcolor)
-        self.style.configure('.',font="TkDefaultFont")
-        self.style.map('.',background=
-            [('selected', _compcolor), ('active',_ana2color)])
+        self.style.configure('.', background=_bgcolor)
+        self.style.configure('.', foreground=_fgcolor)
+        self.style.configure('.', font="TkDefaultFont")
+        self.style.map('.', background=
+        [('selected', _compcolor), ('active', _ana2color)])
 
         top.geometry("880x748+246+63")
         top.title("Fish training GUI V2 - Client")
@@ -115,7 +123,7 @@ class MainGUI:
 
         self.frmTraining = tk.Frame(top)
         self.frmTraining.place(relx=0.25, rely=0.388, relheight=0.175
-                , relwidth=0.743)
+                               , relwidth=0.743)
         self.frmTraining.configure(relief='groove')
         self.frmTraining.configure(borderwidth="2")
         self.frmTraining.configure(relief="groove")
@@ -202,7 +210,7 @@ class MainGUI:
 
         self.txtFishNo1 = tk.Text(self.frmTraining)
         self.txtFishNo1.place(relx=0.352, rely=0.229, relheight=0.244
-                , relwidth=0.092)
+                              , relwidth=0.092)
         self.txtFishNo1.configure(background="white")
         self.txtFishNo1.configure(font="TkTextFont")
         self.txtFishNo1.configure(foreground="black")
@@ -217,7 +225,7 @@ class MainGUI:
 
         self.txtTrainingDay1 = tk.Text(self.frmTraining)
         self.txtTrainingDay1.place(relx=0.443, rely=0.229, relheight=0.244
-                , relwidth=0.064)
+                                   , relwidth=0.064)
         self.txtTrainingDay1.configure(background="white")
         self.txtTrainingDay1.configure(font="TkTextFont")
         self.txtTrainingDay1.configure(foreground="black")
@@ -232,7 +240,7 @@ class MainGUI:
 
         self.txtFishNo2 = tk.Text(self.frmTraining)
         self.txtFishNo2.place(relx=0.352, rely=0.534, relheight=0.244
-                , relwidth=0.092)
+                              , relwidth=0.092)
         self.txtFishNo2.configure(background="white")
         self.txtFishNo2.configure(font="TkTextFont")
         self.txtFishNo2.configure(foreground="black")
@@ -247,7 +255,7 @@ class MainGUI:
 
         self.txtTrainingDay2 = tk.Text(self.frmTraining)
         self.txtTrainingDay2.place(relx=0.443, rely=0.534, relheight=0.244
-                , relwidth=0.064)
+                                   , relwidth=0.064)
         self.txtTrainingDay2.configure(background="white")
         self.txtTrainingDay2.configure(font="TkTextFont")
         self.txtTrainingDay2.configure(foreground="black")
@@ -292,7 +300,7 @@ class MainGUI:
 
         self.radCam1 = tk.Radiobutton(self.frmTraining)
         self.radCam1.place(relx=0.015, rely=0.076, relheight=0.168
-                , relwidth=0.139)
+                           , relwidth=0.139)
         self.radCam1.configure(activebackground="#d9d9d9")
         self.radCam1.configure(activeforeground="#000000")
         self.radCam1.configure(background="#d9d9d9")
@@ -307,7 +315,7 @@ class MainGUI:
 
         self.fra38_rad41 = tk.Radiobutton(self.frmTraining)
         self.fra38_rad41.place(relx=0.0, rely=0.0, relheight=0.008
-                , relwidth=0.002)
+                               , relwidth=0.002)
         self.fra38_rad41.configure(activebackground="#d9d9d9")
         self.fra38_rad41.configure(activeforeground="#000000")
         self.fra38_rad41.configure(background="#d9d9d9")
@@ -322,7 +330,7 @@ class MainGUI:
 
         self.fra38_rad42 = tk.Radiobutton(self.frmTraining)
         self.fra38_rad42.place(relx=0.0, rely=0.0, relheight=0.008
-                , relwidth=0.002)
+                               , relwidth=0.002)
         self.fra38_rad42.configure(activebackground="#d9d9d9")
         self.fra38_rad42.configure(activeforeground="#000000")
         self.fra38_rad42.configure(background="#d9d9d9")
@@ -337,7 +345,7 @@ class MainGUI:
 
         self.radCam2 = tk.Radiobutton(self.frmTraining)
         self.radCam2.place(relx=0.015, rely=0.229, relheight=0.168
-                , relwidth=0.139)
+                           , relwidth=0.139)
         self.radCam2.configure(activebackground="#d9d9d9")
         self.radCam2.configure(activeforeground="#000000")
         self.radCam2.configure(background="#d9d9d9")
@@ -364,7 +372,7 @@ class MainGUI:
 
         self.radF1_2 = tk.Radiobutton(self.frmTraining)
         self.radF1_2.place(relx=0.183, rely=0.458, relheight=0.168
-                , relwidth=0.122)
+                           , relwidth=0.122)
         self.radF1_2.configure(activebackground="#d9d9d9")
         self.radF1_2.configure(activeforeground="#000000")
         self.radF1_2.configure(background="#d9d9d9")
@@ -379,7 +387,7 @@ class MainGUI:
 
         self.radF1_1 = tk.Radiobutton(self.frmTraining)
         self.radF1_1.place(relx=0.183, rely=0.305, relheight=0.168
-                , relwidth=0.107)
+                           , relwidth=0.107)
         self.radF1_1.configure(activebackground="#d9d9d9")
         self.radF1_1.configure(activeforeground="#000000")
         self.radF1_1.configure(background="#d9d9d9")
@@ -442,7 +450,7 @@ class MainGUI:
 
         self.chbtn_StopTraining = tk.Checkbutton(self.frmTraining)
         self.chbtn_StopTraining.place(relx=0.657, rely=0.229, relheight=0.168
-                , relwidth=0.142)
+                                      , relwidth=0.142)
         self.chbtn_StopTraining.configure(activebackground="#d9d9d9")
         self.chbtn_StopTraining.configure(activeforeground="#000000")
         self.chbtn_StopTraining.configure(background="#d9d9d9")
@@ -464,7 +472,7 @@ class MainGUI:
 
         self.txtTrainingStop = tk.Entry(self.frmTraining)
         self.txtTrainingStop.place(relx=0.657, rely=0.611, height=27
-                , relwidth=0.171)
+                                   , relwidth=0.171)
         self.txtTrainingStop.configure(background="white")
         self.txtTrainingStop.configure(font="TkFixedFont")
         self.txtTrainingStop.configure(foreground="#000000")
@@ -501,7 +509,7 @@ class MainGUI:
 
         self.frmStat = tk.Frame(top)
         self.frmStat.place(relx=0.011, rely=0.013, relheight=0.361
-                , relwidth=0.983)
+                           , relwidth=0.983)
         self.frmStat.configure(relief='groove')
         self.frmStat.configure(borderwidth="2")
         self.frmStat.configure(relief="groove")
@@ -566,7 +574,7 @@ class MainGUI:
 
         self.txtStatDaysBack = tk.Text(self.frmStat)
         self.txtStatDaysBack.place(relx=0.208, rely=0.889, relheight=0.089
-                , relwidth=0.076)
+                                   , relwidth=0.076)
         self.txtStatDaysBack.configure(background="white")
         self.txtStatDaysBack.configure(font="TkTextFont")
         self.txtStatDaysBack.configure(foreground="black")
@@ -581,7 +589,7 @@ class MainGUI:
 
         self.txtMainFolder = tk.Text(self.frmStat)
         self.txtMainFolder.place(relx=0.254, rely=0.037, relheight=0.089
-                , relwidth=0.731)
+                                 , relwidth=0.731)
         self.txtMainFolder.configure(background="white")
         self.txtMainFolder.configure(font="TkTextFont")
         self.txtMainFolder.configure(foreground="black")
@@ -596,7 +604,7 @@ class MainGUI:
 
         self.Frame1 = tk.Frame(self.frmStat)
         self.Frame1.place(relx=0.012, rely=0.148, relheight=0.648
-                , relwidth=0.711)
+                          , relwidth=0.711)
         self.Frame1.configure(relief='groove')
         self.Frame1.configure(borderwidth="2")
         self.Frame1.configure(relief="groove")
@@ -605,23 +613,23 @@ class MainGUI:
         self.Frame1.configure(highlightcolor="black")
         self.Frame1.configure(width=615)
 
-        self.style.configure('Treeview.Heading',  font="TkDefaultFont")
+        self.style.configure('Treeview.Heading', font="TkDefaultFont")
         self.DB = ScrolledTreeView(self.Frame1)
         self.DB.place(relx=0.016, rely=0.057, relheight=0.874, relwidth=0.976)
         self.DB.configure(columns="Col1")
         # build_treeview_support starting.
-        self.DB.heading("#0",text="Tree")
-        self.DB.heading("#0",anchor="center")
-        self.DB.column("#0",width="293")
-        self.DB.column("#0",minwidth="20")
-        self.DB.column("#0",stretch="1")
-        self.DB.column("#0",anchor="w")
-        self.DB.heading("Col1",text="Col1")
-        self.DB.heading("Col1",anchor="center")
-        self.DB.column("Col1",width="293")
-        self.DB.column("Col1",minwidth="20")
-        self.DB.column("Col1",stretch="1")
-        self.DB.column("Col1",anchor="w")
+        self.DB.heading("#0", text="Tree")
+        self.DB.heading("#0", anchor="center")
+        self.DB.column("#0", width="293")
+        self.DB.column("#0", minwidth="20")
+        self.DB.column("#0", stretch="1")
+        self.DB.column("#0", anchor="w")
+        self.DB.heading("Col1", text="Col1")
+        self.DB.heading("Col1", anchor="center")
+        self.DB.column("Col1", width="293")
+        self.DB.column("Col1", minwidth="20")
+        self.DB.column("Col1", stretch="1")
+        self.DB.column("Col1", anchor="w")
 
         self.Label13 = tk.Label(self.frmStat)
         self.Label13.place(relx=0.74, rely=0.167, height=24, width=76)
@@ -645,7 +653,7 @@ class MainGUI:
 
         self.txtLogFolder = tk.Text(self.frmStat)
         self.txtLogFolder.place(relx=0.74, rely=0.259, relheight=0.096
-                , relwidth=0.252)
+                                , relwidth=0.252)
         self.txtLogFolder.configure(background="white")
         self.txtLogFolder.configure(font="TkTextFont")
         self.txtLogFolder.configure(foreground="black")
@@ -659,7 +667,7 @@ class MainGUI:
 
         self.txtDBfile = tk.Text(self.frmStat)
         self.txtDBfile.place(relx=0.74, rely=0.593, relheight=0.096
-                , relwidth=0.252)
+                             , relwidth=0.252)
         self.txtDBfile.configure(background="white")
         self.txtDBfile.configure(font="TkTextFont")
         self.txtDBfile.configure(foreground="black")
@@ -711,7 +719,7 @@ class MainGUI:
 
         self.frmCom = tk.Frame(top)
         self.frmCom.place(relx=0.011, rely=0.388, relheight=0.175
-                , relwidth=0.232)
+                          , relwidth=0.232)
         self.frmCom.configure(relief='groove')
         self.frmCom.configure(borderwidth="2")
         self.frmCom.configure(relief="groove")
@@ -789,7 +797,7 @@ class MainGUI:
         self.Label7.configure(text='''Steps number''')
 
         self.txtStepNum = tk.Entry(self.frmCom)
-        self.txtStepNum.place(relx=0.049, rely=0.382,height=27, relwidth=0.392)
+        self.txtStepNum.place(relx=0.049, rely=0.382, height=27, relwidth=0.392)
         self.txtStepNum.configure(background="white")
         self.txtStepNum.configure(font="TkFixedFont")
         self.txtStepNum.configure(foreground="#000000")
@@ -813,7 +821,7 @@ class MainGUI:
 
         self.frmLog = tk.Frame(top)
         self.frmLog.place(relx=0.011, rely=0.575, relheight=0.354
-                , relwidth=0.983)
+                          , relwidth=0.983)
         self.frmLog.configure(relief='groove')
         self.frmLog.configure(borderwidth="2")
         self.frmLog.configure(relief="groove")
@@ -834,7 +842,7 @@ class MainGUI:
 
         self.txtMainLog = tk.Text(self.frmLog)
         self.txtMainLog.place(relx=0.006, rely=0.113, relheight=0.777
-                , relwidth=0.985)
+                              , relwidth=0.985)
         self.txtMainLog.configure(background="white")
         self.txtMainLog.configure(font="TkTextFont")
         self.txtMainLog.configure(foreground="black")
@@ -881,10 +889,10 @@ class MainGUI:
         self.lblTimeCount.configure(justify='left')
         self.lblTimeCount.configure(text='''00:00''')
 
-        self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
-        top.configure(menu = self.menubar)
+        self.menubar = tk.Menu(top, font="TkMenuFont", bg=_bgcolor, fg=_fgcolor)
+        top.configure(menu=self.menubar)
 
-    def __init__(self, top = None):
+    def __init__(self, top=None):
 
         self.stop_training = True
         self.exit_flag = False
@@ -897,7 +905,9 @@ class MainGUI:
 
         self.vars_init()
         self.fillValue()
+
         self.exception_obj.info(" --- Program started --- ")
+        self.exception_obj.info("config file - ..\{}".format(self.config_file_name))
 
     def Font_init(self):
         self.myFont_reg = Font(family="TkTextFont", size=14)
@@ -910,17 +920,19 @@ class MainGUI:
         self.myFont_Ssmall = Font(family="TkTextFont", size=10)
         self.myFont_Sssmall = Font(family="TkTextFont", size=8)
 
+    # noinspection PyAttributeOutsideInit
     def vars_init(self):
         self.LogFolderName = ""
         self.Stat_days = ""
         self.Stat_arg = ""
         self.ServerIP = ""
         self.Args = ""
+        self.max_training_time = ""
 
     def str_pins_split(self, _str):
         p1_place = int(_str.find("("))
         p2_place = int(_str.find(")"))
-        new_str = _str[p1_place+1:p2_place]
+        new_str = _str[p1_place + 1:p2_place]
         new_str = new_str.split(",")
         results = list(map(int, new_str))
 
@@ -942,33 +954,36 @@ class MainGUI:
         tv.heading(col, command=lambda: self.treeview_sort_column(tv, col, not reverse))
 
     def tree_view_create(self):
-        self.DB.pack()
-        self.DB.pack_forget()
-        #
-        self.style.configure('Treeview', font=self.myFont_big14)
-        self.style.configure('Treeview.Heading', font="TkDefaultFont")
-        self.DB = ScrolledTreeView(self.Frame1)
-        self.DB.place(relx=0.012, rely=0.057, relheight=0.874, relwidth=0.98)
+        try:
+            self.DB.pack()
+            self.DB.pack_forget()
+            #
+            self.style.configure('Treeview', font=self.myFont_big14)
+            self.style.configure('Treeview.Heading', font="TkDefaultFont")
+            self.DB = ScrolledTreeView(self.Frame1)
+            self.DB.place(relx=0.012, rely=0.057, relheight=0.874, relwidth=0.98)
 
-        # build_treeview_support starting.
-        col_names = ['Fish no.', 'Last training', 'Training day', 'Total feed', 'Avg feed p. records']
-        col_width = [70, 170, 90, 95, 135]
-        columns_list = []
-        for i in range(len(col_names)):
-            columns_list.append("Col{}".format(i))
-        self.DB.configure(columns=columns_list, show='headings')
+            # build_treeview_support starting.
+            col_names = ['Fish no.', 'Last training', 'Training day', 'Total feed', 'Avg feed p. records']
+            col_width = [70, 170, 90, 95, 135]
+            columns_list = []
+            for i in range(len(col_names)):
+                columns_list.append("Col{}".format(i))
+            self.DB.configure(columns=columns_list, show='headings')
 
-        for no, col_name in enumerate(col_names):
-            # print("no:{} val:{}".format(no, col_name))
-            col_idx = "#{}".format(no+1)
-            self.DB.heading(col_idx, text=col_name)
-            self.DB.heading(col_idx, anchor="center")
-            self.DB.heading(col_idx, command=lambda _col=col_idx: self.treeview_sort_column(self.DB, _col, False))
-            self.DB.column(col_idx, width=col_width[no])
-            self.DB.column(col_idx, minwidth="20")
-            self.DB.column(col_idx, stretch="1")
-            self.DB.column(col_idx, anchor="center")
-            self.DB.bind("<Double-1>", self.OnTreeDoubleClick)
+            for no, col_name in enumerate(col_names):
+                # print("no:{} val:{}".format(no, col_name))
+                col_idx = "#{}".format(no + 1)
+                self.DB.heading(col_idx, text=col_name)
+                self.DB.heading(col_idx, anchor="center")
+                self.DB.heading(col_idx, command=lambda _col=col_idx: self.treeview_sort_column(self.DB, _col, False))
+                self.DB.column(col_idx, width=col_width[no])
+                self.DB.column(col_idx, minwidth="20")
+                self.DB.column(col_idx, stretch="1")
+                self.DB.column(col_idx, anchor="center")
+                self.DB.bind("<Double-1>", self.OnTreeDoubleClick)
+        except RuntimeError:
+            print("Error (tree_view_create) - Window closed")
 
     def OnTreeDoubleClick(self, event):
         item = self.DB.selection()
@@ -983,7 +998,7 @@ class MainGUI:
             self.txtFishNo1.delete('1.0', tk.END)
             self.txtFishNo1.insert('0.0', fish_no)
             self.txtTrainingDay1.delete('1.0', tk.END)
-            self.txtTrainingDay1.insert('0.0', training_no+1)
+            self.txtTrainingDay1.insert('0.0', training_no + 1)
 
     def db_file_full_path(self):
         full_path = Path("{}/data/{}".format(script_dir, self.DB_fish_file))
@@ -996,22 +1011,26 @@ class MainGUI:
         return file_ex
 
     def db_fill(self):
-        str_db_path = self.db_file_full_path()
-        if self.db_file_exists(str_db_path) is False:
-            self.exception_obj.error("\t\t\t ----- DB file not exist !! Creating new one -----",
-                                     bold=True)
+        try:
+            str_db_path = self.db_file_full_path()
+            if self.db_file_exists(str_db_path) is False:
+                self.exception_obj.error("\t\t\t ----- DB file not exist !! Creating new one -----",
+                                         bold=True)
 
-        fish_db = fish_log.Database(str_db_path)
-        fish_list = fish_db.db_fish_view()
-        # print("fish_list:{}".format(fish_list))
-        for i, each_fish in enumerate(fish_list):
-            fish_rec = fish_db.extract_fish_records(each_fish)
-            ttl_feeds = fish_db.calc_total_and_avg_feed(fish_rec)
-            last_training = fish_db.find_last_training(fish_rec)
-            training_day = fish_db.find_training_day(fish_rec)
-            data_insert = [each_fish, last_training, training_day, ttl_feeds[0], "{:.1f}".format(ttl_feeds[1])]
-            self.DB.insert("", tk.END, values=data_insert)
-        fish_db.__exit__()
+            fish_db = fish_log.Database(str_db_path)
+            fish_list = fish_db.db_fish_view()
+            # print("fish_list:{}".format(fish_list))
+            for i, each_fish in enumerate(fish_list):
+                fish_rec = fish_db.extract_fish_records(each_fish)
+                ttl_feeds = fish_db.calc_total_and_avg_feed(fish_rec)
+                last_training = fish_db.find_last_training(fish_rec)
+                training_day = fish_db.find_training_day(fish_rec)
+                data_insert = [each_fish, last_training, training_day, ttl_feeds[0], "{:.1f}".format(ttl_feeds[1])]
+                self.DB.insert("", tk.END, values=data_insert)
+        except RuntimeError:
+            print("Error (db_fill) - Window closed")
+        finally:
+            fish_db.__exit__()
 
     def fillValue(self):
         self.txtMainLog.tag_configure("bold", font=self.myFont_bold)
@@ -1030,6 +1049,7 @@ class MainGUI:
         self.lblTimeCount.configure(font=self.myFont_big_bold)
 
         ConfigVals = ConfigSectionMap(self.exception_obj)
+        self.config_file_name = ConfigVals.file_name
         self.chb_Var = ClientGUI_V2_support.chb_Var
 
         fish_statistics_dict = ConfigVals.get("Fish Statistics")
@@ -1037,7 +1057,13 @@ class MainGUI:
         fish_dict = ConfigVals.get("Fish")
         arduino_dict = ConfigVals.get("Arduino")
         motor_dict = ConfigVals.get("Motor")
-        pins_2a = motor_dict['pins2a']; pins_2b = motor_dict['pins2b'];
+
+        pins_1a = motor_dict['pins1a'];
+        pins_1b = motor_dict['pins1b'];
+        pin_step_1a_list = self.str_pins_split(pins_1a)
+        pin_step_1b_list = self.str_pins_split(pins_1b)
+        pins_2a = motor_dict['pins2a'];
+        pins_2b = motor_dict['pins2b'];
         pin_step_2a_list = self.str_pins_split(pins_2a)
         pin_step_2b_list = self.str_pins_split(pins_2b)
 
@@ -1061,6 +1087,13 @@ class MainGUI:
                 Arg1 = fish_dict['argument1']
                 Arg2 = fish_dict['argument2']
                 self.Args = '{} {}'.format(Arg1, Arg2)
+                str_max_training_time = fish_dict['max training time']
+                str_max_training_time_split = str(str_max_training_time).split(':')
+
+                # convert max_training_time to timedelta object
+                self.max_training_time = timedelta(hours=int(str_max_training_time_split[0])
+                                                   , minutes=int(str_max_training_time_split[1])
+                                                   , seconds=int(str_max_training_time_split[2]))
 
             if arduino_dict == {}:
                 pass
@@ -1070,11 +1103,15 @@ class MainGUI:
                     ardu_conn = ClientGUI_V2_support.feed_object.Arduino.connection
                     if ardu_conn == 'OK':
                         arduino_obj = ClientGUI_V2_support.feed_object.Arduino
-                        p2a_st = pin_step_2a_list[0]; p2a_dir = pin_step_2a_list[1]; p2a_en = pin_step_2a_list[2];
-                        p2b_st = pin_step_2b_list[0]; p2b_dir = pin_step_2b_list[1]; p2b_en = pin_step_2b_list[2];
+                        (p1a_st, p1a_dir, p1a_en) = pin_step_1a_list
+                        (p1b_st, p1b_dir, p1b_en) = pin_step_1b_list
+                        (p2a_st, p2a_dir, p2a_en) = pin_step_2a_list
+                        (p2b_st, p2b_dir, p2b_en) = pin_step_2b_list
 
                         arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_1(p2a_st, p2a_dir, p2a_en))
                         arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_2(p2b_st, p2b_dir, p2b_en))
+                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_3(p1a_st, p1a_dir, p1a_en))
+                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_4(p1b_st, p1b_dir, p1b_en))
                         arduino_obj.send_command(arduino_obj.command_str.define_default_vel_acc(10, 20, 10))
         except KeyError as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -1086,8 +1123,8 @@ class MainGUI:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
-            self.exception_obj.error("{}({}) - somthing is wrong.".
-                                     format(exc_type.__name__, exc_obj))
+            self.exception_obj.error("line({})-{}({})".
+                                     format(exc_tb.tb_lineno, exc_type.__name__, exc_obj))
 
         str_main_folder = str(main_folder())
         log_folder_only = str(log_folder()).replace(str_main_folder, "")
@@ -1103,10 +1140,10 @@ class MainGUI:
                                                    lambda name,
                                                           index,
                                                           mode,
-                                                          txtTrainingStop = ClientGUI_V2_support.txtTrainingStop:
-        entryUpdateEndHour(self.txtTrainingStop))
+                                                          txtTrainingStop=ClientGUI_V2_support.txtTrainingStop:
+                                                   entryUpdateEndHour(self.txtTrainingStop))
 
-        ClientGUI_V2_support.chb_Var.set('1') # NEW feeder
+        ClientGUI_V2_support.chb_Var.set('1')  # NEW feeder
         ClientGUI_V2_support.FeedVar1.set('F')
         ClientGUI_V2_support.FeedVar2.set('F')
         ClientGUI_V2_support.CamVar1.set('1')
@@ -1115,21 +1152,23 @@ class MainGUI:
 
         self.db_tree_view_data_refresh()
 
-
     def db_tree_view_data_refresh(self):
         self.tree_view_create()
         self.db_fill()
 
     def print_and_update_main_log(self, str_to_print, _bold, new_line=True):
         global Fish_trainingGUI, top
-        str_temp = '{}'.format(str_to_print)
-        print (str_temp)
-        if new_line: str_temp = '{}\n'.format(str_temp)
-        if _bold:
-            self.txtMainLog.insert(tk.END, str_temp, "bold")
-        else:
-            self.txtMainLog.insert(tk.END, str_temp)
-        self.txtMainLog.see(tk.END)
+        try:
+            str_temp = '{}'.format(str_to_print)
+            print(str_temp)
+            if new_line: str_temp = '{}\n'.format(str_temp)
+            if _bold:
+                self.txtMainLog.insert(tk.END, str_temp, "bold")
+            else:
+                self.txtMainLog.insert(tk.END, str_temp)
+            self.txtMainLog.see(tk.END)
+        except RuntimeError:
+            print("Error (print_and_update_main_log) - Window closed.")
 
     def update_time(self, _time_timed_str, training_stop_timed_str=None):
         # print("type:{}".format(type(time_str)))
@@ -1145,7 +1184,8 @@ class MainGUI:
             time_timed_str = "{} / {}".format(str(_time_timed_str), training_stop_timed_str)
         self.lblTimeCount.configure(text=time_timed_str)
 
-        stop_training = self.check_if_auto_training_stop(_time_timed_str, training_stop_timed_str)
+        stop_training = self.check_if_auto_training_stop(_time_timed_str, training_stop_timed_str,
+                                                         self.max_training_time)
 
         if _str_min > 1:
             self.lblTimeCount.configure(fg='#5eaf24')
@@ -1155,13 +1195,23 @@ class MainGUI:
         def __call__(self):
             print("RUN Command")
 
-    def check_if_auto_training_stop(self, _time_timed_str, _training_stop_timed_str):
+    def check_if_auto_training_stop(self, _time_timed_str, _training_stop_timed_str, _max_training_time):
         stop_training = False
         try:
-            if _time_timed_str >= _training_stop_timed_str:
-                stop_training = True
-        except TypeError:
-            pass
+            if _max_training_time is not None:
+                if _time_timed_str >= _max_training_time:
+                    self.print_and_update_main_log('\t\tMAXIMUM TRAINING TIME - QUITING', True)       # bold=True
+                    stop_training = True
+            if _training_stop_timed_str is not None:
+                if _time_timed_str >= _training_stop_timed_str:
+                    stop_training = True
+
+        except TypeError as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
+            self.exception_obj.error("line({})-{}({})".
+                                     format(exc_tb.tb_lineno, exc_type.__name__, exc_obj))
 
         return stop_training
 
@@ -1189,7 +1239,7 @@ class AutoScroll(object):
             pass
         hsb = ttk.Scrollbar(master, orient='horizontal', command=self.xview)
 
-        #self.configure(yscrollcommand=_autoscroll(vsb),
+        # self.configure(yscrollcommand=_autoscroll(vsb),
         #    xscrollcommand=_autoscroll(hsb))
         try:
             self.configure(yscrollcommand=self._autoscroll(vsb))
@@ -1210,10 +1260,10 @@ class AutoScroll(object):
         # Copy geometry methods of master  (taken from ScrolledText.py)
         if py3:
             methods = tk.Pack.__dict__.keys() | tk.Grid.__dict__.keys() \
-                  | tk.Place.__dict__.keys()
+                      | tk.Place.__dict__.keys()
         else:
             methods = tk.Pack.__dict__.keys() + tk.Grid.__dict__.keys() \
-                  + tk.Place.__dict__.keys()
+                      + tk.Place.__dict__.keys()
 
         for meth in methods:
             if meth[0] != '_' and meth not in ('config', 'configure'):
@@ -1222,6 +1272,7 @@ class AutoScroll(object):
     @staticmethod
     def _autoscroll(sbar):
         '''Hide and show scrollbar as needed.'''
+
         def wrapped(first, last):
             first, last = float(first), float(last)
             if first <= 0 and last >= 1:
@@ -1229,6 +1280,7 @@ class AutoScroll(object):
             else:
                 sbar.grid()
             sbar.set(first, last)
+
         return wrapped
 
     def __str__(self):
@@ -1238,11 +1290,13 @@ class AutoScroll(object):
 def _create_container(func):
     '''Creates a ttk Frame with a given master, and use this new frame to
     place the scrollbars and the widget.'''
+
     def wrapped(cls, master, **kw):
         container = ttk.Frame(master)
         container.bind('<Enter>', lambda e: _bound_to_mousewheel(e, container))
         container.bind('<Leave>', lambda e: _unbound_to_mousewheel(e, container))
         return func(cls, container, **kw)
+
     return wrapped
 
 
@@ -1271,9 +1325,9 @@ def _unbound_to_mousewheel(event, widget):
 
 def _on_mousewheel(event, widget):
     if platform.system() == 'Windows':
-        widget.yview_scroll(-1*int(event.delta/120),'units')
+        widget.yview_scroll(-1 * int(event.delta / 120), 'units')
     elif platform.system() == 'Darwin':
-        widget.yview_scroll(-1*int(event.delta),'units')
+        widget.yview_scroll(-1 * int(event.delta), 'units')
     else:
         if event.num == 4:
             widget.yview_scroll(-1, 'units')
@@ -1283,9 +1337,9 @@ def _on_mousewheel(event, widget):
 
 def _on_shiftmouse(event, widget):
     if platform.system() == 'Windows':
-        widget.xview_scroll(-1*int(event.delta/120), 'units')
+        widget.xview_scroll(-1 * int(event.delta / 120), 'units')
     elif platform.system() == 'Darwin':
-        widget.xview_scroll(-1*int(event.delta), 'units')
+        widget.xview_scroll(-1 * int(event.delta), 'units')
     else:
         if event.num == 4:
             widget.xview_scroll(-1, 'units')
@@ -1296,6 +1350,7 @@ def _on_shiftmouse(event, widget):
 class ScrolledTreeView(AutoScroll, ttk.Treeview):
     '''A standard ttk Treeview widget with scrollbars that will
     automatically show/hide as needed.'''
+
     @_create_container
     def __init__(self, master, **kw):
         ttk.Treeview.__init__(self, master, **kw)
@@ -1307,7 +1362,7 @@ def entryUpdateEndHour(entry):
         text = entry.get()
         if len(text) in (2, 5):
             entry.insert(tk.END, ':')
-            entry.icursor(len(text)+1)
+            entry.icursor(len(text) + 1)
         elif len(text) not in (3, 6):
             if not text[-1].isdigit():
                 entry.delete(0, tk.END)
@@ -1318,17 +1373,20 @@ def entryUpdateEndHour(entry):
     except IndexError:
         pass
 
-
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
     global val, Fish_trainingGUI, root
-    sys.stdout = fish_log.Logger_stdout()               # start main stdout logger - logfile.log
+    sys.stdout = fish_log.Logger_stdout()  # start main stdout logger - logfile.log
     root = tk.Tk()
     ClientGUI_V2_support.set_Tk_var()
     Fish_trainingGUI = MainGUI(root)
     Excp = Fish_trainingGUI.exception_obj
     ClientGUI_V2_support.init(root, Fish_trainingGUI, Excp)
-    root.mainloop()
+
+    try:
+        root.mainloop()
+    finally:
+        ClientGUI_V2_support.onExit()
 
 
 def destroy_Fish_training_GUI___Client():
@@ -1360,7 +1418,6 @@ def log_file_name(_file_name):
     file_name = Path("{}/{}".format(full_path, _file_name))
 
     return file_name
-
 
 
 if __name__ == '__main__':

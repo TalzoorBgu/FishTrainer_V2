@@ -135,3 +135,6 @@ gen
 .DS_Store
 /tools/trash/
 /data/
+!/data/
+!/lock_file.pid
+/.idea/

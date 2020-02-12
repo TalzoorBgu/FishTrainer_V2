@@ -30,16 +30,17 @@ class Tank:
     def decide(self, x, y, _ver='edge'):
         tmp_return = None
         if _ver is 'edge':
-            if x < self.width/4 and not self.side == 'left':
+            if x < self.width / 4 and not self.side == 'left':
                 self.side = 'left'
                 tmp_return = 'left'
 
-            elif x > self.width*3/4 and not self.side == 'right':
+            elif x > self.width * 3 / 4 and not self.side == 'right':
                 self.side = 'right'
                 tmp_return = 'right'
 
         elif _ver is 'center':
-            if (x > self.width * 3/8 and x < self.width * 5/8) and (y > self.width * 3/8 and y < self.width * 5/8):
+            if (x > self.width * 3 / 8 and x < self.width * 5 / 8) and (
+                    y > self.width * 3 / 8 and y < self.width * 5 / 8):
                 if self.side is 'out_center':
                     self.side = 'center'
                     tmp_return = 'center'
@@ -68,12 +69,12 @@ class ScenePlanner:
                 fish_draw.append(eval(line))
             for fishy in fish_draw:
                 cv2.rectangle(_img, (fishy['left'], fishy['upper']), (fishy['right'], fishy['lower']),
-                          (255, 255, 255), 1)
+                              (255, 255, 255), 1)
         except IOError:
-            print ('file dosent exsit - cannot draw')
+            print('file dosent exsit - cannot draw')
 
     def click_and_crop(self, event, x, y, flags, param):
-        global image, fish ,refPt
+        global image, fish, refPt
 
         # grab references to the global variables
         global refPt, cropping
@@ -94,10 +95,11 @@ class ScenePlanner:
             cropping = False
 
             # arrange points left-right up-down
-            ordered=[(min(refPt[0][0],refPt[1][0]),min(refPt[0][1],refPt[1][1]))]
-            ordered.append((max(refPt[0][0],refPt[1][0]),max(refPt[0][1],refPt[1][1])))
+            ordered = [(min(refPt[0][0], refPt[1][0]), min(refPt[0][1], refPt[1][1]))]
+            ordered.append((max(refPt[0][0], refPt[1][0]), max(refPt[0][1], refPt[1][1])))
 
-            fish.append({'camera:': camera, 'upper': ordered[0][1], 'lower': ordered[1][1], 'left': ordered[0][0], 'right': ordered[1][0]})
+            fish.append({'camera:': camera, 'upper': ordered[0][1], 'lower': ordered[1][1], 'left': ordered[0][0],
+                         'right': ordered[1][0]})
 
             # draw a rectangle around the region of interest
             cv2.rectangle(image, ordered[0], ordered[1],
@@ -127,9 +129,8 @@ class ScenePlanner:
         try:
             ret, image = video_capture.read()
 
-            if image is None:     # check for empty frames
+            if image is None:  # check for empty frames
                 self.exception_obj.error("No Image, camera failed to properly initialize!")
-
 
             # draw current configuration
             self.draw_current(image, _camera)
@@ -140,7 +141,8 @@ class ScenePlanner:
             cv2.setMouseCallback("image", self.click_and_crop, _camera)
 
             # keep looping until the 'c' key is pressed
-            while True:
+            loop_out = False
+            while not loop_out:
 
                 # Write Text
                 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -148,8 +150,9 @@ class ScenePlanner:
                 fontColor = (255, 255, 255)
                 lineType = 2
 
-                cv2.putText(image, 'please mark your tanks',(50,50),font,fontScale,fontColor,lineType)
-                cv2.putText(image, 'press "c" to finish and "r" to reset',(50,100),font,fontScale,fontColor,lineType)
+                cv2.putText(image, 'please mark your tanks', (50, 50), font, fontScale, fontColor, lineType)
+                cv2.putText(image, 'press "c" to finish and "r" to reset', (50, 100), font, fontScale, fontColor,
+                            lineType)
                 ''
                 # display the image and wait for a keypress
                 cv2.imshow("image", image)
@@ -160,13 +163,13 @@ class ScenePlanner:
                 # 'R'=82            'C'=67
                 # 'heb(r)' = 248    'heb(c)=225
 
-                #print key
-                if (key == ord('r') or key == ord('R') or key == 248) :
+                # print key
+                if (key == ord('r') or key == ord('R') or key == 248):
                     image = clone.copy()
 
                 # if the 'c' key is pressed, break from the loop
                 elif (key == ord('c') or key == ord('C') or key == 225):
-                    break
+                    loop_out = True
 
             # if there are two reference points, then crop the region of interest
             # from the image and display it
@@ -176,7 +179,7 @@ class ScenePlanner:
 
                 thefile = open(file_path, 'w+')
 
-                print ("file_path:{}".format(file_path))
+                print("file_path:{}".format(file_path))
 
                 for fishy in fish:
                     print(fishy)
@@ -200,7 +203,7 @@ class ScenePlanner:
 class TrackerFeeder:
     def __init__(self):
         global time_to_sleep
-        time_to_sleep = 0.25/1000.0 #(0.005) - 5ms
+        time_to_sleep = 0.25 / 1000.0  # (0.005) - 5ms
         print('feeder init -- ', end='')
 
         self.Arduino = ArduinoFunctions()
@@ -210,7 +213,6 @@ class TrackerFeeder:
         self.check_arduino_conn()
 
         if self.ardu_conn is True:
-            pass
             self.Arduino.send_default_program()
 
     def check_arduino_conn(self):
@@ -221,12 +223,12 @@ class TrackerFeeder:
         res = ''
         print("side={}".format(_side))
         if _side == 'left' or _side == 1 or _side == 'center':
-            _motor = 1
-        # else:
             _motor = 2
+        else:
+            _motor = 1
 
         if self.ardu_conn is True:
-            res = self.Arduino.prog_run(0, _motor)  #back to motor 1 or 2
+            res = self.Arduino.prog_run(0, _motor)  # back to motor 1 or 2
         else:
             pass
         return res
@@ -244,11 +246,9 @@ class TrackerFeeder:
             pass
         return res
 
-    def set_zero(self, _int_on):
-        if _int_on == 1:
-            self.Arduino.disable_pins(1)
-        else:
-            self.Arduino.disable_pins(0)
+    # def set_zero(self, _int_on=0):
+    #     self.Arduino.disable_pins(_int_on)
+
 
 
 class SendCommand:
@@ -325,7 +325,7 @@ class MySerial:
             if not cmd == '':
                 print('(Comp_OUT):#{}#'.format(cmd))
                 self.serial.write(cmd.encode())
-                sleep(20.0/1000.0)      # 20mS
+                sleep(20.0 / 1000.0)  # 20mS
         except KeyboardInterrupt:
             raise KeyboardInterrupt
         except:
@@ -339,7 +339,7 @@ class MySerial:
         try:
             nb_chars = self.serial.in_waiting
             if nb_chars > 0:
-                time.sleep(40.0/1000.0)
+                time.sleep(20.0 / 1000.0)
                 nb_chars = self.serial.in_waiting
                 ch_r = self.serial.read(nb_chars).decode()
                 real_string = False  # flag to check if all char=0
@@ -373,18 +373,18 @@ class ArduinoFunctions:
         print("serial_ports_list:{}".format(serial_ports_list))
         try:
             self.connection = 'NO'
-            for port in reversed(serial_ports_list):            # usually COM7
+            for port in reversed(serial_ports_list):  # usually COM7
                 print("Checking port:{}".format(port))
-                self.serial_con = MySerial(port, 9600)
+                self.serial_con = MySerial(port, 115200)
                 #     dump first lines
-                time.sleep(3000/1000)     # ms
+                time.sleep(3)  # sec
                 str_in = self.receive_data()
                 # print("str_in:@@{}@@".format(str_in))
                 if str_in.find("Connected to PC") is not -1:
                     self.connection = 'OK'
                 if self.connection is 'OK':
                     break
-                time.sleep(5 / 1000)    # ms
+                time.sleep(5 / 1000)  # ms
         except:
             self.connection = 'NO'
         finally:
@@ -395,7 +395,7 @@ class ArduinoFunctions:
 
     def send_command(self, _command):
         res = self.serial_con.write(_command)
-        sleep(40/1000)   #ms
+        sleep(20 / 1000)  # ms
         res = self.receive_data()
 
         return res
@@ -423,19 +423,19 @@ class ArduinoFunctions:
 
     def main(self):
         global bool_send_default_program
-        print('--- Main loop ---')
+        print('--- Arduino Main loop ---')
         try:
             i = 0
             millis = int(round(time.time() * 1000))
             interval = 500  # mS
             old_time = millis
 
-            while True:
+            while True:     # runs in
                 millis = int(round(time.time() * 1000))
                 tim_now = millis
 
                 i += 1
-                time.sleep(0.005)
+                time.sleep(5/1000)
                 result = self.serial_con.read()
 
                 if not result == '':
@@ -459,33 +459,33 @@ class ArduinoFunctions:
             print("main error: {},{}".format(e[0], e[1]))
 
     def send_default_program(self):
-        PROG_arry = [['prog_start',     0,      0,      0],
-                     ['moveto',         0,      0,      0],
-                     ['def_v_a',        60,     40,    20],
-                     ['moveto',         30,      0,      0],
-                     ['def_v_a',        600,     300,    20],
-                     ['delay',          400, 'L', 0],
+        PROG_arry = [['prog_start', 0, 0, 0],
+                     ['moveto', 0, 0, 0],
+                     ['def_v_a', 60, 40, 20],
+                     ['moveto', 30, 0, 0],
+                     ['def_v_a', 600, 300, 20],
+                     ['delay', 400, 'L', 0],
 
-                     ['move',           180+30, 'L', 0],
-                     ['delay',          450,    'L', 0],
-                     ['def_v_a',        60,     60,     40],
-                     ['move',           80,     'R',    0],
-                     ['delay',          300,     'L',    0],
-                     ['move',           80,     'L',    0],
-                     ['delay',          200,    'L',    0],
+                     ['move', 180 + 30, 'L', 0],
+                     ['delay', 450, 'L', 0],
+                     ['def_v_a', 60, 60, 40],
+                     ['move', 80, 'R', 0],
+                     ['delay', 300, 'L', 0],
+                     ['move', 80, 'L', 0],
+                     ['delay', 200, 'L', 0],
 
-                     ['def_v_a',        25,     1,    20],
+                     ['def_v_a', 25, 1, 20],
 
-                     ['move',           30,     'L',    0],
-                     ['move',           25,     'L',    0],
-                     ['delay',          60, 'L', 0],
-                     ['move',           25,     'R',    0],
+                     ['move', 30, 'L', 0],
+                     ['move', 25, 'L', 0],
+                     ['delay', 60, 'L', 0],
+                     ['move', 25, 'R', 0],
 
-                     ['def_v_a',        40,     20,     30],
-                     ['moveto',         0,      0,      0],
+                     ['def_v_a', 40, 20, 30],
+                     ['moveto', 0, 0, 0],
 
-                     ['def_v_a',        100,    80,     30],
-                     ['prog_end',       0,      0,      0]
+                     ['def_v_a', 100, 80, 30],
+                     ['prog_end', 0, 0, 0]
                      ]
 
         for step in PROG_arry:
@@ -507,7 +507,7 @@ class ArduinoFunctions:
             self.serial_con.write(_str_to_send)
 
             result = ''
-            while result == '':     # wait for respond before sending next command
+            while result == '':  # wait for respond before sending next command
                 result = self.serial_con.read()
             if "p_end" in result:
                 print('Program write --> OK')
@@ -564,7 +564,7 @@ class ArduinoFunctions:
         while self.serial_con.serial.inWaiting():
             # str_in = str_in + self.serial_con.serial.readline().decode()
             str_in = str_in + self.serial_con.serial.read().decode()
-            sleep(1/1000) # 1ms
+            sleep(1 / 1000)  # 1ms
 
         if not str_in == "":
             print("(Ardu_in): {}".format(str_in))
@@ -582,39 +582,39 @@ def get_file_name(_camera):
 
 
 def serial_ports():
-        """ Lists serial port names
+    """ Lists serial port names
 
-            :raises EnvironmentError:
-                On unsupported or unknown platforms
-            :returns:
-                A list of the serial ports available on the system
-        """
-        if sys.platform.startswith('win'):
-            ports = ['COM%s' % (i + 1) for i in range(256)]
-        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-            # this excludes your current terminal "/dev/tty"
-            ports = glob.glob('/dev/tty[A-Za-z]*')
-        elif sys.platform.startswith('darwin'):
-            ports = glob.glob('/dev/tty.*')
-        else:
-            raise EnvironmentError('Unsupported platform')
+        :raises EnvironmentError:
+            On unsupported or unknown platforms
+        :returns:
+            A list of the serial ports available on the system
+    """
+    if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i + 1) for i in range(256)]
+    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+    elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
+    else:
+        raise EnvironmentError('Unsupported platform')
 
-        result = []
-        for port in ports:
-            try:
-                s = serial.Serial(port)
-                s.close()
-                result.append(port)
-            except (OSError, serial.SerialException):
-                pass
-        return result
+    result = []
+    for port in ports:
+        try:
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+    return result
 
 
-FEED_EVERY = 3          # feed every 3 sec
+FEED_EVERY = 3  # feed every 3 sec
 
 
 class Tracking:
-    def __init__(self, _exception_class, _camera=0, video=None):
+    def __init__(self, _exception_class, _max_training_time, _camera=0, video=None):
         self.video_capture = None
         file_path = get_file_name(_camera)
 
@@ -626,6 +626,7 @@ class Tracking:
 
         self.exception_obj = _exception_class
         self.controller_obj = None
+        self.max_training_time = _max_training_time
 
         try:
             print("file_path:{}".format(file_path))
@@ -663,14 +664,15 @@ class Tracking:
     def set_controller_obj(self, _controller):
         self.controller_obj = _controller
 
-    def track_loop(self,  _version='edge'):  # cb is an object that has a do() function in the calling script
+    def track_loop(self, _version='edge'):  # cb is an object that has a do() function in the calling script
         self.stop_training = False
 
         if self.video_capture is None:
             self.exception_obj.error("Having problem to get image from camera")
             return 0
 
-        self.exception_obj.info("Training started. version:{}".format(_version), bold=True)
+        self.exception_obj.info("Training started. version:{}, max training time:{}".
+                                format(_version, self.max_training_time), bold=True)
 
         for i, fishy in enumerate(self.fish):
             img_name = "image" + str(i)
@@ -701,8 +703,8 @@ class Tracking:
                 fgmask = cv2.erode(fgmask, None, iterations=2)
                 mask = cv2.dilate(fgmask, None, iterations=2)
 
-                tank_width = abs(fishy['upper']-fishy['lower'])
-                tank_height = abs(fishy['left']-fishy['right'])
+                tank_width = abs(fishy['upper'] - fishy['lower'])
+                tank_height = abs(fishy['left'] - fishy['right'])
                 # print("tank_dim:{}/{}".format(tank_width, tank_height))
 
                 self.draw_lines(cv2, tank_width, tank_height, frame_cut, _version)
@@ -724,7 +726,7 @@ class Tracking:
                 if len(cnts) > 0:
                     ((x, y), radius) = cv2.minEnclosingCircle(largest_cntr)
                     cv2.circle(frame_cut, (int(x), int(y)), int(radius), (0, 255, 255), 2)  # show radius for debbuging
-                    cv2.imshow("image"+str(i), frame_cut)
+                    cv2.imshow("image" + str(i), frame_cut)
                     cv2.waitKey(1)
 
                     if self.controller_obj is not None:
@@ -735,7 +737,6 @@ class Tracking:
 
             # TBD - inclear where to put
             # if cv2.waitKey(1) & 0xFF == ord('q'): break #Exit when Q is pressed
-
 
         # exit while loop:
         print("Loop exit")
@@ -758,20 +759,20 @@ class Tracking:
 
     def draw_lines(self, _cv_obj, _tank_width, _tank_height, _frame, _ver):
         if _ver is 'edge':
-            low_boundry = 1.0/4.0
-            hige_boundry = 3.0/4.0
+            low_boundry = 1.0 / 4.0
+            hige_boundry = 3.0 / 4.0
         elif _ver is 'center':
-            low_boundry = 3.0/8.0
-            hige_boundry = 5.0/8.0
+            low_boundry = 3.0 / 8.0
+            hige_boundry = 5.0 / 8.0
 
         down = int(_tank_width * low_boundry)
         up = int(_tank_width * hige_boundry)
         right = int(_tank_height * low_boundry)
         left = int(_tank_height * hige_boundry)
 
-        #print("_ver:{}, _tank_height:{}, left_up:{}, left_down:{}".
+        # print("_ver:{}, _tank_height:{}, left_up:{}, left_down:{}".
         #      format(_ver, _tank_height, left_up, left_down))
-        #print("low_boundry:{}".format(low_boundry))
+        # print("low_boundry:{}".format(low_boundry))
 
         if _ver is 'edge':
             _cv_obj.line(_frame, (left, 0), (left, _tank_width), (255, 255, 255), 1)
@@ -781,7 +782,8 @@ class Tracking:
 
 
 class Controller:
-    def __init__(self, _tracking_obj, _feed, _exception_class, _log_folder, _log_name=['test'], _GUI_obj=None, _camera=0, _training_stop_timed=None):
+    def __init__(self, _tracking_obj, _feed, _exception_class, _log_folder, _log_name=['test'], _GUI_obj=None,
+                 _camera=0, _training_stop_timed=None):
         global time_counter
 
         time_counter = 0
@@ -803,7 +805,7 @@ class Controller:
         self.tank = []
         self.log_folder = _log_folder
         # fish_id = 0
-        print("self.tracking_obj.width:{}".format(self.tracking_obj.width))
+        # print("self.tracking_obj.width:{}".format(self.tracking_obj.width))
         print("_log_name:{}".format(_log_name))
         for i, size in enumerate(self.tracking_obj.width):
             self.total_feed.append(0)
@@ -815,9 +817,10 @@ class Controller:
                                        log_str,
                                        self.exception_log)
                                )
-
+        self.feed.Arduino.disable_pins(False)               # make motors available
 
     def __del__(self):  # Destroy
+        self.feed.Arduino.disable_pins(True)                # shut motors off
         print('Controller closed')
 
     def time(self):
@@ -837,15 +840,15 @@ class Controller:
         _int_tmp = self.GUI_obj.stop_training
         return _int_tmp
 
-    def end_training(self, fish_id):        # called in tracking.py - cb.end_training(id_out)
+    def end_training(self, fish_id):  # called in tracking.py - cb.end_training(id_out)
         try:
             fish_db = tools.log.Database(self.GUI_obj.db_file_full_path())
 
             log_filename = self.logger[fish_id].filename
-            self.logger[fish_id].fo.close()
-            sleep(0.2)  # 200mS wait
+            self.logger[fish_id].file_obj.close()
+            sleep(200/1000)  # 200mS wait
             t_data = ReadFile(log_filename)
-            if not t_data.file_empty:       # continue only when there is data
+            if not t_data.file_empty:  # continue only when there is data
                 t_dt_str = t_data.training_start_str
                 time_str = t_dt_str[:t_dt_str.rindex(" ") + 6]
                 total_feed = self.total_feed[fish_id]
@@ -860,27 +863,28 @@ class Controller:
                 self.GUI_obj.db_tree_view_data_refresh()
 
                 thread_plotter = threading.Thread(target=tools.log.run,
-                                                  args=(t_data, self.log_folder, log_filename, ),
+                                                  args=(t_data, self.log_folder, log_filename,),
                                                   kwargs=dict(show=True, overwrite=True), )
                 thread_plotter.daemon = False
                 thread_plotter.start()
                 thread_plotter.join()
             else:
-                self.exception_log.error("No data. DB record is not created")
+                self.exception_log.error("No data. DB record not created")
         finally:
             fish_db.__exit__()
+            self.feed.Arduino.disable_pins(True)
 
     def do(self, x, y, fish_id, _version):
         time_now = int(round(time.time()))
 
         self.logger[fish_id].add_tracked_point(x, y)
-        if time_now - self.time_last_feed > FEED_EVERY:     # feed every..
+        if time_now - self.time_last_feed > FEED_EVERY:  # feed every..
             feed_side = self.tank[fish_id].decide(x, y, _version)
         else:
             feed_side = None
 
         if feed_side is 'center':
-            #feed_side = 'left'     # only send 'left' (socket)
+            # feed_side = 'left'     # only send 'left' (socket)
             pass
         if feed_side is 'out_center':
             feed_side = None
@@ -907,9 +911,20 @@ class Controller:
 class TimeCounter:
 
     def __init__(self):
-
         self.start_time = datetime.datetime.now()
-        [self.t_hr, self.t_min, self.t_sec] =self.start_time.hour,self.start_time.minute,self.start_time.second
+        # debug ------
+        str_year = self.start_time.year
+        str_month = self.start_time.month
+        str_day = self.start_time.day
+        str_hr = self.start_time.hour
+        str_min = self.start_time.minute
+        print("date:{}/{}/{} {}:{}".format(str_year, str_month, str_day, str_hr, str_min))
+        # debug ------
+        # self.start_time = datetime.datetime(str_year, str_month, str_day, str_hr-1, str_min+1)
+        [self.t_hr, self.t_min, self.t_sec] = \
+            self.start_time.hour, \
+            self.start_time.minute, \
+            self.start_time.second
 
         self.old_t_hr = self.t_hr
         self.old_t_min = self.t_min
@@ -918,7 +933,7 @@ class TimeCounter:
         str_time_start = datetime.datetime.now()
 
     def get_time_str(self):
-        #global str_time_start, str_time, old_str_time
+        # global str_time_start, str_time, old_str_time
 
         old_t_sec = self.t_sec
         [self.t_hr, self.t_min, self.t_sec] = datetime.now().hour, datetime.now().minute, datetime.now().second

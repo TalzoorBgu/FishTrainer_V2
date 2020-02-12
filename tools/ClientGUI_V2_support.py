@@ -144,34 +144,63 @@ def on1R():
 
 def on2L():
     print('ClientGUI_support.on2L')
-    sys.stdout.flush()
+    try:
+        exception_obj.info_wo_tstamp("\tTest motor - 2L")
+
+        steps_no = Fish_trainingGUI.txtStepNum.get()
+        motor = 3
+        if steps_no == '':
+            program = 0
+            feed_obj.new_feeder_run(program, motor)
+        else:
+            feed_obj.move_steps(steps_no, motor)
+
+        sys.stdout.flush()
+    except TypeError:
+        pass
 
 
 def on2R():
     print('ClientGUI_support.on2R')
-    sys.stdout.flush()
+    try:
+        exception_obj.info_wo_tstamp("\tTest motor - 2R")
+
+        steps_no = Fish_trainingGUI.txtStepNum.get()
+        motor = 2
+        if steps_no == '':
+            program = 0
+            feed_obj.new_feeder_run(program, motor)
+        else:
+            feed_obj.move_steps(steps_no, motor)
+
+        sys.stdout.flush()
+    except TypeError:
+        pass
 
 
 def onExit():
     global exit_flag, Fish_trainingGUI, thread_track_fish, root
     print('ClientGUI_support.onExit')
     sys.stdout.flush()
-
     # exit_var = True
     # Fish_traningGUI.stop_traning = True
     print("stop_training:{}".format(Fish_trainingGUI.stop_training))
+    try:
+        if Fish_trainingGUI.stop_training == True:
+            destroy_window()
+        else:       # False
+            Fish_trainingGUI.exit_flag = True
+            onStopTraining()
+            # Fish_trainingGUI.stop_training = True
+            # thread_track_fish.join()
 
-    if Fish_trainingGUI.stop_training == True:
-        destroy_window()
-    else:       # False
-        Fish_trainingGUI.exit_flag = True
-        onStopTraining()
-        # Fish_trainingGUI.stop_training = True
-        # thread_track_fish.join()
-
-        while thread_track_fish.isAlive():
-            root.update()
-        destroy_window()
+            while thread_track_fish.isAlive():
+                root.update()
+            destroy_window()
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
 
 
 def onRunTraining():
@@ -185,7 +214,7 @@ def onRunTraining():
     log_name = []
 
     camera = CamVar1.get()
-    tracking_obj = Tracking(exception_obj, camera)
+    tracking_obj = Tracking(exception_obj, Fish_trainingGUI.max_training_time, camera)
     no_of_training = len(tracking_obj.fish)
     check_fish_no_and_tday(no_of_training)
     fish_no1 = Fish_trainingGUI.txtFishNo1.get('0.0', 'end-1c')
@@ -208,7 +237,6 @@ def onRunTraining():
         print("there is not Controller instance")
     except NameError:
         print("name 'controller' is not defined")
-
 
     controller = Controller(tracking_obj,
                             feed_obj,
@@ -276,10 +304,12 @@ def onSendtest():
     # fish_client.send('test', 0)
     # fish_client.kill()
 
+
 def onStatClear():
     print('ClientGUI_support.onStatClear')
     sys.stdout.flush()
     # Fish_trainingGUI.txtStatLog.delete('0.0', END)
+
 
 def onTankConfig():
     global CamVar1, exception_obj
@@ -289,6 +319,7 @@ def onTankConfig():
     relvant_camera = CamVar1.get()
     scene_planner = ScenePlanner(exception_obj)
     scene_planner.SP_Main(relvant_camera)
+
 
 def onSetZero():
     print('ClientGUI_support.onSetZero')
@@ -308,17 +339,20 @@ def onShowDBFile():
 
     show_file(Fish_trainingGUI.db_file_full_path())
 
+
 def onOpenFolder():
     global Fish_trainingGUI
     print('ClientGUI_support.onOpenFolder')
     sys.stdout.flush()
     open_folder(Fish_trainingGUI.LogFolderName)
 
+
 def OnRefresh():
     global Fish_trainingGUI
     print('ClientGUI_support.OnRefresh')
     sys.stdout.flush()
     Fish_trainingGUI.db_tree_view_data_refresh()
+
 
 def OnChkStopTraining():
     global chVar_stop_tr, Fish_trainingGUI
@@ -340,6 +374,9 @@ def init(top, gui, _exception_class,  *args, **kwargs):
     feed_obj = TrackerFeeder()
     arduino_obj = feed_obj.Arduino
 
+    # HERE - find how is calling to arduino.main()
+    # than add disable pins on start and stop
+    
     if arduino_obj.connection == 'NO':
         exception_obj.error("No Arduino conn. check serial port (USB)", bold=True)
     else:
@@ -350,7 +387,6 @@ def destroy_window():
     global top_level, thread_track_fish, controller, root
     # Function which closes the window.
     print("Quiting.")
-
     root.destroy()
 
 

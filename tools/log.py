@@ -15,8 +15,11 @@ if sys_pf == 'darwin':
     import matplotlib
     matplotlib.use("TkAgg")
 
-from matplotlib import pyplot as plt, gridspec as gridspec, patches
-
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib import gridspec as gridspec, patches
+# from matplotlib import pyplot as plt, gridspec as gridspec, patches
 
 def time_stamp():
     return datetime.today().strftime('%Y-%m-%d %H%M%S')
@@ -41,34 +44,34 @@ class FishLog:
 
         self.filename = '{}/{}{}{}'.format(log_folder, time_stamp(), '_' + fish_name, ".txt")   # time+name
         print('log file:{}'.format(self.filename))
-        self.fo = open(self.filename, 'w+')
+        self.file_obj = open(self.filename, 'w+')
         self.add_tracked_point(0, 0)        # for start training time
 
     def add_tracked_point(self, x, y):
-        self.fo.write(str(self.line_number)+' ')
-        self.fo.write(str(self.track_count)+' ')
-        self.fo.write(str(datetime.now().time())+' ')
-        self.fo.write('track' + ' ')
+        self.file_obj.write(str(self.line_number) + ' ')
+        self.file_obj.write(str(self.track_count) + ' ')
+        self.file_obj.write(str(datetime.now().time()) + ' ')
+        self.file_obj.write('track' + ' ')
 
-        self.fo.write("{0:.2f} ".format(round(x, 2)))
-        self.fo.write("{0:.2f}".format(round(y, 2)))
+        self.file_obj.write("{0:.2f} ".format(round(x, 2)))
+        self.file_obj.write("{0:.2f}".format(round(y, 2)))
 
-        self.fo.write('\n')
+        self.file_obj.write('\n')
         self.line_number = self.line_number+1
         self.track_count = self.track_count+1
         
     def add_feed(self,side):
-        self.fo.write(str(self.line_number)+' ')
-        self.fo.write(str(self.feed_count[side])+' ')
-        self.fo.write(str(datetime.now().time())+' ')
-        self.fo.write('feed' + ' ')
-        self.fo.write(side + ' ')
-        self.fo.write('\n')
+        self.file_obj.write(str(self.line_number) + ' ')
+        self.file_obj.write(str(self.feed_count[side]) + ' ')
+        self.file_obj.write(str(datetime.now().time()) + ' ')
+        self.file_obj.write('feed' + ' ')
+        self.file_obj.write(side + ' ')
+        self.file_obj.write('\n')
         self.line_number = self.line_number + 1
         self.feed_count[side] = self.feed_count[side]+1
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.fo.close()
+        self.file_obj.close()
 
 
 class ReadFile:
@@ -421,6 +424,7 @@ class PlotTraj:
         pass
 
     def plot_it(self, _data, _feed_data):
+
         self.data = _data
         data_x = numpy.array(_data[0])
         data_y = numpy.array(_data[1])
