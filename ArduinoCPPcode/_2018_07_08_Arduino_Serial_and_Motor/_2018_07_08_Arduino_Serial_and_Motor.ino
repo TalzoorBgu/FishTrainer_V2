@@ -75,51 +75,20 @@ void setup()
   Serial.begin(baud_rate);
   //  RPISerial.begin(9600);
   delay(10);
-  Serial.println(F("Connected to PC"));
+  Serial.print("Fish Training system V2.1");
+  Serial.println(F("\tConnected to PC"));
 
   EEPROMexInit();
   delay(10);
 
-  Serial.print(F("Stepper_Pin[i]=("));
-  for (i = 1; i < 6; i++) {
-    Serial.print(Stepper_Pins[i]);
-    Serial.print(F(","));
-  }
-  Serial.print(Stepper_Pins[6]);
-  Serial.println(")");
-
-  for (i = 1; i < 3; i++) {
-    stp_Pin[i] = Stepper_Pins[1 + (3 * (i - 1))];
-    dir_Pin[i] = Stepper_Pins[2 + (3 * (i - 1))];
-    En_pin[i] = Stepper_Pins[3 + (3 * (i - 1))];
-    delay(2);
-  }
-
-  for (i = 1; i < 3; i++) {
-    Serial.print(F("motor_")); Serial.print(i); Serial.print(F("="));
-    Serial.print(stp_Pin[i]); Serial.print(F(","));
-    Serial.print(dir_Pin[i]); Serial.print(F(","));
-    Serial.print(En_pin[i]); Serial.print(F("\t"));
-    MotorPins(i, stp_Pin[i], dir_Pin[i], En_pin[i], false);
-  } Serial.println(F(" PINS: step, dir, en"));
-
-  Serial.print(F("Max_v:")); Serial.print(max_velocity);
-  Serial.print(F(", Max_a:")); Serial.print(max_accel);
-  Serial.print(F(", MinPulseW:")); Serial.print(MinPulseW);
-  Serial.println(F(""));
-  Set_accel_vel_pulse(max_velocity, max_accel, MinPulseW, false);
-
-  pinMode(En_pin[1], OUTPUT);
-  digitalWrite(En_pin[1], LOW);
-
-  stepper.setEnablePin(En_pin[1]);
-  stepper.updatePins(stp_Pin[1], dir_Pin[1]);
+  StepperInit();
 
   PROG_params_INIT();
 
   while (!Serial) {
     ; // wait for serial port to connect. Needed for Leonardo only
   }
+
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
 }
@@ -144,8 +113,6 @@ void loop() // run over and over
 
     int params[NUM_OF_PARAM] = {};
     unsigned int sizeOfp = sizeof(params) / sizeof(params[0]);
-
-
 
     translate_str(_str, strlen(_str), params, sizeOfp);
 
@@ -177,32 +144,17 @@ void loop() // run over and over
     else if (params[0] == 990)    SelectMotor(params[1]);
     else if (params[0] == 991)    MotorPins(1, params[1], params[2], params[3]);
     else if (params[0] == 992)    MotorPins(2, params[1], params[2], params[3]);
-    else if (params[0] == 980)    stepper.disableOutputs();
-    else if (params[0] == 981)    stepper.enableOutputs();
+    else if (params[0] == 980)    MotorDisable(params[1]);
+    else if (params[0] == 981)    MotorEnable(params[1]);
     else if (params[0] == 99)     Set_accel_vel_pulse(params[1], params[2], params[3], true);
     else if (params[0] == 98)     Set_accel_vel_pulse(params[1], params[2], params[3], false);
     else                          do_step(params[0], params[1], params[2], true);
   }
 
-  // If data is available on PC, send it to Raspberry Pi
-
-  //  if (Serial.available()) {
-  //    strcpy(_str, serialEvent(0));
-  //    strcat(_str, "\0");
-  ////    RPISerial.print(_str);
-  ////    Serial.print(F("OUT:"));
-  //    Serial.print(_str);
-  //  }
-
-
 }
 
 void do_step(unsigned int action, int steps_or_pos, int dir, boolean wait_for_ready) {
-  /*Serial.print(F("VARS:"));
-    Serial.print(action); Serial.print(F(","));
-    Serial.print(steps_or_pos); Serial.print(F(","));
-    Serial.print(dir); Serial.print(F(","));
-    Serial.print(wait_for_ready); Serial.println("");*/
+
   switch (action) {
     case 1:
       if (dir == 10) steps_or_pos = steps_or_pos * (-1);
@@ -225,6 +177,4 @@ void do_step(unsigned int action, int steps_or_pos, int dir, boolean wait_for_re
     }
   }
 
-  //Serial.print(F("\tDone"));
-  //Serial.println();
 }
