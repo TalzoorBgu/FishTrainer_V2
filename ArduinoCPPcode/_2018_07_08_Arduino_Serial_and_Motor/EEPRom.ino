@@ -50,11 +50,11 @@ void EEPROMexInit() {
 
   delay(100);
 
-  for (i = 1; i < 7; i++) {                     //Read all pin
+  for (i = 1; i <= 6; i++) {                     //Read all pin
     int _out = EEReadInt(addrInt[i]);
     Stepper_Pins[i] = _out;
     delay(50);
-//    Serial.print("_out:"); Serial.print(_out);
+    Serial.print("_out:"); Serial.print(_out);
   }
 
   max_velocity =  EEReadInt(addrInt[7]);        //Read velocity and accelration
