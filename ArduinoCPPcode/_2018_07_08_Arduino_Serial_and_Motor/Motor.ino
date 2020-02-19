@@ -63,7 +63,7 @@ void StepperInit(){
     Serial.print(F(","));
   }
   Serial.print(Stepper_Pins[6]);
-  Serial.println(F(")");
+  Serial.println(F(")"));
 
   for (i = 1; i <= 2; i++) {
     stp_Pin[i] = Stepper_Pins[1 + (3 * (i - 1))];
