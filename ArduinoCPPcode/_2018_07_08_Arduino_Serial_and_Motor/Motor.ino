@@ -52,6 +52,7 @@ void MotorEnable(unsigned int _motor){
 }
 
 void StepperInit(){
+  int i = 0;
   Serial.print(F("Stepper_Pin[i]=("));
   for (i = 1; i < 6; i++) {
     Serial.print(Stepper_Pins[i]);

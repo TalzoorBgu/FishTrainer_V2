@@ -71,7 +71,6 @@ void setup()
   //  DEBUG_BLINK(5 , true);
 #endif
 
-  int i = 0;
   Serial.begin(baud_rate);
   //  RPISerial.begin(9600);
   delay(10);
