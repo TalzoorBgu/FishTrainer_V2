@@ -20,8 +20,9 @@ void MotorPins(unsigned int motor, unsigned int _stp_pin, unsigned int _dir_pin,
   En_pin[motor]   = _en_pin;
   //if (motor == 1) {
   
-  stepper.updatePins(stp_Pin[motor], dir_Pin[motor]);
-  stepper.setEnablePin(En_pin[motor]);
+//  stepper.updatePins(stp_Pin[motor], dir_Pin[motor]);
+//  stepper.setEnablePin(En_pin[motor]);
+  
   //}
   /*else if (motor == 2) {
     stepper2.updatePins(stp_Pin[motor], dir_Pin[motor]);
