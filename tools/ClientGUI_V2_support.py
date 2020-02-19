@@ -326,10 +326,10 @@ def onSetZero():
     btn_txt = Fish_trainingGUI.btnSetZero['text']
     if btn_txt == "Set ZERO pos.":
         Fish_trainingGUI.btnSetZero.configure(text='END')
-        feed_obj.Arduino.disable_pins(True)
+        feed_obj.Arduino.disable_pins(True, -1)
     else:
         Fish_trainingGUI.btnSetZero.configure(text='Set ZERO pos.')
-        feed_obj.Arduino.disable_pins(False)
+        feed_obj.Arduino.disable_pins(False, -1)
 
 
 def onShowDBFile():

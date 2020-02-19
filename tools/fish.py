@@ -308,11 +308,19 @@ class SendCommand:
         return _str_to_send
 
     def disable_pins(self, _num):
-        _str_to_send = 'dis_pins,{}'.format(_num)
+        if _num == 'left' or _num == 1:
+            _motor = 1
+        else:
+            _motor = 2
+        _str_to_send = 'dis_pins,{}'.format(_motor)
         return _str_to_send
 
     def en_pins(self, _num):
-        _str_to_send = 'en_pins,{}'.format(_num)
+        if _num == 'left' or _num == 1:
+            _motor = 1
+        else:
+            _motor = 2
+        _str_to_send = 'en_pins,{}'.format(_motor)
         return _str_to_send
 
 
@@ -512,14 +520,18 @@ class ArduinoFunctions:
             if "p_end" in result:
                 print('Program write --> OK')
 
-    def disable_pins(self, _int_on):
-
-        if _int_on == 1:
-            _str_to_send = self.command_str.disable_pins(0)
+    def disable_pins(self, _int_on, _all=-1):   # -1=all, num=motors
+        if _all is -1:
+            motor = [0, 1]
         else:
-            _str_to_send = self.command_str.en_pins(0)
+            motor = [0]
 
-        res = self.send_command(_str_to_send)
+        for m in motor:
+            if _int_on == 1:
+                _str_to_send = self.command_str.disable_pins(m)
+            else:
+                _str_to_send = self.command_str.en_pins(m)
+            res = self.send_command(_str_to_send)
 
         return res
 
@@ -817,10 +829,10 @@ class Controller:
                                        log_str,
                                        self.exception_log)
                                )
-        self.feed.Arduino.disable_pins(False)               # make motors available
+        self.feed.Arduino.disable_pins(False, _camera)               # make motors available (training sys by cam)
 
     def __del__(self):  # Destroy
-        self.feed.Arduino.disable_pins(True)                # shut motors off
+        self.feed.Arduino.disable_pins(True, _camera)                # shut motors off
         print('Controller closed')
 
     def time(self):
