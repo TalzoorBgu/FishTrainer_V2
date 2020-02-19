@@ -383,7 +383,7 @@ class ArduinoFunctions:
             self.connection = 'NO'
             for port in reversed(serial_ports_list):  # usually COM7
                 print("Checking port:{}".format(port))
-                self.serial_con = MySerial(port, 9600)
+                self.serial_con = MySerial(port, 115200)
                 #     dump first lines
                 time.sleep(3)  # sec
                 str_in = self.receive_data()
