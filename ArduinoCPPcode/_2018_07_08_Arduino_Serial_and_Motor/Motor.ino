@@ -42,7 +42,7 @@ void SelectMotor(unsigned int _motor){
 
 void MotorDisable(unsigned int _motor){
    char buf[30];
-   sprintf(buf, "Pins:%i,%i,%i (stp,dir,en)", stp_Pin[_motor], dir_Pin[_motor], En_pin[_motor]);
+   sprintf(buf, "(%i)Pins:%i,%i,%i (stp,dir,en)", _motor, stp_Pin[_motor], dir_Pin[_motor], En_pin[_motor]);
    SelectMotor(_motor);
    stepper.disableOutputs();
    Serial.print(F("\tMotor disabled. "));
@@ -58,30 +58,30 @@ void MotorEnable(unsigned int _motor){
 void StepperInit(){
   int i = 0;
   Serial.print(F("Stepper_Pin[i]=("));
-  for (i = 1; i < 6; i++) {
+  for (i = 1; i <= 5; i++) {
     Serial.print(Stepper_Pins[i]);
     Serial.print(F(","));
   }
   Serial.print(Stepper_Pins[6]);
-  Serial.println(")");
+  Serial.println(F(")");
 
-  for (i = 1; i < 3; i++) {
+  for (i = 1; i <= 2; i++) {
     stp_Pin[i] = Stepper_Pins[1 + (3 * (i - 1))];
     dir_Pin[i] = Stepper_Pins[2 + (3 * (i - 1))];
     En_pin[i] = Stepper_Pins[3 + (3 * (i - 1))];
     pinMode(En_pin[i], OUTPUT);
-    stepper.setEnablePin(En_pin[i]);
-    stepper.updatePins(stp_Pin[i], dir_Pin[i]);
+//     stepper.setEnablePin(En_pin[i]);
+//     stepper.updatePins(stp_Pin[i], dir_Pin[i]);
     delay(2);
   }
 
-  for (i = 1; i < 3; i++) {
+  for (i = 1; i <= 2; i++) {
     Serial.print(F("motor_")); Serial.print(i); Serial.print(F("="));
     Serial.print(stp_Pin[i]); Serial.print(F(","));
     Serial.print(dir_Pin[i]); Serial.print(F(","));
     Serial.print(En_pin[i]); Serial.print(F("\t"));
     MotorPins(i, stp_Pin[i], dir_Pin[i], En_pin[i], false);
-  } Serial.println(F(" PINS: step, dir, en"));
+  } Serial.println(F(" (PINS: step, dir, en)"));
 
   Serial.print(F("Max_v:")); Serial.print(max_velocity);
   Serial.print(F(", Max_a:")); Serial.print(max_accel);
