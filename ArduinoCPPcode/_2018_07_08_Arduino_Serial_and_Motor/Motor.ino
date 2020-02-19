@@ -65,6 +65,9 @@ void StepperInit(){
     stp_Pin[i] = Stepper_Pins[1 + (3 * (i - 1))];
     dir_Pin[i] = Stepper_Pins[2 + (3 * (i - 1))];
     En_pin[i] = Stepper_Pins[3 + (3 * (i - 1))];
+    pinMode(En_pin[i], OUTPUT);
+    stepper.setEnablePin(En_pin[i]);
+    stepper.updatePins(stp_Pin[i], dir_Pin[i]);
     delay(2);
   }
 
@@ -82,9 +85,8 @@ void StepperInit(){
   Serial.println(F(""));
   Set_accel_vel_pulse(max_velocity, max_accel, MinPulseW, false);
 
-  pinMode(En_pin[1], OUTPUT);
-  digitalWrite(En_pin[1], LOW);
 
-  stepper.setEnablePin(En_pin[1]);
-  stepper.updatePins(stp_Pin[1], dir_Pin[1]);
+//   digitalWrite(En_pin[1], LOW);
+
+
   }
