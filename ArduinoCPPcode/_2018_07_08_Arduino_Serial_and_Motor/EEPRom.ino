@@ -10,12 +10,12 @@ void issuedAdresses() {
   Serial.println(F("-----------------------------------"));
 
   Serial.println(F("addresses \t\t size \t\t value"));
-  for (i = 1; i < 7; i++) {
+  for (i = 1; i <= 6; i++) {
     Serial.print(addrInt[i]); Serial.print(F(" \t\t ")); Serial.print(sizeof(int)); Serial.print(F(" (int)")); Serial.print(F(" \t\t ")); Serial.println(Stepper_Pins[i]);
   }
-  Serial.print(addrInt[i]); Serial.print(F(" \t\t ")); Serial.print(sizeof(int)); Serial.print(F(" (int)")); Serial.print(F(" \t\t ")); Serial.println(max_velocity);
-  Serial.print(addrInt[i]); Serial.print(F(" \t\t ")); Serial.print(sizeof(int)); Serial.print(F(" (int)")); Serial.print(F(" \t\t ")); Serial.println(max_accel);
-  Serial.print(addrInt[i]); Serial.print(F(" \t\t ")); Serial.print(sizeof(int)); Serial.print(F(" (int)")); Serial.print(F(" \t\t ")); Serial.println(MinPulseW);
+  Serial.print(addrInt[7]); Serial.print(F(" \t\t ")); Serial.print(sizeof(int)); Serial.print(F(" (int)")); Serial.print(F(" \t\t ")); Serial.println(max_velocity);
+  Serial.print(addrInt[8]); Serial.print(F(" \t\t ")); Serial.print(sizeof(int)); Serial.print(F(" (int)")); Serial.print(F(" \t\t ")); Serial.println(max_accel);
+  Serial.print(addrInt[9]); Serial.print(F(" \t\t ")); Serial.print(sizeof(int)); Serial.print(F(" (int)")); Serial.print(F(" \t\t ")); Serial.println(MinPulseW);
 
   delay(40);
 }
