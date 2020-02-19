@@ -55,7 +55,7 @@ boolean print_serial = true;
 
 int step_no = 0;
 
-byte addrInt[10] = {0};
+int  addrInt[10] = {0};
 byte Stepper_Pins[6] = {0};
 
 void setup()
