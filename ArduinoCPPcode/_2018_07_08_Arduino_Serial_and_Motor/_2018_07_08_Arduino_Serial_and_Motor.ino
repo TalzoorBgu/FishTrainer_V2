@@ -7,6 +7,7 @@
 #define NUM_OF_PARAM  4
 #define STEPS  26
 #define DEBUG 1
+#define baud_rate 115200
 
 #ifdef DEBUG
 #define LED_Yellow_LOW 2
@@ -45,19 +46,9 @@ byte ledState = LOW;
 
 
 AccelStepper stepper(AccelStepper::DRIVER, stp_Pin[1], dir_Pin[1]);
-//AccelStepper stepper2(AccelStepper::DRIVER, stp_Pin[1], dir_Pin[1]);
 
-//SoftwareSerial RPISerial(0, 0); // RX, TX
-
-//unsigned long previousMillis = 0;        // will store last time LED was updated
-//const long interval = 30;
-//int Shake_IT = 0;
 const int Shake_loc = 10;
-//int Do_it_all = 0;
-//int total_count = 0;
 int full_cycle = 1600;
-//const int pos_180_deg = full_cycle / 2;
-//const int pos_18_deg = full_cycle / 20;
 
 boolean no_shake = false;
 
@@ -81,7 +72,7 @@ void setup()
 #endif
 
   int i = 0;
-  Serial.begin(115200);
+  Serial.begin(baud_rate);
   //  RPISerial.begin(9600);
   delay(10);
   Serial.println(F("Connected to PC"));

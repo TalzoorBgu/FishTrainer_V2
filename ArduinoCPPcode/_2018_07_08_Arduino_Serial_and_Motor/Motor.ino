@@ -34,7 +34,13 @@ void MotorPins(unsigned int motor, unsigned int _stp_pin, unsigned int _dir_pin,
   }
 }
 
-void SelectMotor(unsigned int motor){
-  stepper.updatePins(stp_Pin[motor], dir_Pin[motor]);
-  Serial.println(F("\tMotor selected. "));
+void SelectMotor(unsigned int _motor){
+  stepper.updatePins(stp_Pin[_motor], dir_Pin[_motor]);
+  Serial.print(F("\tMotor selected. "));
+}
+
+void MotorDisable(unsigned int _motor){
+   SelectMotor(_motor);
+   stepper.disableOutputs();
+   Serial.print(F("\tMotor disabled. "));
 }
