@@ -31,9 +31,9 @@ int PROG_params[NUM_OF_PROGS][STEPS][NUM_OF_PARAM] = {};   //10 available progra
 byte PROG_num = 0;
 byte PROG_step = 0;
 
-byte stp_Pin[2] = {0};
-byte dir_Pin[2] = {0};
-byte En_pin[2] = {0};
+byte stp_Pin[3] = {0};
+byte dir_Pin[3] = {0};
+byte En_pin[3] = {0};
 byte max_velocity;
 byte max_accel;
 byte MinPulseW;
@@ -42,8 +42,6 @@ char serial_inData[STR_SIZE];
 unsigned long previousMillis = 0;
 const long interval = 50;
 byte ledState = LOW;
-
-
 
 AccelStepper stepper(AccelStepper::DRIVER, stp_Pin[1], dir_Pin[1]);
 
@@ -57,8 +55,8 @@ boolean print_serial = true;
 
 int step_no = 0;
 
-int addrInt[10] = {0};
-int Stepper_Pins[6] = {0};
+byte addrInt[10] = {0};
+byte Stepper_Pins[6] = {0};
 
 void setup()
 {
