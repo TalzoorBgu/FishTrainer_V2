@@ -43,10 +43,10 @@ void SelectMotor(unsigned int _motor){
 
 void MotorDisable(unsigned int _motor){
    char buf[30];
-   sprintf(buf, "(%i)Pins:%i,%i,%i (stp,dir,en)", _motor, stp_Pin[_motor], dir_Pin[_motor], En_pin[_motor]);
+   sprintf(buf, "(%i)(stp,dir,en):%i,%i,%i", _motor, stp_Pin[_motor], dir_Pin[_motor], En_pin[_motor]);
    SelectMotor(_motor);
    stepper.disableOutputs();
-   Serial.print(F("\tMotor disabled. "));
+   Serial.print(F(" -> Motor disabled. "));
    Serial.print(buf);
 }
 
