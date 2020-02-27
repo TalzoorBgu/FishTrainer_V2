@@ -30,7 +30,7 @@ except ImportError:
     py3 = 1
 
 try:
-    from tools import ClientGUI_V2_support
+    import tools.ClientGUI_V2_support
 except ImportError:
     from .tools import ClientGUI_V2_support
 #
