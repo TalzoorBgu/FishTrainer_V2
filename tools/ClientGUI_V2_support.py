@@ -340,6 +340,14 @@ def onShowDBFile():
     show_file(Fish_trainingGUI.db_file_full_path())
 
 
+def onShowConfigFile():
+    global Fish_trainingGUI
+    print('ClientGUI_support.onShowConfigFile')
+    sys.stdout.flush()
+
+    show_file(Fish_trainingGUI.config_file_full_path())
+
+
 def onOpenFolder():
     global Fish_trainingGUI
     print('ClientGUI_support.onOpenFolder')

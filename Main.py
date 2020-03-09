@@ -62,18 +62,17 @@ exit_flag = False
 class ConfigSectionMap:
     def __init__(self, _exception=None):
         self.exception = _exception
-        self.file_name = 'GUI_config.txt'
+        self.file_name_short = 'GUI_config.txt'
+
+        data_folder = Path(script_dir)
+        file_to_open = data_folder / self.file_name_short
+        self.file_name_long = file_to_open
 
     def get(self, section):
         dict1 = {}
 
-        file_name = self.file_name
-
-        data_folder = Path(script_dir)
-        file_to_open = data_folder / file_name
-
         try:
-            with open(file_to_open) as f:
+            with open(self.file_name_long) as f:
                 try:
                     Config.read_file(f)
                 except configparser.DuplicateOptionError:
@@ -98,7 +97,8 @@ class ConfigSectionMap:
 
 
 class MainGUI:
-
+    # '__init__from_page' function created with 'page' app - .tcl files
+    # and pasted here.
     def __init__from_page(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -741,6 +741,8 @@ class MainGUI:
         self.btnShowConfig.configure(highlightbackground="#d9d9d9")
         self.btnShowConfig.configure(highlightcolor="black")
         self.btnShowConfig.configure(text='''Show''')
+        self.btnShowConfig.configure(command=ClientGUI_V2_support.onShowConfigFile)
+
 
         self.Label18 = tk.Label(self.frmStat)
         self.Label18.place(relx=0.74, rely=0.648, height=24, width=72)
@@ -1035,6 +1037,10 @@ class MainGUI:
         full_path = Path("{}/data/{}".format(script_dir, self.DB_fish_file))
         return full_path
 
+    def config_file_full_path(self):
+        full_path = Path("{}/{}".format(script_dir, self.config_file_name))
+        return full_path
+
     @staticmethod
     def db_file_exists(_file_name):
         my_file = Path(_file_name)
@@ -1080,7 +1086,8 @@ class MainGUI:
         self.lblTimeCount.configure(font=self.myFont_big_bold)
 
         ConfigVals = ConfigSectionMap(self.exception_obj)
-        self.config_file_name = ConfigVals.file_name
+        self.config_file_name = ConfigVals.file_name_short
+        self.config_file_name_long = ConfigVals.file_name_long
         self.chb_Var = ClientGUI_V2_support.chb_Var
 
         fish_statistics_dict = ConfigVals.get("Fish Statistics")
@@ -1164,6 +1171,9 @@ class MainGUI:
         str_db_file = str(self.db_file_full_path())
         db_file_only = str_db_file.replace(str_main_folder, "")
         self.txtDBfile.insert('0.0', db_file_only)
+        str_config_file = str(self.config_file_name_long)
+        config_file_only = str_config_file.replace(str_main_folder, "")
+        self.txtConfigFile.insert('0.0', config_file_only)
 
         self.txtStatDaysBack.insert('0.0', self.Stat_days)
         self.txtTrainingStop.configure(state='disabled')
