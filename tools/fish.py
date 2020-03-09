@@ -250,7 +250,6 @@ class TrackerFeeder:
     #     self.Arduino.disable_pins(_int_on)
 
 
-
 class SendCommand:
     def __init__(self, _full_cycle=FULL_CYCLE):
         self.full_cycle = _full_cycle

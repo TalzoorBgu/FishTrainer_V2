@@ -30,9 +30,9 @@ except ImportError:
     py3 = 1
 
 try:
-    import tools.ClientGUI_V2_support
+    import tools.ClientGUI_V2_support as ClientGUI_V2_support
 except ImportError:
-    from .tools import ClientGUI_V2_support
+    from .tools import ClientGUI_V2_support as ClientGUI_V2_support
 #
 # pid_file = 'lock_file.pid'
 # fp = open(pid_file, 'w')
@@ -98,6 +98,7 @@ class ConfigSectionMap:
 
 
 class MainGUI:
+
     def __init__from_page(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -107,7 +108,7 @@ class MainGUI:
         _ana1color = '#d9d9d9'  # X11 color: 'gray85'
         _ana2color = '#ececec'  # Closest X11 color: 'gray92'
         self.style = ttk.Style()
-        if sys_pf == "win32":
+        if sys.platform == "win32":
             self.style.theme_use('winnative')
         self.style.configure('.', background=_bgcolor)
         self.style.configure('.', foreground=_fgcolor)
@@ -115,7 +116,7 @@ class MainGUI:
         self.style.map('.', background=
         [('selected', _compcolor), ('active', _ana2color)])
 
-        top.geometry("880x748+246+63")
+        top.geometry("880x748+321+67")
         top.title("Fish training GUI V2 - Client")
         top.configure(background="#d9d9d9")
         top.configure(highlightbackground="#d9d9d9")
@@ -156,7 +157,7 @@ class MainGUI:
         self.Label2.configure(text='''Training day''')
 
         self.radF1 = tk.Radiobutton(self.frmTraining)
-        self.radF1.place(relx=0.505, rely=0.229, relheight=0.168, relwidth=0.092)
+        self.radF1.place(relx=0.505, rely=0.229, relheight=0.168, relwidth=0.089)
 
         self.radF1.configure(activebackground="#d9d9d9")
         self.radF1.configure(activeforeground="#000000")
@@ -171,7 +172,7 @@ class MainGUI:
         self.radF1.configure(variable=ClientGUI_V2_support.FeedVar1)
 
         self.radN1 = tk.Radiobutton(self.frmTraining)
-        self.radN1.place(relx=0.505, rely=0.382, relheight=0.168, relwidth=0.121)
+        self.radN1.place(relx=0.505, rely=0.382, relheight=0.168, relwidth=0.118)
 
         self.radN1.configure(activebackground="#d9d9d9")
         self.radN1.configure(activeforeground="#000000")
@@ -269,7 +270,7 @@ class MainGUI:
         self.txtTrainingDay2.configure(wrap="word")
 
         self.radF2 = tk.Radiobutton(self.frmTraining)
-        self.radF2.place(relx=0.505, rely=0.534, relheight=0.168, relwidth=0.092)
+        self.radF2.place(relx=0.505, rely=0.534, relheight=0.168, relwidth=0.089)
 
         self.radF2.configure(activebackground="#d9d9d9")
         self.radF2.configure(activeforeground="#000000")
@@ -284,7 +285,7 @@ class MainGUI:
         self.radF2.configure(variable=ClientGUI_V2_support.FeedVar2)
 
         self.radN2 = tk.Radiobutton(self.frmTraining)
-        self.radN2.place(relx=0.505, rely=0.687, relheight=0.168, relwidth=0.121)
+        self.radN2.place(relx=0.505, rely=0.687, relheight=0.168, relwidth=0.118)
 
         self.radN2.configure(activebackground="#d9d9d9")
         self.radN2.configure(activeforeground="#000000")
@@ -300,7 +301,7 @@ class MainGUI:
 
         self.radCam1 = tk.Radiobutton(self.frmTraining)
         self.radCam1.place(relx=0.015, rely=0.076, relheight=0.168
-                           , relwidth=0.139)
+                           , relwidth=0.133)
         self.radCam1.configure(activebackground="#d9d9d9")
         self.radCam1.configure(activeforeground="#000000")
         self.radCam1.configure(background="#d9d9d9")
@@ -345,7 +346,7 @@ class MainGUI:
 
         self.radCam2 = tk.Radiobutton(self.frmTraining)
         self.radCam2.place(relx=0.015, rely=0.229, relheight=0.168
-                           , relwidth=0.139)
+                           , relwidth=0.133)
         self.radCam2.configure(activebackground="#d9d9d9")
         self.radCam2.configure(activeforeground="#000000")
         self.radCam2.configure(background="#d9d9d9")
@@ -401,7 +402,7 @@ class MainGUI:
         self.radF1_1.configure(variable=ClientGUI_V2_support.TrainingVar)
 
         self.Label5 = tk.Label(self.frmTraining)
-        self.Label5.place(relx=0.183, rely=0.076, height=24, width=95)
+        self.Label5.place(relx=0.183, rely=0.076, height=24, width=90)
         self.Label5.configure(activebackground="#f9f9f9")
         self.Label5.configure(activeforeground="black")
         self.Label5.configure(background="#d9d9d9")
@@ -439,7 +440,7 @@ class MainGUI:
         self.TSeparator2.configure(orient="vertical")
 
         self.Label15 = tk.Label(self.frmTraining)
-        self.Label15.place(relx=0.657, rely=0.076, height=24, width=98)
+        self.Label15.place(relx=0.657, rely=0.076, height=24, width=93)
         self.Label15.configure(activebackground="#f9f9f9")
         self.Label15.configure(activeforeground="black")
         self.Label15.configure(background="#d9d9d9")
@@ -450,7 +451,7 @@ class MainGUI:
 
         self.chbtn_StopTraining = tk.Checkbutton(self.frmTraining)
         self.chbtn_StopTraining.place(relx=0.657, rely=0.229, relheight=0.168
-                                      , relwidth=0.142)
+                                      , relwidth=0.136)
         self.chbtn_StopTraining.configure(activebackground="#d9d9d9")
         self.chbtn_StopTraining.configure(activeforeground="#000000")
         self.chbtn_StopTraining.configure(background="#d9d9d9")
@@ -519,7 +520,7 @@ class MainGUI:
         self.frmStat.configure(width=864)
 
         self.Label3 = tk.Label(self.frmStat)
-        self.Label3.place(relx=0.006, rely=0.019, height=24, width=100)
+        self.Label3.place(relx=0.006, rely=0.019, height=24, width=94)
         self.Label3.configure(activebackground="#f9f9f9")
         self.Label3.configure(activeforeground="black")
         self.Label3.configure(background="#d9d9d9")
@@ -642,7 +643,7 @@ class MainGUI:
         self.Label13.configure(text='''Log folder''')
 
         self.Label16 = tk.Label(self.frmStat)
-        self.Label16.place(relx=0.74, rely=0.5, height=24, width=95)
+        self.Label16.place(relx=0.74, rely=0.426, height=24, width=95)
         self.Label16.configure(activebackground="#f9f9f9")
         self.Label16.configure(activeforeground="black")
         self.Label16.configure(background="#d9d9d9")
@@ -652,8 +653,8 @@ class MainGUI:
         self.Label16.configure(text='''Database file''')
 
         self.txtLogFolder = tk.Text(self.frmStat)
-        self.txtLogFolder.place(relx=0.74, rely=0.259, relheight=0.096
-                                , relwidth=0.252)
+        self.txtLogFolder.place(relx=0.74, rely=0.259, relheight=0.093
+                                , relwidth=0.249)
         self.txtLogFolder.configure(background="white")
         self.txtLogFolder.configure(font="TkTextFont")
         self.txtLogFolder.configure(foreground="black")
@@ -666,8 +667,8 @@ class MainGUI:
         self.txtLogFolder.configure(wrap="word")
 
         self.txtDBfile = tk.Text(self.frmStat)
-        self.txtDBfile.place(relx=0.74, rely=0.593, relheight=0.096
-                             , relwidth=0.252)
+        self.txtDBfile.place(relx=0.74, rely=0.5, relheight=0.093
+                             , relwidth=0.249)
         self.txtDBfile.configure(background="white")
         self.txtDBfile.configure(font="TkTextFont")
         self.txtDBfile.configure(foreground="black")
@@ -680,7 +681,7 @@ class MainGUI:
         self.txtDBfile.configure(wrap="word")
 
         self.Label12 = tk.Label(self.frmStat)
-        self.Label12.place(relx=0.104, rely=0.815, height=24, width=43)
+        self.Label12.place(relx=0.104, rely=0.815, height=24, width=41)
         self.Label12.configure(activebackground="#f9f9f9")
         self.Label12.configure(activeforeground="black")
         self.Label12.configure(background="#d9d9d9")
@@ -690,7 +691,7 @@ class MainGUI:
         self.Label12.configure(text='''Filter''')
 
         self.btnOpenLogFolder = tk.Button(self.frmStat)
-        self.btnOpenLogFolder.place(relx=0.913, rely=0.37, height=32, width=53)
+        self.btnOpenLogFolder.place(relx=0.913, rely=0.352, height=32, width=52)
         self.btnOpenLogFolder.configure(activebackground="#d9d9d9")
         self.btnOpenLogFolder.configure(activeforeground="#000000")
         self.btnOpenLogFolder.configure(background="#d9d9d9")
@@ -702,7 +703,7 @@ class MainGUI:
         self.btnOpenLogFolder.configure(text='''Open''')
 
         self.btnShowDBfile = tk.Button(self.frmStat)
-        self.btnShowDBfile.place(relx=0.913, rely=0.704, height=32, width=53)
+        self.btnShowDBfile.place(relx=0.913, rely=0.593, height=32, width=52)
         self.btnShowDBfile.configure(activebackground="#d9d9d9")
         self.btnShowDBfile.configure(activeforeground="#000000")
         self.btnShowDBfile.configure(background="#d9d9d9")
@@ -717,6 +718,36 @@ class MainGUI:
         self.TSeparator3.place(relx=0.728, rely=0.148, relheight=0.778)
         self.TSeparator3.configure(orient="vertical")
 
+        self.txtConfigFile = tk.Text(self.frmStat)
+        self.txtConfigFile.place(relx=0.74, rely=0.741, relheight=0.093
+                                 , relwidth=0.249)
+        self.txtConfigFile.configure(background="white")
+        self.txtConfigFile.configure(font="TkTextFont")
+        self.txtConfigFile.configure(foreground="black")
+        self.txtConfigFile.configure(highlightbackground="#d9d9d9")
+        self.txtConfigFile.configure(highlightcolor="black")
+        self.txtConfigFile.configure(insertbackground="black")
+        self.txtConfigFile.configure(selectbackground="#c4c4c4")
+        self.txtConfigFile.configure(selectforeground="black")
+        self.txtConfigFile.configure(width=218)
+        self.txtConfigFile.configure(wrap="word")
+
+        self.btnShowConfig = tk.Button(self.frmStat)
+        self.btnShowConfig.place(relx=0.913, rely=0.833, height=32, width=52)
+        self.btnShowConfig.configure(activebackground="#d9d9d9")
+        self.btnShowConfig.configure(activeforeground="#000000")
+        self.btnShowConfig.configure(background="#d9d9d9")
+        self.btnShowConfig.configure(foreground="#000000")
+        self.btnShowConfig.configure(highlightbackground="#d9d9d9")
+        self.btnShowConfig.configure(highlightcolor="black")
+        self.btnShowConfig.configure(text='''Show''')
+
+        self.Label18 = tk.Label(self.frmStat)
+        self.Label18.place(relx=0.74, rely=0.648, height=24, width=72)
+        self.Label18.configure(background="#d9d9d9")
+        self.Label18.configure(foreground="#000000")
+        self.Label18.configure(text='''Config file''')
+
         self.frmCom = tk.Frame(top)
         self.frmCom.place(relx=0.011, rely=0.388, relheight=0.175
                           , relwidth=0.232)
@@ -729,7 +760,7 @@ class MainGUI:
         self.frmCom.configure(width=204)
 
         self.Label4 = tk.Label(self.frmCom)
-        self.Label4.place(relx=0.025, rely=0.038, height=24, width=77)
+        self.Label4.place(relx=0.025, rely=0.038, height=24, width=73)
         self.Label4.configure(activebackground="#f9f9f9")
         self.Label4.configure(activeforeground="black")
         self.Label4.configure(background="#d9d9d9")
@@ -831,7 +862,7 @@ class MainGUI:
         self.frmLog.configure(width=865)
 
         self.Label8 = tk.Label(self.frmLog)
-        self.Label8.place(relx=0.006, rely=0.019, height=24, width=34)
+        self.Label8.place(relx=0.006, rely=0.019, height=24, width=33)
         self.Label8.configure(activebackground="#f9f9f9")
         self.Label8.configure(activeforeground="black")
         self.Label8.configure(background="#d9d9d9")
@@ -944,7 +975,7 @@ class MainGUI:
         if col_text == "Last training":
             col_list.sort(reverse=reverse)
         else:
-            col_list.sort(key=lambda x: float(x[0]), reverse=reverse)
+            col_list.sort(key=lambda x: x[0], reverse=reverse)
 
         # rearrange items in sorted positions
         for index, (val, k) in enumerate(col_list):

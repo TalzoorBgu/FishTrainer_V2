@@ -88,6 +88,7 @@ class ReadFile:
             self.feed_y = []
             self.max_x = 0
             self.max_y = 0
+            self.total_feed = 0
 
             self.training_start_str = ""
             self.file_empty = False
@@ -119,6 +120,7 @@ class ReadFile:
                         self.add(data[1])
                     elif data[0] is "FEED":
                         self.feed_add()
+                        self.total_feed += 1
 
                 # print(" self.max_x:",  self.max_x, "  self.max_y:",  self.max_y)
                 if num > 10:
@@ -417,8 +419,8 @@ class PlotTraj:
         self.open_png = _open_png
         self.overwrite = _overwrite
         self.info = properties
-        self.max_x = properties[4][0]
-        self.max_y = properties[4][1]
+        self.max_x = properties[5][0]
+        self.max_y = properties[5][1]
         print("properties:", properties)
 
         pass
@@ -435,8 +437,8 @@ class PlotTraj:
 
         self.ax = fig.add_subplot(gs1[0])
 
-        _title = '$Fish-{}$ \nTraining day:{}\nDate:{}, Total time:{}'.\
-            format(info[0], info[1], info[2], info[3])
+        _title = '$Fish-{}$ \nTraining day:{}, Total feed:{}\nDate:{}, Total time:{}'.\
+            format(info[0], info[1], info[2], info[3], info[4])
 
         self.ax.set_aspect('equal', adjustable="box")
 
@@ -502,8 +504,10 @@ def run(_read_file_class, _log_folder, _file_to_plot, **kwargs):
 
         properties = [read_file_class.fish_no,
                       read_file_class.train_day,
+                      read_file_class.total_feed,       #last change! ######################
                       read_file_class.training_start_str,
-                      read_file_class.total_training_time, [read_file_class.max_x, read_file_class.max_y]]
+                      read_file_class.total_training_time,
+                      [read_file_class.max_x, read_file_class.max_y]]
 
         plot_fig = PlotTraj(properties, show_at_end, overwrite)
         plot_fig.plot_it(file_data, file_feed_data)
