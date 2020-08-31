@@ -1211,6 +1211,7 @@ class MainGUI:
         ClientGUI_V2_support.chVar_stop_tr.set('0')
 
         if self.rad_camera is not None:
+            print("self.rad_camera:{}".format(self.rad_camera))
             if self.rad_camera == '1':
                 self.radCam1.configure(value='1')
                 self.radCam2.configure(value='0')
