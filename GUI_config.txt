@@ -29,7 +29,7 @@ max training time = 01:00:00
 route: 66
 
 [Camera]
-camera default = 1
+camera default = 2
 
 [Arduino]
 send stepper pins = False

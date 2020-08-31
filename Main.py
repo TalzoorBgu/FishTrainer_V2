@@ -1212,13 +1212,13 @@ class MainGUI:
 
         if self.rad_camera is not None:
             print("self.rad_camera:{},type:{}".format(self.rad_camera, type(self.rad_camera)))
-            if self.rad_camera == '1':
-                self.radCam1.configure(value='1')
-                self.radCam2.configure(value='0')
+            if int(self.rad_camera) == 1:
+                # self.radCam1.configure(value='1')
+                # self.radCam2.configure(value='0')
                 ClientGUI_V2_support.CamVar1.set('0')
-            else:
-                self.radCam1.configure(value='0')
-                self.radCam2.configure(value='1')
+            if int(self.rad_camera) == 2:
+                # self.radCam1.configure(value='0')
+                # self.radCam2.configure(value='1')
                 ClientGUI_V2_support.CamVar1.set('1')
 
         self.db_tree_view_data_refresh()
