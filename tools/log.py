@@ -267,8 +267,13 @@ class Database(object):
         # print("self.db_conn:{}".format(self.db_conn))
 
     def connect(self):
-        conn = sqlite3.connect(self.database)
-        conn.commit()
+        try:
+            conn = sqlite3.connect(self.database)
+            conn.commit()
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print("Error! log->Database->connect()\n", exc_type, fname, exc_tb.tb_lineno)
         # conn.close()
         self.db_conn = conn
 

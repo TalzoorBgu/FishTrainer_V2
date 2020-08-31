@@ -60,14 +60,6 @@ byte Stepper_Pins[6] = {0};
 
 void setup()
 {
-#ifdef DEBUG
-  //  pinMode(LED_Yellow_LOW, OUTPUT);
-  //  pinMode(LED_Yellow_A, OUTPUT);
-  //  pinMode(LED_Red_LOW, OUTPUT);
-  //  pinMode(LED_Red_A, OUTPUT);
-
-  //  DEBUG_BLINK(5 , true);
-#endif
 
   Serial.begin(baud_rate);
   //  RPISerial.begin(9600);

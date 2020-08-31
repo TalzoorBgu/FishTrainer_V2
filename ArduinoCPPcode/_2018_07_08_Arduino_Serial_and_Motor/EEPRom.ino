@@ -65,7 +65,7 @@ void EEPROMexInit() {
 
 void EEPinWrite(unsigned int _motor, unsigned int _stp_pin, unsigned int _dir_pin, unsigned int _en_pin) {
   char _buffer[20];
-  Serial.print(F("WRITING--> addr("));
+  Serial.print(F("\tWRITING--> addr("));
   itoa(1 + 3 * (_motor - 1), _buffer, 10);
   Serial.print(_buffer); Serial.print(F(","));
   itoa(2 + 3 * (_motor - 1), _buffer, 10);
@@ -86,7 +86,7 @@ void EEPinWrite(unsigned int _motor, unsigned int _stp_pin, unsigned int _dir_pi
 }
 
 void EEVelAccelPulseWrite(unsigned int _max_vel, unsigned int _max_accel, unsigned int _minPulsew) {
-  Serial.print(F("WRITING--> Max_velo("));
+  Serial.print(F("\tWRITING--> Max_velo("));
   Serial.print(_max_vel); Serial.print(F("), Max_accel("));
   Serial.print(_max_accel); Serial.print(F("), _MinPulW("));
   Serial.print(_minPulsew); Serial.print(F(")"));

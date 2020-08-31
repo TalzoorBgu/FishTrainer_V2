@@ -322,14 +322,15 @@ def onTankConfig():
 
 
 def onSetZero():
+    global arduino_obj
     print('ClientGUI_support.onSetZero')
     btn_txt = Fish_trainingGUI.btnSetZero['text']
     if btn_txt == "Set ZERO pos.":
         Fish_trainingGUI.btnSetZero.configure(text='END')
-        feed_obj.Arduino.disable_pins(True, -1)
+        arduino_obj.disable_pins(True, -1)
     else:
         Fish_trainingGUI.btnSetZero.configure(text='Set ZERO pos.')
-        feed_obj.Arduino.disable_pins(False, -1)
+        arduino_obj.disable_pins(False, -1)
 
 
 def onShowDBFile():
@@ -373,14 +374,14 @@ def OnChkStopTraining():
         Fish_trainingGUI.txtTrainingStop.configure(state="disabled")
 
 
-def init(top, gui, _exception_class,  *args, **kwargs):
-    global Fish_trainingGUI, top_level, root, exception_obj, feed_obj
+def init(top, gui, exception_class, _arduino_obj,  *args, **kwargs):
+    global Fish_trainingGUI, root, feed_obj, arduino_obj, exception_obj
     Fish_trainingGUI = gui
-    top_level = top
     root = top
-    exception_obj = _exception_class
-    feed_obj = TrackerFeeder()
-    arduino_obj = feed_obj.Arduino
+    arduino_obj = _arduino_obj
+    exception_obj = exception_class
+    feed_obj = TrackerFeeder(exception_obj, arduino_obj)
+
 
     # HERE - find how is calling to arduino.main()
     # than add disable pins on start and stop
@@ -392,7 +393,7 @@ def init(top, gui, _exception_class,  *args, **kwargs):
 
 
 def destroy_window():
-    global top_level, thread_track_fish, controller, root
+    global thread_track_fish, controller, root
     # Function which closes the window.
     print("Quiting.")
     root.destroy()

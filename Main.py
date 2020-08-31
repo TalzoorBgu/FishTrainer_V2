@@ -9,7 +9,9 @@ from datetime import datetime
 import os
 from pathlib import Path
 import tools.log as fish_log
+from tools.fish import ArduinoFunctions
 from datetime import timedelta
+import _thread
 
 # from tendo import singleton
 
@@ -929,18 +931,24 @@ class MainGUI:
 
         self.stop_training = True
         self.exit_flag = False
-        self.Font_init()
 
+        self.top = top
         self.__init__from_page(top)
+        self.Font_init()
+        self.buttons_disable()
 
         self.exception_obj = fish_log.RaiseException(self)
+        self.exception_obj.info(" --- Program started --- ", bold=True)
+        self.exception_obj.info(" --- Loading --- ")
+
+        self.arduino_obj = ArduinoFunctions(self.exception_obj)
         self.log_folder = log_folder()
 
         self.vars_init()
         self.fillValue()
 
-        self.exception_obj.info(" --- Program started --- ")
         self.exception_obj.info("config file - ..\{}".format(self.config_file_name))
+
 
     def Font_init(self):
         self.myFont_reg = Font(family="TkTextFont", size=14)
@@ -952,6 +960,21 @@ class MainGUI:
         self.myFont_Small = Font(family="TkTextFont", size=12)
         self.myFont_Ssmall = Font(family="TkTextFont", size=10)
         self.myFont_Sssmall = Font(family="TkTextFont", size=8)
+
+        self.txtMainLog.tag_configure("bold", font=self.myFont_bold)
+        self.txtMainLog.configure(font=self.myFont_reg)
+
+        self.radF1.configure(font=self.myFont_Sssmall)
+        self.radN1.configure(font=self.myFont_Sssmall)
+        self.radF2.configure(font=self.myFont_Sssmall)
+        self.radN2.configure(font=self.myFont_Sssmall)
+
+        self.txtFishNo1.configure(font=self.myFont_big18)
+        self.txtTrainingDay1.configure(font=self.myFont_big18)
+        self.txtFishNo2.configure(font=self.myFont_big18)
+        self.txtTrainingDay2.configure(font=self.myFont_big18)
+
+        self.lblTimeCount.configure(font=self.myFont_big_bold)
 
     # noinspection PyAttributeOutsideInit
     def vars_init(self):
@@ -1051,8 +1074,11 @@ class MainGUI:
         try:
             str_db_path = self.db_file_full_path()
             if self.db_file_exists(str_db_path) is False:
-                self.exception_obj.error("\t\t\t ----- DB file not exist !! Creating new one -----",
-                                         bold=True)
+                self.exception_obj.error("\t ----- DB file ({}) "
+                                         "not exist !! Creating new one -----".format(str_db_path)
+                                         , bold=True)
+                folder_to_create = str_db_path.parents[0]
+                folder_to_create.mkdir(parents=True, exist_ok=True)
 
             fish_db = fish_log.Database(str_db_path)
             fish_list = fish_db.db_fish_view()
@@ -1070,21 +1096,6 @@ class MainGUI:
             fish_db.__exit__()
 
     def fillValue(self):
-        self.txtMainLog.tag_configure("bold", font=self.myFont_bold)
-        self.txtMainLog.configure(font=self.myFont_reg)
-
-        self.radF1.configure(font=self.myFont_Sssmall)
-        self.radN1.configure(font=self.myFont_Sssmall)
-        self.radF2.configure(font=self.myFont_Sssmall)
-        self.radN2.configure(font=self.myFont_Sssmall)
-
-        self.txtFishNo1.configure(font=self.myFont_big18)
-        self.txtTrainingDay1.configure(font=self.myFont_big18)
-        self.txtFishNo2.configure(font=self.myFont_big18)
-        self.txtTrainingDay2.configure(font=self.myFont_big18)
-
-        self.lblTimeCount.configure(font=self.myFont_big_bold)
-
         ConfigVals = ConfigSectionMap(self.exception_obj)
         self.config_file_name = ConfigVals.file_name_short
         self.config_file_name_long = ConfigVals.file_name_long
@@ -1138,18 +1149,19 @@ class MainGUI:
             else:
                 set_stepper_pins = arduino_dict['send stepper pins']
                 if set_stepper_pins == 'True':
-                    ardu_conn = ClientGUI_V2_support.feed_object.Arduino.connection
-                    if ardu_conn == 'OK':
-                        arduino_obj = ClientGUI_V2_support.feed_object.Arduino
+
+                    arduino_obj = self.arduino_obj
+
+                    if arduino_obj.connection == 'OK':
                         (p1a_st, p1a_dir, p1a_en) = pin_step_1a_list
                         (p1b_st, p1b_dir, p1b_en) = pin_step_1b_list
                         (p2a_st, p2a_dir, p2a_en) = pin_step_2a_list
                         (p2b_st, p2b_dir, p2b_en) = pin_step_2b_list
 
-                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_1(p2a_st, p2a_dir, p2a_en))
-                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_2(p2b_st, p2b_dir, p2b_en))
-                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_3(p1a_st, p1a_dir, p1a_en))
-                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor_4(p1b_st, p1b_dir, p1b_en))
+                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor(1, p2a_st, p2a_dir, p2a_en))
+                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor(2, p2b_st, p2b_dir, p2b_en))
+                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor(3, p1a_st, p1a_dir, p1a_en))
+                        arduino_obj.send_command(arduino_obj.command_str.init_seq_motor(4, p1b_st, p1b_dir, p1b_en))
                         arduino_obj.send_command(arduino_obj.command_str.define_default_vel_acc(10, 20, 10))
         except KeyError as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -1192,6 +1204,23 @@ class MainGUI:
         ClientGUI_V2_support.chVar_stop_tr.set('0')
 
         self.db_tree_view_data_refresh()
+
+    def all_children(self, wid, finList):
+        _list = wid.winfo_children()
+        for item in _list:
+            finList.append(item)
+            self.all_children(item, finList)
+        return finList
+
+    def buttons_disable(self, disable=True):
+        childlist = []
+        childlist = self.all_children(self.top, childlist)
+        for item in childlist:
+            if "button" in str(item):
+                if disable:
+                    item.config(state="disabled")
+                else:
+                    item.config(state="normal")
 
     def db_tree_view_data_refresh(self):
         self.tree_view_create()
@@ -1414,15 +1443,24 @@ def entryUpdateEndHour(entry):
     except IndexError:
         pass
 
-def vp_start_gui():
-    '''Starting point when module is the main routine.'''
-    global val, Fish_trainingGUI, root
-    sys.stdout = fish_log.Logger_stdout()  # start main stdout logger - logfile.log
-    root = tk.Tk()
+
+def gui_init():
     ClientGUI_V2_support.set_Tk_var()
     Fish_trainingGUI = MainGUI(root)
     Excp = Fish_trainingGUI.exception_obj
-    ClientGUI_V2_support.init(root, Fish_trainingGUI, Excp)
+    arduino_obj = Fish_trainingGUI.arduino_obj
+    ClientGUI_V2_support.init(root, Fish_trainingGUI, Excp, arduino_obj)
+    Excp.info("Loading DONE", bold=True)
+    Fish_trainingGUI.buttons_disable(False)
+
+def vp_start_gui():
+    '''Starting point when module is the main routine.'''
+    global val, Fish_trainingGUI, root
+
+    sys.stdout = fish_log.Logger_stdout()  # start main stdout logger - logfile.log
+    root = tk.Tk()
+    # root.winfo_children()
+    _thread.start_new_thread(gui_init, ())
 
     try:
         root.mainloop()
@@ -1462,5 +1500,7 @@ def log_file_name(_file_name):
 
 
 if __name__ == '__main__':
+    t_stamp = datetime.today().strftime('%Y-%m-%d %H:%M.%S --> ')
+    print("{}Started".format(t_stamp))
     Fish_trainingGUI = None
     vp_start_gui()

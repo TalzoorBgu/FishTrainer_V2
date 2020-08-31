@@ -12,7 +12,7 @@ from time import sleep
 import cv2
 import serial
 
-import Main
+# import Main
 import tools.log
 from tools.log import FishLog, ReadFile
 
@@ -201,14 +201,15 @@ class ScenePlanner:
 
 
 class TrackerFeeder:
-    def __init__(self):
+    def __init__(self, _exception_class, _arduino_obj):
         global time_to_sleep
-        time_to_sleep = 0.25 / 1000.0  # (0.005) - 5ms
-        print('feeder init -- ', end='')
+        # time_to_sleep = 0.25 / 1000.0  # (0.005) - 5ms
+        # print('feeder init -- ', end='')
+        self.exception_class = _exception_class
 
-        self.Arduino = ArduinoFunctions()
+        self.Arduino = _arduino_obj
         if not self.Arduino.connection == 'OK':
-            print('No Arduino answer. Check Serial conn.')
+            self.exception_class.info('No Arduino answer. Check Serial conn.')
 
         self.check_arduino_conn()
 
@@ -254,12 +255,8 @@ class SendCommand:
     def __init__(self, _full_cycle=FULL_CYCLE):
         self.full_cycle = _full_cycle
 
-    def init_seq_motor_1(self, _pin1, _pin2, _pin3):
-        _str_to_send = 'in_s_motor_1,{},{},{}'.format(_pin1, _pin2, _pin3)
-        return _str_to_send
-
-    def init_seq_motor_2(self, _pin1, _pin2, _pin3):
-        _str_to_send = 'in_s_motor_2,{},{},{}'.format(_pin1, _pin2, _pin3)
+    def init_seq_motor(self, _motor, _pin1, _pin2, _pin3):
+        _str_to_send = 'in_s_motor_{},{},{},{}'.format(_motor, _pin1, _pin2, _pin3)
         return _str_to_send
 
     def select_motor(self, _motor):
@@ -374,14 +371,16 @@ class MySerial:
 
 
 class ArduinoFunctions:
-    def __init__(self):
+    def __init__(self, _exception_class):
         self.command_str = SendCommand(FULL_CYCLE)
+        self.exception_class = _exception_class
         serial_ports_list = serial_ports()
-        print("serial_ports_list:{}".format(serial_ports_list))
+
+        self.exception_class.info("Serial ports:{}".format(serial_ports_list))
         try:
             self.connection = 'NO'
             for port in reversed(serial_ports_list):  # usually COM7
-                print("Checking port:{}".format(port))
+                self.exception_class.info("Checking port:{}".format(port))
                 self.serial_con = MySerial(port, 115200)
                 #     dump first lines
                 time.sleep(3)  # sec
