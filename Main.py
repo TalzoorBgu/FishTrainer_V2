@@ -1106,17 +1106,26 @@ class MainGUI:
         fish_dict = ConfigVals.get("Fish")
         arduino_dict = ConfigVals.get("Arduino")
         motor_dict = ConfigVals.get("Motor")
-
-        pins_1a = motor_dict['pins1a'];
-        pins_1b = motor_dict['pins1b'];
-        pin_step_1a_list = self.str_pins_split(pins_1a)
-        pin_step_1b_list = self.str_pins_split(pins_1b)
-        pins_2a = motor_dict['pins2a'];
-        pins_2b = motor_dict['pins2b'];
-        pin_step_2a_list = self.str_pins_split(pins_2a)
-        pin_step_2b_list = self.str_pins_split(pins_2b)
+        camera_dict = ConfigVals.get("Camera")
 
         try:
+            if camera_dict == {}:
+                pass
+            else:
+                self.rad_camera = camera_dict['camera default']
+
+            if motor_dict == {}:
+                pass
+            else:
+                pins_1a = motor_dict['pins1a']
+                pins_1b = motor_dict['pins1b']
+                pin_step_1a_list = self.str_pins_split(pins_1a)
+                pin_step_1b_list = self.str_pins_split(pins_1b)
+                pins_2a = motor_dict['pins2a']
+                pins_2b = motor_dict['pins2b']
+                pin_step_2a_list = self.str_pins_split(pins_2a)
+                pin_step_2b_list = self.str_pins_split(pins_2b)
+
             if fish_statistics_dict == {}:
                 pass
             else:
@@ -1202,6 +1211,14 @@ class MainGUI:
         ClientGUI_V2_support.CamVar1.set('1')
         ClientGUI_V2_support.TrainingVar.set('C')
         ClientGUI_V2_support.chVar_stop_tr.set('0')
+
+        if self.rad_camera is not None:
+            if self.rad_camera == '1':
+                self.radCam1.configure(value='1')
+                self.radCam2.configure(value='0')
+            else:
+                self.radCam1.configure(value='0')
+                self.radCam2.configure(value='1')
 
         self.db_tree_view_data_refresh()
 
@@ -1502,5 +1519,6 @@ def log_file_name(_file_name):
 if __name__ == '__main__':
     t_stamp = datetime.today().strftime('%Y-%m-%d %H:%M.%S --> ')
     print("{}Started".format(t_stamp))
+    print("Python version: {}".format(sys.version))
     Fish_trainingGUI = None
     vp_start_gui()

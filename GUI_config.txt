@@ -1,5 +1,7 @@
+# !!! make sure to write all keys lower case !!!
+
 [Fish Statistics]
-DB file = Fish training db.db
+db file = Fish training db.db
 days back = 100
 arg = 1
 
@@ -9,12 +11,12 @@ server ip = 132.73.194.80
 
 
 [Motor]
-stepNum = 320
-redFeeder = 1
-Pins1A = (0, 0, 0)      # step, dir, en
-Pins1B = (0, 0, 0)
-Pins2A = (5, 6, 7)      # step, dir, en
-Pins2B = (10, 11, 12)
+step_num = 320
+red_feeder = 1
+pins1a = (0, 0, 0)      # step, dir, en
+pins1b = (0, 0, 0)
+pins2a = (5, 6, 7)      # step, dir, en
+pins2b = (10, 11, 12)
 
 [Fish]
 argument1 = --file=tank_config.txt
@@ -24,7 +26,10 @@ argument2 = --n=
 max training time = 01:00:00
 
 [Others]
-Route: 66
+route: 66
+
+[Camera]
+camera default = 1
 
 [Arduino]
 send stepper pins = False
