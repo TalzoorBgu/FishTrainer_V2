@@ -307,7 +307,6 @@ class MainGUI:
         self.radCam1.configure(activebackground="#d9d9d9")
         self.radCam1.configure(activeforeground="#000000")
         self.radCam1.configure(background="#d9d9d9")
-        self.radCam1.configure(command=ClientGUI_V2_support.R1Sel)
         self.radCam1.configure(foreground="#000000")
         self.radCam1.configure(highlightbackground="#d9d9d9")
         self.radCam1.configure(highlightcolor="black")
@@ -352,7 +351,6 @@ class MainGUI:
         self.radCam2.configure(activebackground="#d9d9d9")
         self.radCam2.configure(activeforeground="#000000")
         self.radCam2.configure(background="#d9d9d9")
-        self.radCam2.configure(command=ClientGUI_V2_support.R1Sel)
         self.radCam2.configure(foreground="#000000")
         self.radCam2.configure(highlightbackground="#d9d9d9")
         self.radCam2.configure(highlightcolor="black")
@@ -1208,7 +1206,7 @@ class MainGUI:
         ClientGUI_V2_support.chb_Var.set('1')  # NEW feeder
         ClientGUI_V2_support.FeedVar1.set('F')
         ClientGUI_V2_support.FeedVar2.set('F')
-        ClientGUI_V2_support.CamVar1.set('1')
+        # ClientGUI_V2_support.CamVar1.set('1')
         ClientGUI_V2_support.TrainingVar.set('C')
         ClientGUI_V2_support.chVar_stop_tr.set('0')
 
@@ -1216,9 +1214,11 @@ class MainGUI:
             if self.rad_camera == '1':
                 self.radCam1.configure(value='1')
                 self.radCam2.configure(value='0')
+                ClientGUI_V2_support.CamVar1.set('0')
             else:
                 self.radCam1.configure(value='0')
                 self.radCam2.configure(value='1')
+                ClientGUI_V2_support.CamVar1.set('1')
 
         self.db_tree_view_data_refresh()
 
