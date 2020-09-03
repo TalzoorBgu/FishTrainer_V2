@@ -16,7 +16,7 @@ import serial
 import tools.log
 from tools.log import FishLog, ReadFile
 
-FULL_CYCLE = 2 * 200
+FULL_CYCLE = 2 * 400
 HALF_CYCLE = FULL_CYCLE / 2
 bool_send_default_program = False
 
@@ -265,6 +265,7 @@ class SendCommand:
 
     def move(self, _steps, _dir):
         steps = float(_steps) / 360.0 * FULL_CYCLE
+        print("steps:{}".format(steps))
         steps = int(steps)
         str_to_send = 'move,{},{}'.format(steps, _dir)
         return str_to_send
