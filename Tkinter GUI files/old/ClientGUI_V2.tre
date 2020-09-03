@@ -1,0 +1,65 @@
+PAGE
+    Toplevel: Fish_traning_GUI_-_Client
+        Frame: frmTraining  
+            Button: btnRunTraining   command: onRunTraining
+            Label: Label2  
+            Radiobutton: radF1   command: R1Sel
+            Radiobutton: radN1   command: R1Sel
+            Label: Label1  
+            Text: txtArgs  
+            Label: Label10  
+            Button: btnStopTraning   command: onStopTraining
+            Text: txtFishNo1  
+            Text: txtTrainingDay1  
+            Text: txtFishNo2  
+            Text: txtTrainingDay2  
+            Radiobutton: radF2   command: R2Sel
+            Radiobutton: radN2   command: R2Sel
+            Radiobutton: radCam1   command: R1Sel
+             command: R1Sel
+             command: R1Sel
+            Radiobutton: radCam2   command: R1Sel
+            Button: btnTankConf   command: onTankConfig
+            Radiobutton: radF1_2   command: R3Sel
+            Radiobutton: radF1_1   command: R3Sel
+        Button: btnExit   command: onExit
+        Menu Bar
+        Frame: frmStat  
+            Label: Label3  
+            Button: btnStatClear   command: onStatClear
+            Button: btnStatRun   command: onStatRun
+            Label: Label9  
+            Label: Label11  
+            Text: txtStatDaysBack  
+            Label: Label12  
+            Text: txtStatArgs  
+            Text: txtLogFolder  
+            Frame: Frame1  
+                Scrolledtreeview: DB  
+                    Treeview
+        Frame: frmCom  
+            Label: Label4  
+            Entry: txtServerIP  
+            Label: Label5  
+            Button: btnComSend   command: onSendtest
+            Label: Label6  
+            Button: btnMotor1L   command: on1L
+            Button: btnMotor1R   command: on1R
+            Button: btnMotor2R   command: on2R
+            Button: btnMotor2L   command: on2L
+            Label: Label7  
+            Entry: txtStepNum  
+            Entry: txtVelocity  
+            Entry: txtAccl  
+            Checkbutton: chb_NewMotor  
+            Button: btnSetZero   command: onSetZero
+            Label: Label7_3  
+            Label: Label7_4  
+        Frame: frmLog  
+            Label: Label8  
+            Text: txtMainLog  
+            Button: frmLogClear   command: onLogClear
+            Label: Label14  
+            Label: Label15  
+        Menu Bar
+
