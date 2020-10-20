@@ -382,15 +382,15 @@ class MySerial:
 
 class ArduinoFunctions:
     def __init__(self, _exception_class, _debug_fake_arduino_conn=False):
+        self.exception_class = _exception_class
         if _debug_fake_arduino_conn:    # emulate arduino connection
             self.emulation = True
             self.connection = 'OK'
             self.command_str = SendCommand(FULL_CYCLE)
-            self.exception_class = _exception_class
 
         else:   #normal mode
+            self.emulation = False
             self.command_str = SendCommand(FULL_CYCLE)
-            self.exception_class = _exception_class
             serial_ports_list = serial_ports()
 
             self.exception_class.info("Serial ports:{}".format(serial_ports_list))
