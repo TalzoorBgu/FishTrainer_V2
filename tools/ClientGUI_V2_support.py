@@ -79,9 +79,11 @@ def R3Sel():
     print("TraningVar.get():{}".format(r_button_val))
     motor_notification = ""
 
-    if r_button_val is 'E':
-        train_type = 'Edge'
-    elif r_button_val is 'C':
+    if r_button_val == 'ES':
+        train_type = 'Edge-Sides'
+    if r_button_val == 'EV':
+        train_type = 'Edge-Vertical'
+    elif r_button_val == 'C':
         train_type = 'Center'
         motor_notification = "\tmotor B will be active"
 
@@ -250,7 +252,14 @@ def onRunTraining():
     tracking_obj.set_controller_obj(controller)
     # print("type:{}".format(_tmp1))
 
-    training_type = "edge" if TrainingVar.get() is 'E' else "center"
+    training_var = TrainingVar.get()
+    if training_var == 'C':
+        training_type = 'center'
+    elif training_var == 'ES':
+        training_type = 'Edge-Sides'
+    elif training_var == 'EV':
+        training_type = 'Edge-Vertical'
+    # training_type = "edge" if TrainingVar.get() is 'E' else "center"
     # controller, exception_class, _log_name=['test'], _camera=0, video=None
 
     track_loop_args = (training_type,)
@@ -389,7 +398,10 @@ def init(top, gui, exception_class, _arduino_obj,  *args, **kwargs):
     if arduino_obj.connection == 'NO':
         exception_obj.error("No Arduino conn. check serial port (USB)", bold=True)
     else:
-        exception_obj.info("Arduino connection OK, port:{}".format(arduino_obj.serial_con.serial.port))
+        if arduino_obj.emulation:
+            exception_obj.info("*** Arduino emulation ON - check GUI_config.txt ***", bold=True)
+        else:
+            exception_obj.info("Arduino connection OK, port:{}".format(arduino_obj.serial_con.serial.port))
 
 
 def destroy_window():

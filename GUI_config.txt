@@ -33,4 +33,5 @@ camera default = 2
 
 [Arduino]
 send stepper pins = False
+debug - emulation - dont search = True
 

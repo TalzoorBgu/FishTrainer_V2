@@ -22,34 +22,43 @@ bool_send_default_program = False
 
 
 class Tank:
-    def __init__(self, fid, width):  # pin_num - set in config file on pi
+    def __init__(self, fid, width, height):  # pin_num - set in config file on pi
         self.fid = fid
         self.width = width
+        self.height = height
         self.side = None
 
-    def decide(self, x, y, _ver='edge'):
+        print("self.width={}, self.height={}".format(self.width, self.height))
+
+    def decide(self, x, y, _ver='Edge-Sides'):
         tmp_return = None
-        if _ver is 'edge':
+        if _ver == 'Edge-Sides':
             if x < self.width / 4 and not self.side == 'left':
                 self.side = 'left'
-                tmp_return = 'left'
-
+                tmp_return = self.side
             elif x > self.width * 3 / 4 and not self.side == 'right':
                 self.side = 'right'
-                tmp_return = 'right'
+                tmp_return = self.side
 
-        elif _ver is 'center':
+        if _ver == 'Edge-Vertical':
+            if y < self.height / 4 and not self.side == 'up':
+                self.side = 'up'
+                tmp_return = self.side
+            elif y > self.height * 3 / 4 and not self.side == 'down':
+                self.side = 'down'
+                tmp_return = self.side
+
+        elif _ver == 'center':
             if (x > self.width * 3 / 8 and x < self.width * 5 / 8) and (
-                    y > self.width * 3 / 8 and y < self.width * 5 / 8):
+                    y > self.height * 3 / 8 and y < self.height * 5 / 8):
                 if self.side is 'out_center':
                     self.side = 'center'
-                    tmp_return = 'center'
+                    tmp_return = self.side
             else:
                 self.side = 'out_center'
-                tmp_return = 'out_center'
+                tmp_return = self.side
 
         return tmp_return
-
 
 class ScenePlanner:
     def __init__(self, _exception_class):
@@ -372,39 +381,49 @@ class MySerial:
 
 
 class ArduinoFunctions:
-    def __init__(self, _exception_class):
-        self.command_str = SendCommand(FULL_CYCLE)
-        self.exception_class = _exception_class
-        serial_ports_list = serial_ports()
+    def __init__(self, _exception_class, _debug_fake_arduino_conn=False):
+        if _debug_fake_arduino_conn:    # emulate arduino connection
+            self.emulation = True
+            self.connection = 'OK'
+            self.command_str = SendCommand(FULL_CYCLE)
+            self.exception_class = _exception_class
 
-        self.exception_class.info("Serial ports:{}".format(serial_ports_list))
-        try:
-            self.connection = 'NO'
-            for port in reversed(serial_ports_list):  # usually COM7
-                self.exception_class.info("Checking port:{}".format(port))
-                self.serial_con = MySerial(port, 115200)
-                #     dump first lines
-                time.sleep(3)  # sec
-                str_in = self.receive_data()
-                # print("str_in:@@{}@@".format(str_in))
-                if str_in.find("Connected to PC") is not -1:
-                    self.connection = 'OK'
-                if self.connection is 'OK':
-                    break
-                time.sleep(5 / 1000)  # ms
-        except:
-            self.connection = 'NO'
-        finally:
-            print("Arduino conn:{}".format(self.connection))
+        else:   #normal mode
+            self.command_str = SendCommand(FULL_CYCLE)
+            self.exception_class = _exception_class
+            serial_ports_list = serial_ports()
+
+            self.exception_class.info("Serial ports:{}".format(serial_ports_list))
+            try:
+                self.connection = 'NO'
+                for port in reversed(serial_ports_list):  # usually COM7
+                    self.exception_class.info("Checking port:{}".format(port))
+                    self.serial_con = MySerial(port, 115200)
+                    #     dump first lines
+                    time.sleep(3)  # sec
+                    str_in = self.receive_data()
+                    # print("str_in:@@{}@@".format(str_in))
+                    if str_in.find("Connected to PC") is not -1:
+                        self.connection = 'OK'
+                    if self.connection is 'OK':
+                        break
+                    time.sleep(5 / 1000)  # ms
+            except:
+                self.connection = 'NO'
+            finally:
+                print("Arduino conn:{}".format(self.connection))
 
     def __enter__(self):
         return self
 
     def send_command(self, _command):
-        res = self.serial_con.write(_command)
-        sleep(20 / 1000)  # ms
-        res = self.receive_data()
-
+        res = ''
+        if self.emulation:
+            self.exception_class.info("DEBUG: sent #{}# to Serial.".format(_command))
+        else: #normal mode
+            res = self.serial_con.write(_command)
+            sleep(20 / 1000)  # ms
+            res = self.receive_data()
         return res
 
     def check_arduino_connection(self):
@@ -769,26 +788,29 @@ class Tracking:
         print("thread_track_fish Finished")
 
     def draw_lines(self, _cv_obj, _tank_width, _tank_height, _frame, _ver):
-        if _ver is 'edge':
-            low_boundry = 1.0 / 4.0
-            hige_boundry = 3.0 / 4.0
-        elif _ver is 'center':
-            low_boundry = 3.0 / 8.0
-            hige_boundry = 5.0 / 8.0
+        if _ver.startswith('Edge'):
+            low_boundary = 1.0 / 4.0
+            high_boundary = 3.0 / 4.0
+        elif _ver == 'center':
+            low_boundary = 3.0 / 8.0
+            high_boundary = 5.0 / 8.0
 
-        down = int(_tank_width * low_boundry)
-        up = int(_tank_width * hige_boundry)
-        right = int(_tank_height * low_boundry)
-        left = int(_tank_height * hige_boundry)
+        down = int(_tank_width * low_boundary)
+        up = int(_tank_width * high_boundary)
+        right = int(_tank_height * low_boundary)
+        left = int(_tank_height * high_boundary)
 
-        # print("_ver:{}, _tank_height:{}, left_up:{}, left_down:{}".
-        #      format(_ver, _tank_height, left_up, left_down))
+        # print("_ver:{}, _tank_height:{}, left:{}, right:{}".
+        #      format(_ver, _tank_height, left, right))
         # print("low_boundry:{}".format(low_boundry))
 
-        if _ver is 'edge':
+        if _ver == 'Edge-Sides':
             _cv_obj.line(_frame, (left, 0), (left, _tank_width), (255, 255, 255), 1)
             _cv_obj.line(_frame, (right, 0), (right, _tank_width), (255, 255, 255), 1)
-        elif _ver is 'center':
+        elif _ver == 'Edge-Vertical':
+            _cv_obj.line(_frame, (0, down), (_tank_height, down), (255, 255, 255), 1)
+            _cv_obj.line(_frame, (0, up), (_tank_height, up), (255, 255, 255), 1)
+        elif _ver == 'center':
             _cv_obj.rectangle(_frame, (left, down), (right, up), (255, 255, 255), 1)
 
 
@@ -811,17 +833,17 @@ class Controller:
 
         self.exception_log = _exception_class
         self.tracking_obj = _tracking_obj
-
         self.logger = []
         self.tank = []
         self.log_folder = _log_folder
         # fish_id = 0
         # print("self.tracking_obj.width:{}".format(self.tracking_obj.width))
         print("_log_name:{}".format(_log_name))
-        for i, size in enumerate(self.tracking_obj.width):
+
+        for i, (width, height) in enumerate(zip(self.tracking_obj.width, self.tracking_obj.height)):
             self.total_feed.append(0)
             # print("i:{}".format(i))
-            self.tank.append(Tank(i, size))
+            self.tank.append(Tank(i, width, height))
             log_str = "{}.({})".format(_log_name[i], str(i))
             # print("log_str:{}".format(log_str))
             self.logger.append(FishLog(self.log_folder,
@@ -831,7 +853,7 @@ class Controller:
         self.feed.Arduino.disable_pins(False, _camera)               # make motors available (training sys by cam)
 
     def __del__(self):  # Destroy
-        self.feed.Arduino.disable_pins(True, _camera)                # shut motors off
+        self.feed.Arduino.disable_pins(True, -1)                # shut motors off
         print('Controller closed')
 
     def time(self):

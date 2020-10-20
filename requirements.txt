@@ -3,3 +3,6 @@ opencv-contrib-python
 numpy
 fakeRPiGPIO
 matplotlib
+configparser
+pathlib
+_thread

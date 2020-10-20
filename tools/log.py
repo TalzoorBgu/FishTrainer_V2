@@ -37,7 +37,7 @@ class FishLog:
 
         self.line_number = 0
         self.track_count = 0
-        self.feed_count = {'left': 0, 'right': 0, 'center': 0}
+        self.feed_count = {'left': 0, 'right': 0, 'up': 0, 'down': 0, 'center': 0}
         self.fish_name = fish_name
         print('start logging data')
         # Open a file
